@@ -1,0 +1,353 @@
+<ref ClassicalLogic /> is the most common logic currently in use. Any time you
+gather up all the information available to you and use that information to come
+to a conclusion, you are probably using <ref ClassicalLogic />. Now, because we
+mathematicians are so detached from reality, we have invented a number of
+different styles of logic, but for the most part we use <ref ClassicalLogic />.
+
+# Propositions and Operators
+
+We'll begin by defining the words necessary to talk about logic. The first word
+we need to define is logic itself.
+
+\System ClassicalLogic {
+  name = "Classical Logic"
+  tagline = {
+    A Hilbert-style deduction system with <ref ClassicalLogic.implies />,
+    <ref ClassicalLogic.negation />, and nothing else.
+  }
+  description = {
+    Suitable for those satisfied with the naked beauty of a simple, elegant
+    definition of ``truth". Almost every logic created in the past few thousand
+    years has been at least close in spirit to <ref ClassicalLogic />, and
+    maybe we just don't want to wrap our heads around the more esoteric logics
+    like those filthy intuitionists, no matter how compelling an argument they
+    may have.
+  }
+}
+
+How's that for an introduction? I mean, it explains what <ref ClassicalLogic />
+<em>is</em>, but not, for example, how to <em>use</em> it. Explaining how to
+use it will take the entire rest of this chapter, but first we must finish
+defining words. Next, we will define the most fundamental concept in all of
+logic: the humble proposition.
+
+\Type Prop: ClassicalLogic {
+  name = "Proposition"
+  tagline = {
+    Statements of declaration.
+  }
+  description = {
+    In <ref ClassicalLogic />, propositions may be either true or false. If you
+    have a statement which is both true and false at the same time, this is
+    either very bad or very boring, depending on who you ask.
+  }
+}
+
+Some examples of propositions are ``we live in a society" and ``Epstein didn't
+kill himself". Never forget, though, that propositions can be wrong. Consider
+the statement ``comic sans does not cause traumatic cataracts". This is a false
+statement. No one would ever say such a terrible thing, and with good reason,
+but that does not disqualify it from being a proposition.
+
+Look at it this way: any homicidal maniac can come in and propose that comic
+sans is <em>not</em> an evil spawn of Satan. He can propose that when a flier
+is printed with that accursed typeface, the printer does <em>not</em> open a
+portal to Hades through which one hears much wailing and gnashing of teeth. And
+this lunatic <em>would</em> be hurled into the ocean, as is tradition. This is
+undoubtedly heresy, but he proposed this heresy, and so this heresy is a
+proposition.
+
+In a sense, mathematics is fundamentally a way to tell which propositions are
+true and which ones are delusions that will get you hurled into the ocean.
+However, we live in a universe which does not like having its innermost
+workings probed, and so we don't get a straight answer to that question.
+Instead, all we get is a half-answer to a slightly different question: ``Under
+these assumptions, what can we conclude?"
+
+Consider the statement ``whenever it rains, the road outside gets wet". One can
+argue the validity of that statement. What if you're under a bridge, for
+example? That may prevent the road from getting wet. Except, of course, if the
+road under the bridge is sloped, so the rain water can flow in from the sides.
+Also, I said the road <em>outside</em> gets wet. If you are under a bridge, are
+you really outside?
+
+There are just too many things to consider when determining which statements
+are true, and so mathematics is entirely agnostic on the subject. But,
+<em>if</em> that statement were true, then any time it rains, we can conclude
+that the road outside is wet. We wouldn't need to check, we would just know it
+from logic alone.
+
+Because of the importance of if-then statements in mathematics, if-then gets its
+own symbol.
+
+\Symbol implies: ClassicalLogic {
+  name = "Material Implication"
+  tagline = {
+    An if-then statement. Usually read as ``implies".
+  }
+  description = {
+    The left-hand side of the arrow is called the antecedent, and the right-hand
+    side is called the consequent. Most importantly, the statement
+    \('phi => 'psi\) means that as soon as you derive the antecedent \('phi\),
+    you can immediately derive the consequent \('psi\).
+  }
+
+  type = (Prop, Prop) -> Prop
+  read = Infix =>
+}
+
+While we're at it, we may as well define another symbol which we will need
+frequently: the negation operator.
+
+\Symbol negation: ClassicalLogic {
+  name = "Negation"
+  tagline = {
+    The negation of a statement.
+  }
+
+  type = (Prop) -> Prop
+  read = Prefix !
+}
+
+As always in mathematics, we will usually prove things about entire classes of
+propositions instead of one proposition at a time. To represent a single
+proposition whose specific content we don't care about, we will use a variable.
+Most often, this variable will be a Greek letter, either \('phi\), \('psi\),
+\('chi\) or \('theta\). Furthermore, because variables play an important role
+in how ckproof works, we will place an apostrophe before them. That way, we
+cannot confuse variables with constants like \(pi\). This is a non-standard
+notation, but it works well for this purpose.
+
+The very first thing we will go over will be how these two operators interact
+with the truth of a statement. This study is known as ``propositional calculus",
+and we will make extensive use of it once we start filling in these variables
+with real propositions.
+
+# Truth Tables of the Logical Operators
+
+Here, we will introduce truth tables. When we apply an operator to a
+proposition, it yields a new proposition whose truth-value can be determined
+from the truth-value of the original proposition. This relationship can be
+represented clearly and concisely using a table. Here is the truth table for
+the negation operator:
+
+<table>
+  <head>
+    <row>
+      <cell>\('phi\)</cell>
+      <cell>\(!'phi\)</cell>
+    </row>
+  </head>
+  <body>
+    <row>
+      <cell>True</cell>
+      <cell>False</cell>
+    </row>
+    <row>
+      <cell>False</cell>
+      <cell>True</cell>
+    </row>
+  </body>
+  <caption>Truth Table for the Negation Operator</caption>
+</table>
+
+The first column is the possible truth-values of \('phi\). The second column
+lists the values of \(!'phi\) given the value of \('phi\) in the first column.
+So, according to this table, when \('phi\) is a proposition which is true, then
+\(!'phi\) is a proposition which is false. Conversely, when \('phi\) is false,
+then \(!'phi\) is true. It's pretty simple. The implies operator, however, is
+somewhat non-trivial.
+
+<table>
+  <head>
+    <row>
+      <cell>\('phi\)</cell>
+      <cell>\('psi\)</cell>
+      <cell>\('phi => 'psi\)</cell>
+    </row>
+  </head>
+  <body>
+    <row>
+      <cell>True</cell>
+      <cell>True</cell>
+      <cell>True</cell>
+    </row>
+    <row>
+      <cell>True</cell>
+      <cell>False</cell>
+      <cell>False</cell>
+    </row>
+    <row>
+      <cell>False</cell>
+      <cell>True</cell>
+      <cell>True</cell>
+    </row>
+    <row>
+      <cell>False</cell>
+      <cell>False</cell>
+      <cell>True</cell>
+    </row>
+  </body>
+  <caption>Truth Table for the Material Implication Operator</caption>
+</table>
+
+Let's go through this table row-by-row. The first row says that if \('phi\) and
+\('psi\) are both true, then the combined statement \('phi => 'psi\) is also
+true. At first, this may seem intuitively obvious, but something to bear in mind
+is that \('psi\) need not be related to \('phi\). All that's required is that
+they are both true.
+
+Consider the statements ``the blue whale is the largest mammal to have ever
+lived," and ``every human is mortal." Both of these statements are true, and
+therefore the combined statement ``if the blue whale is the largest mammal to
+have ever lived, then every human is mortal" is a true statement. This differs
+from how if-then statements are used in natural language, as such statements
+usually imply a causal relationship.
+
+The second row says that if \('phi\) is true and \('psi\) is false, then the
+combined statement \('phi => 'psi\) is false. For example: ``I think, therefore
+I know everything." The first half, ``I think", is a true statement. However,
+the second half ``I know everything" is a false statement. And so, upon
+combining the two together with an if-then statement, we obtain a false
+statement.
+
+This kind of statement is called a non-sequitur, and it's the only one of the
+four rows that people understand intuitively. That's because it's the only
+situation where the \(=>\) operator behaves the same as if-then statements in
+natural language. That being said, non-sequiturs are an easy mistake to make,
+and you should learn how to recognize them.
+
+The third and fourth rows are the most surprising. They say that if \('phi\) is
+false, then \('phi => 'psi\) is always true, independent of \('psi\)! As it
+turns out, this is <em>not</em> just some weird quirk which we can ignore in
+practice. It's not just common, it's <em>useful</em>; this is the thing which
+gives us proof by contradiction. The last row says that you can derive a false
+statement from a false statement. But, the second row you <em>cannot</em> derive
+a false statement from a true one. So, if we start with some assumptions and
+from them derive a statement which is very clearly false, then the assumptions
+must have been false to begin with.
+
+# Epistemology, Unusual Logic, Bloodletting and an Apology for Mathematics
+## A warning on blind assumption of even the most obvious facts
+
+This brings us to the big question: why should anyone subscribe to this specific
+notion of logic? What if these non-trivialities are a sign that something has
+gone horribly wrong? <ref ClassicalLogic /> is certainly a system which makes
+intuitive sense, and it's widely recognized, and even if it was only rigorously
+defined in the 20th century, the basic idea has been studied for literally
+thousands of years. However, there have been plenty of times before where such
+widely-held beliefs have been completely overturned.
+
+Consider this: the ancient Greeks who were responsible for our understanding of
+logic were also responsible for the four humors of ancient medicine. According
+to this model, the human body is made of blood, phlegm, yellow bile and black
+bile. Disease is caused by an imbalance of these four humors, and the cure was
+to remove the ones in excess to restore balance to the body. This was the basis
+for the practice of bloodletting, for example, which in retrospect caused more
+harm than good. But try to put yourself in the shoes of the doctors who studied
+it.
+
+Why do people vomit when they are sick? The modern understanding is that
+microbes have infiltrated your stomach and so you expel them to help fight the
+disease. But what if no one had ever considered the existence of bacteria?
+According to humorism, this sickness is actually caused by the excess of bile
+and this is your body's attempt to return to balance.
+
+Why does blood loss cause anemia? The modern understanding is that red blood
+cells are needed to carry oxygen around the bloodstream, and losing them is, in
+a sense, equivalent to forever being short of breath. But what if you have never
+heard of red blood cells or even oxygen? Humorism posits that you must now have
+an excess of the three other humors, which must be causing the tiredness.
+
+The point I'm trying to make is that humorism makes intuitive sense insofar as
+it explains illness in a self-consistent way. I'd say it's even more intuitive
+than modern medicine because you don't need a medical degree to understand it.
+However, although it is self-consistent, it is not consistent with reality. The
+intuitive nature of humorism does not make it correct.
+
+For those who are just hearing of humorism for the first time, this was not some
+obscure ancient Greek custom which was quickly forgotten.
+
+<todo>
+  The preceding paragraph should have a very long list of examples of humorism
+  used in medicine, ranging from the ancient to the medieval to the 17th
+  century. I am not a historian, so it should also be reviewed by someone who
+  actually knows what they're talking about. Some useful resources:
+
+  <mla>
+    authors = { Siraisi, Nancy G }
+    title = {
+      Medieval and early Renaissance medicine: an introduction to knowledge and
+      practice
+    }
+    container {
+      publisher = { University of Chicago Press }
+      publication_date = { 1990 }
+    }
+  </mla>
+
+  While we're at it, we should be adding citations to this entire section.
+</todo>
+
+The point I'm trying to make is that humorism was widely recognized by the
+ancient Greeks, the Romans, the medieval Muslims and Europeans, and all other
+cultures whose understanding of the universe has its roots in the Greek
+philosophers. The wide recognition of humorism spanning millenia does not make
+it correct.
+
+So it doesn't matter if <ref ClassicalLogic /> makes intuitive sense, is widely
+recognized and has been studied for thousands of years. We've been wrong before
+and we will be wrong again, we just don't yet know about what.
+
+It's not immediately obvious what a different logic would even look like. There
+are others which are studied, though to a lesser extent. Some of them try to
+extend <ref ClassicalLogic />. In Modal Logic, we take into account not just the
+truth of a proposition, but also its necessity and possibility. But even this
+logic still lines up well with the results of <ref ClassicalLogic />.
+
+If you want to learn about something truly different, you can try Intuitionist
+Logic. In Intuitionist Logic, we reject The Law of Excluded Middle. One
+consequence of this is that double-negatives no longer cancel out. Normally,
+when I say that something isn't untrue, that means it's true. But with
+Intuitionist Logic, a non-untruth is meaningless; a sort of fuzzy,
+indeterminate state of truth. This chapter is on <ref ClassicalLogic />, so a
+detailed explanation of other logics will have to wait until later, but the
+weirdest part about Intuitionist Logic is that the more I think about it, the
+more I think it's a superior model of logic.
+
+So, I don't know if <ref ClassicalLogic /> is a correct model for how thinking
+should work. But that's not actually a problem, because mathematics doesn't care
+about truth, it cares about consequences. I may not know if
+<ref ClassicalLogic /> is correct, but I'm very certain that one consequence of
+it is The Law of Excluded Middle, and one consequence of Intuitionist Logic is
+that we <em>cannot</em> derive The Law of Excluded Middle. This is a mantra I
+will repeat throughout this treatise: mathematics does not tell you what is
+true, it tells you what consequences can be derived from what assumptions...
+probably?
+
+Honestly, I'm not totally sold on that. If you were to ask me <em>why</em> I
+believe that mathematics tells you about consequences, then we run into exactly
+the same epistemological issues as any child who annoys their parents by asking
+``why?" repeatedly: you get a never-ending chain of answers which can be
+completely discredited by again asking ``why?". It's the ``malicious, powerful,
+cunning demon" who deceived Descartes, the absurd question of Camus and the
+radical freedom of Sartre.
+
+I'm <em>very sure</em> <ref ClassicalLogic /> works, and I'm <em>very sure</em>
+that those consequences really are consequences, and I'm <em>very sure</em>
+that mathematics is more rigorously verified than any other academic field, but
+I don't <em>know</em> it a priori. We know <em>nothing</em> a priori. I can
+derive the consequences of a certain kind of logic, but that doesn't mean it
+has anything to do with the real world. So the best I can do is convince you
+that philosophy, and in particular mathematics, is worth studying.
+
+Here's the best argument I can make for this: I don't do mathematics because I
+think it's ``correct". I do it because I love it. I love how from a handful of
+simple rules, we can derive extremely complex behaviour. I love its elegance,
+its beauty and its mystery. And if there are useful discoveries that plop out
+of the thing that I love, that's great. And plop out they do, in droves. But I
+don't justify the study of mathematics based on its uses. I support the study
+of mathematics for the same reason I support the creation of art: it's just
+beautiful. Some people may say this is a bad reason to support something. They
+are wrong. I refuse to believe true beauty is a waste. And anyone who says
+otherwise can shove it up their stingy ass.

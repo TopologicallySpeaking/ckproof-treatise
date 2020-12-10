@@ -1,0 +1,27 @@
+foundations: "Foundations" {
+  In this book, we study the low-level, fundamental and boring stuff which
+  everything else relies on. Take, for example,
+  <ref ClassicalLogic.PropIdentity />. In this theorem, we prove that
+  \('phi => 'phi\). In plain English, that means ``if something is true, then
+  we can conclude that thing is true." This statement is correct and important,
+  but it's also trivial and uninteresting. Before we can get to the truely
+  <unicorn>Beautiful</unicorn> stuff, we must first deal with this drudgery.
+
+  [
+    classical_logic: "Introduction to Classical Logic" {
+      Fun fact: there are actually a large number of different flavors of logic,
+      including Stoic Logic, Modal Logic, Intuitionist Logic, Relevance Logic,
+      and countless others. Furthermore, mathematics makes no distinction as to
+      which logic is ``correct". In response to this inherent unknowability,
+      logicians just study all of them. In this chapter, we will study the logic
+      which is used most commonly in modern mathematics, called
+      <ref ClassicalLogic />.
+
+      [
+        defs: "Definitions and Symbols",
+        axioms: "Axioms of Propositional Logic",
+        conjunction: "Logical Conjunction",
+      ]
+    }
+  ]
+}
