@@ -2,9 +2,9 @@
 
 # Ckproof Treatise
 
-This is a treatise of mathematical proofs. It's special in that is is machine-readable, so every
-proof in it can be verified with a proof checker. As of right now, these few files are all that
-exists for it. The proof checker itself will be released on GitHub soon.
+This is a treatise of mathematical proofs which are machine-readable so that
+they can be automatically verified as correct. More information may be found at
+[ckproof.io](http://ckproof.io).
 
 ## Licensing
 
