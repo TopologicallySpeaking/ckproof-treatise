@@ -20,6 +20,8 @@ foundations: "Foundations" {
       [
         defs: "Definitions and Symbols",
         axioms: "Axioms of Propositional Logic",
+        double_negative: "Double Negatives",
+        other_contra: "Other Forms of Contrapositive",
         conjunction: "Logical Conjunction",
       ]
     }

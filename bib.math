@@ -1,0 +1,31 @@
+kierkegaard_self {
+  authors = { Søren Kierkegaard, et al }
+  title = {
+    The Sickness unto Death: A Christian Psychological Exposition for
+    Upbuilding and Awakening
+  }
+  container {
+    publisher = { Princeton University Press }
+    publication_date = { 1983 }
+    location = { Princeton, Nj }
+  }
+}
+
+aristotle_protrepticus {
+  authors = { Aristotle }
+  title = { Protrepticus }
+}
+
+kneale_consequentia {
+  authors = { Kneale, William }
+  title = { Aristotle and the Consequentia Mirabilis }
+  container {
+    container_title = { The Journal of Hellenic Studies, vol. 77 }
+    number = { no. 1 }
+    publication_date = { 1957 }
+    location = {
+      pp. 62–66.,
+      <a https://doi.org/10.2307/628635>doi:10.2307/628635</a>
+    }
+  }
+}

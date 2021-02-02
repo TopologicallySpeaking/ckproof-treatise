@@ -1,0 +1,214 @@
+In <ref ClassicalLogic.PropContra/>, we take a statement which already has a
+negation on both the antecedent and consequent, and then remove them while
+reversing their order. This is actually equivalent to adding a negation while
+reversing their order, which we can see from <ref ClassicalLogic.DNegElim />
+which we proved on the last page.
+
+Consider what would happen if we took \(!'psi => !'phi\), reversed the order,
+and then <em>added</em> a negation. We would get \(!!'phi => !!'psi\), and after
+eliminating the double negatives, we do in fact get \('phi => 'psi\). This form
+of the contrapositive is basically the moody little brother of the axiom.
+
+Similar things happen if only one of the halves are negated. If you take the
+contrapositive of \(!'psi => 'phi\), you get \(!'phi => !!'psi\) which reduces
+to \(!'phi => 'psi\), and similarly the contrapositive of \('psi => !'phi\)
+reduces to \('phi => !'psi\). It's like
+<a https://bulbapedia.bulbagarden.net/wiki/Tate_and_Liza>that gym battle in
+Pokémon with the psychic twins</a>.
+
+In this sense, there are actually four equivalent statements in the
+Contrapositive family. Because we only assumed one of them as an axiom, we must
+derive the other three sibilings as theorems.
+
+\Theorem PropContraLeft: ClassicalLogic {
+  name = "Contrapositive with Negation on Antecedent"
+  tagline = {
+    A statement implies its contraposition.
+  }
+  description = {
+    Hehehe... were you surprised that there are two of us? We're twins!
+  }
+
+  var phi: Prop
+  var psi: Prop
+
+  assertion = (!'phi => 'psi) => (!'psi => 'phi);
+}
+
+\Proof PropContraLeft: ClassicalLogic {
+  We can derive this from
+
+  |DNegIntro| 'psi => !!'psi;.
+
+  Begin by distributing in \(!'phi\).
+
+  |PropSimpleInf| !'phi => ('psi => !!'psi);
+  |PropDistribInf| (!'phi => 'psi) => (!'phi => !!'psi);
+
+  This is almost what we're looking for; we just need to take the contrapositive
+  of the consequent.
+
+  |PropContra| (!'phi => !!'psi) => (!'psi => 'phi);
+  |Syllogism| (!'phi => 'psi) => (!'psi => 'phi);
+
+  Bada bing, bada boom, this completes the proof.
+}
+
+\Theorem PropContraRight: ClassicalLogic {
+  name = "Contrapositive with Negation on Consequent"
+  tagline = {
+    A statement implies its contraposition.
+  }
+  description = {
+    Fufufu... were you surprised that there are two of us? We're twins!
+  }
+
+  var phi: Prop
+  var psi: Prop
+
+  assertion = ('phi => !'psi) => ('psi => !'phi);
+}
+
+\Proof PropContraRight: ClassicalLogic {
+  This theorem is proven using the same trick as last time. However, the initial
+  setup is slightly different. We begin with this tautology:
+
+  |PropIdentity| ('phi => !'psi) => ('phi => !'psi);.
+
+  This is almost usable, but the \('phi\) in the consequent should be doubly
+  negated before we can use the trick. To get this, we first bring the \('phi\)
+  outside for easier access.
+
+  |PropCommutation, #1| 'phi => (('phi => !'psi) => !'psi);
+
+  We can use a syllogism with <ref #1 /> and
+
+  |DNegElim| !!'phi => 'phi;
+
+  to get
+
+  |Syllogism| !!'phi => (('phi => !'psi) => !'psi);.
+
+  Now we can bring the \(!!'phi\) back inside to get
+
+  |PropCommutation| ('phi => !'psi) => (!!'phi => !'psi);.
+
+  The setup is complete. We can now take the contrapositive of the consequent
+
+  |PropContra| (!!'phi => !'psi) => ('psi => !'phi);,
+
+  which gives us the statement we were looking for:
+
+  |Syllogism| ('phi => !'psi) => ('psi => !'phi);.
+}
+
+\Theorem PropContraConv: ClassicalLogic {
+  name = "Converse of The Axiom of Contraposition"
+  tagline = {
+    A statement implies its contraposition.
+  }
+  description = {
+    I am nothing like my brother.
+  }
+
+  var phi: Prop
+  var psi: Prop
+
+  assertion = ('phi => 'psi) => (!'psi => !'phi);
+}
+
+\Proof PropContraConv: ClassicalLogic {
+  The proof for this is exactly the same as the last, except we use a different
+  form of the contraposition. We again begin with 
+
+  |PropIdentity| ('phi => 'psi) => ('phi => 'psi);.
+
+  We bring \('phi\) to the front,
+
+  |PropCommutation| 'phi => (('phi => 'psi) => 'psi);,
+
+  and combine it with
+
+  |DNegElim| !!'phi => 'phi;
+
+  to get
+
+  |Syllogism| !!'phi => (('phi => 'psi) => 'psi);.
+
+  After bringing \(!!'phi\) back in,
+
+  |PropCommutation| ('phi => 'psi) => (!!'phi => 'psi);,
+
+  we use <ref ClassicalLogic.PropContraLeft /> to get what we are looking for.
+
+  |PropContraLeft| (!!'phi => 'psi) => (!'psi => !'phi);
+  |Syllogism| ('phi => 'psi) => (!'psi => !'phi);
+}
+
+# Inference Forms of The Contrapositive Family
+
+Now it's time to derive the inference forms for the rest of the Contrapositive
+family.
+
+\Theorem PropContraLeftInf: ClassicalLogic {
+  name = "Inference using Contrapositive with Negation on Antecedent"
+  tagline = {
+    A statement implies its contraposition.
+  }
+
+  var phi: Prop
+  var psi: Prop
+
+  premise = [
+    !'phi => 'psi;
+  ]
+  assertion = !'psi => 'phi;
+}
+
+\Proof PropContraLeftInf: ClassicalLogic {
+  |PropContraLeft| (!'phi => 'psi) => (!'psi => 'phi);
+  |1| !'phi => 'psi;
+  |ModusPonens| !'psi => 'phi;
+}
+
+\Theorem PropContraRightInf: ClassicalLogic {
+  name = "Inference using Contrapositive with Negation on Consequent"
+  tagline = {
+    A statement implies its contraposition.
+  }
+
+  var phi: Prop
+  var psi: Prop
+
+  premise = [
+    'phi => !'psi;
+  ]
+  assertion = 'psi => !'phi;
+}
+
+\Proof PropContraRightInf: ClassicalLogic {
+  |PropContraRight| ('phi => !'psi) => ('psi => !'phi);
+  |1| 'phi => !'psi;
+  |ModusPonens| 'psi => !'phi;
+}
+
+\Theorem PropContraConvInf: ClassicalLogic {
+  name = "Inference using The Converse of The Axiom of Contraposition"
+  tagline = {
+    A statement implies its contraposition.
+  }
+
+  var phi: Prop
+  var psi: Prop
+
+  premise = [
+    'phi => 'psi;
+  ]
+  assertion = !'psi => !'phi;
+}
+
+\Proof PropContraConvInf: ClassicalLogic {
+  |PropContraConv| ('phi => 'psi) => (!'psi => !'phi);
+  |1| 'phi => 'psi;
+  |ModusPonens| !'psi => !'phi;
+}

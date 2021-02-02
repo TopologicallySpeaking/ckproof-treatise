@@ -1,0 +1,460 @@
+Our goal right now is to build up tools which make proofs easier to write. The
+first and simplest thing we will do to this end is prove a bunch of useful
+theorems. On this page, I have arbitrarily chosen to prove that double negatives
+cancel out. Below, you will find eight proofs which will ultimately culminate in
+this goal.
+
+If this seems like a lot of work to prove something trivial, that's because it
+is. I wasn't kidding when I said these proofs will get worse before they get
+better. The good news is that all eight of these proofs will be used almost
+everywhere, so it's worth spending time on them.
+
+# Inference Forms of The Axioms
+
+You may have noticed a similarity between if-then statements and theorems. After
+proving the statement \('phi => 'psi\), you may derive \('psi\) from \('phi\).
+And after proving a theorem with \('phi\) as a premise and \('psi\) as a
+conclusion, you may agian derive \('psi\) from \('phi\).
+
+Even though they have the same semantic meaning, they are not necessarily
+equivalent. In any logic with <ref ClassicalLogic.ModusPonens />, you can prove
+such a theorem from its equivalent if-then statement. However, in some logics
+you cannot go the other way around, and you get theorems for which you cannot
+prove its equivalent if-then statement. Thus, theorems are at least as powerful,
+if not more so, than if-then statements.
+
+In <ref ClassicalLogic /> specifically, they end up being equivalent, so we can
+always derive the if-then statement for a given theorem and vice versa. We will
+call such theorems the ``inference form" of the statement. Furthermore, both
+forms are useful in their own way, and so we will often prove both of them and
+use whichever is easier for a given situation.
+
+Here, we will prove the inference forms of <ref ClassicalLogic.PropSimple />,
+<ref ClassicalLogic.PropDistrib />, and <ref ClassicalLogic.PropContra />.
+
+\Theorem PropSimpleInf: ClassicalLogic {
+  name = "Inference using The Axiom of Simplification"
+  tagline = {
+    Before any statement which has already been derived, we may introduce any
+    antecedent.
+  }
+
+  var phi: Prop
+  var psi: Prop
+
+  premise = [
+    'phi;
+  ]
+  assertion = 'psi => 'phi;
+}
+
+\Proof PropSimpleInf: ClassicalLogic {
+  We begin with <ref ClassicalLogic.PropSimple />.
+
+  |PropSimple| 'phi => ('psi => 'phi);.
+
+  The premise of this theorem is that we have already derived
+
+  |1| 'phi;,
+
+  which allows us to derive
+
+  |ModusPonens| 'psi => 'phi;.
+}
+
+The proofs of all three of these inference laws have the same trivial form, so
+no more commentary will be made.
+
+\Theorem PropDistribInf: ClassicalLogic {
+  name = "Inference using The Axiom of Distribution"
+  tagline = {
+    The <ref ClassicalLogic.implies /> operator distributes over itself.
+  }
+
+  var phi: Prop
+  var psi: Prop
+  var chi: Prop
+
+  premise = [
+    'phi => ('psi => 'chi);
+  ]
+  assertion = ('phi => 'psi) => ('phi => 'chi);
+}
+
+\Proof PropDistribInf: ClassicalLogic {
+  |PropDistrib|
+    ('phi => ('psi => 'chi))
+      => (('phi => 'psi) => ('phi => 'chi));
+
+  |1| 'phi => ('psi => 'chi);
+  |ModusPonens| ('phi => 'psi) => ('phi => 'chi);
+}
+
+\Theorem PropContraInf: ClassicalLogic {
+  name = "Inference using The Axiom of Contraposition"
+  tagline = {
+    The contrapositive of a statment implies the statement itself.
+  }
+
+  var phi: Prop
+  var psi: Prop
+
+  premise = [
+    !'psi => !'phi;
+  ]
+  assertion = 'phi => 'psi;
+}
+
+\Proof PropContraInf: ClassicalLogic {
+  |PropContra| (!'psi => !'phi) => ('phi => 'psi);
+  |1| !'psi => !'phi;
+  |ModusPonens| 'phi => 'psi;
+}
+
+# Syllogism
+
+Consider what it would mean if we derived the two statements \('phi => 'psi\)
+and \('psi => 'chi\). If we were to then derive \('phi\), then we could derive
+\('psi\) by <ref ClassicalLogic.ModusPonens />. But now that we have derived
+\('psi\), we can again use <ref ClassicalLogic.ModusPonens /> to derive
+\('chi\). The net effect is that from \('phi\), we can derive \('chi\).
+
+Said another way, deriving both \('phi => 'psi\) and \('psi => 'chi\) is
+equivalent to \('phi => 'chi\). This transitive property of chaining together
+implications is called <ref ClassicalLogic.Syllogism />.
+
+\Theorem Syllogism: ClassicalLogic {
+  name = "The Principal of Syllogism"
+  tagline = {
+    If \('phi => 'psi\) and \('psi => 'chi\), then \('phi => 'chi\).
+  }
+
+  var phi: Prop
+  var psi: Prop
+  var chi: Prop
+
+  premise = [
+    'phi => 'psi;
+    'psi => 'chi;
+  ]
+  assertion = 'phi => 'chi;
+}
+
+\Proof Syllogism: ClassicalLogic {
+  We begin with the second hypothesis, then distribute \('phi\) into it.
+
+  |2| 'psi => 'chi;
+  |PropSimpleInf| 'phi => ('psi => 'chi);
+  |PropDistribInf| ('phi => 'psi) => ('phi => 'chi);
+
+  This gives us a statement which has the first hypothesis
+
+  |1| 'phi => 'psi;
+
+  as the antecedent. We can now apply <ref ClassicalLogic.ModusPonens /> to get
+
+  |ModusPonens| 'phi => 'chi;,
+
+  which is what we were trying to show.
+}
+
+# Working with Nested Antecedents
+
+In this section, we will prove a couple theorems involving nested antecedents.
+By nested antecedents, I mean a statement of the form
+\('phi => ('psi => 'chi)\). A close equivalent in English might be ``If
+\('phi\), then \('psi\) implies \('chi\)". The interpretation of this is that,
+if we wish to derive \('chi\), we may prove \('phi\) and \('psi\) then apply
+<ref ClassicalLogic.ModusPonens /> twice. To this end, the order of \('phi\) and
+\('psi\) don't matter. That is, \('phi => ('psi => 'chi)\) should be the same as
+\('psi => ('phi => 'chi)\).
+
+\Theorem PropCommutation: ClassicalLogic {
+  name = "Commutation of Antecedents"
+  tagline = {
+    In a statement with multiple antecedents, their order doesn't matter.
+  }
+
+  var phi: Prop
+  var psi: Prop
+  var chi: Prop
+
+  premise = [
+    'phi => ('psi => 'chi);
+  ]
+  assertion = 'psi => ('phi => 'chi);
+}
+
+\Proof PropCommutation: ClassicalLogic {
+  We begin by taking the hypothesis and distributing in \('phi\).
+  
+  |1| 'phi => ('psi => 'chi);
+  |PropDistribInf, #1| ('phi => 'psi) => ('phi => 'chi);
+
+  Consider the following axiom:
+
+  |PropSimple| 'psi => ('phi => 'psi);.
+
+  The consequent of this axiom is the antecedent of <ref #1 />, which allows us
+  to derive
+
+  |Syllogism| 'psi => ('phi => 'chi);.
+}
+
+Now consider what happens if the two antecedents are the same, i.e.
+\('phi => ('phi => 'psi)\). After we prove \('phi\), we can also derive
+\('psi\), but that requires two applications of
+<ref ClassicalLogic.ModusPonens />. Thus, the two antecedents are redundant and
+the statement may be reduced to just \('phi => 'psi\).
+
+\Theorem RedundantAntecedent: ClassicalLogic {
+  name = "Absorbtion of Redundant Antecedent"
+  tagline = {
+    In a statement with repeated antecedents, the second one may be dropped.
+  }
+
+  var phi: Prop
+  var psi: Prop
+
+  premise = [
+    'phi => ('phi => 'psi);
+  ]
+  assertion = 'phi => 'psi;
+}
+
+\Proof RedundantAntecedent: ClassicalLogic {
+  We begin by distributing in \('phi\).
+
+  |1| 'phi => ('phi => 'psi);
+  |PropDistribInf| ('phi => 'phi) => ('phi => 'psi);
+
+  The antecedent of this statement is an axiom,
+
+  |PropIdentity| 'phi => 'phi;,
+
+  which allows us to use <ref ClassicalLogic.ModusPonens /> to get
+
+  |ModusPonens| 'phi => 'psi;.
+}
+
+# Contradictory Antecedents
+
+As we have established with the truth tables on the previous page, a false
+antecedent in <ref ClassicalLogic /> can imply anything. This is an extremely
+powerful notion, and here we will explore two consequences of it.
+
+First up, we have <ref ClassicalLogic.PropExplosion />. Let's say we have
+managed to derive some statement \('phi\) as well as its negation \(!'phi\).
+This should hopefully never happen, but let's explore the consequences if it
+did. It particular, what would we be able to derive as a result of such a
+contradiction? Well, either \('phi\) is false or \(!'phi\) is false. And so, at
+least one of \('phi => 'psi\) or \(!'phi => 'psi\) is true, because a false
+statement can imply anything. Thus, by <ref ClassicalLogic.ModusPonens />, we
+would be able to derive \('psi\), no matter what \('psi\) is.
+
+\Theorem PropExplosion: ClassicalLogic {
+  name = "The Principle of Explosion"
+  tagline = {
+    From a contradiction, we may derive anything.
+  }
+
+  var phi: Prop
+  var psi: Prop
+
+  assertion = !'phi => ('phi => 'psi);
+}
+
+\Proof PropExplosion: ClassicalLogic {
+  We begin with
+
+  |PropIdentity| !'phi => !'phi;.
+
+  From there, we introduce \(!'psi\) as an antecedent and swap it with
+  \(!'phi\).
+
+  |PropSimpleInf| !'psi => (!'phi => !'phi);
+  |PropCommutation| !'phi => (!'psi => !'phi);
+
+  This is almost what we wanted to show, we need only take the contrapositive
+  of the consequent.
+
+  |PropContra| (!'psi => !'phi) => ('phi => 'psi);
+  |Syllogism| !'phi => ('phi => 'psi);
+}
+
+<todo>
+  According to
+  <a https://en.wikipedia.org/wiki/Principle_of_explosion>Wikipedia</a>, the
+  first person to prove this was William of Soissons, and someone
+  pseudographically attributed it to John Duns Scotus. Find the works in which
+  these happened. I will not accept a citation from something else, even if
+  it's a reliable source.
+</todo>
+
+The lesson here is that even a single contradiction, no matter how ostensibly
+harmless, will destroy the integrity of the entire system. In the system of
+natural numbers, if we found a contradiction, that would mean that \(1+1\) would
+still equal \(2\), but it also wouldn't equal \(2\). It would also equal \(5\)
+and not equal \(5\), or any other number. All numbers would be both prime and
+composite at the same time, and the Goldbach Conjecture would simultaneously be
+proven and disproven.
+
+In general for an inconsistent system, the answer to any yes-or-no question is
+always ``yes". Does there exist a smallest integer? Yes! Does there exist no
+smallest integer? Also yes! Is a hot dog a sandwich? Indeed! Is it not a
+sandwich? Correct! Is the answer to any yes-or-no question always ``no"? You
+bet! Hey, you're a programmer, right? Can you fix my printer? Absolutely,
+everyone knows programmers are just computer magicians and can solve anything
+computer-related.
+
+Søren Kierkegaard once said ``The self is a relation that relates itself to
+itself or is the relation's relating itself to itself in the relation; the self
+is not the relation but is the relation's relating itself to
+itself."<cite kierkegaard_self /> I have absolutely no clue what this means,
+but so long as he said it in the context of an inconsistent system, it must be
+true.
+
+A famous example of this is Russel's Paradox. In the late 19th century and the
+early 20th century, mathemeticians were interested in studying Set Theory.
+However, the exact formulation of Set Theory they used, which we now call Naïve
+Set Theory, resulted in a contradiction. In particular, they found a set which
+Naïve Set Theory claimed both contained itself and did not contain itself at the
+same time.
+
+On a number of occasions, I've heard people ask why Russel's Paradox was such a
+big deal. Who cares about sets which contain themselves? None of the sets which
+we care about contain themselves, and so at first glance it would seem like
+this little problem is isolated to something which has no bearing on the
+validity of the rest of Naïve Set Theory. The issue is that such a paradox is
+not isolated. By <ref ClassicalLogic.PropExplosion />, this one single paradox
+ripples throughout the entire system.
+
+Next up, we have <ref ClassicalLogic.Clavius />.
+
+\Theorem Clavius: ClassicalLogic {
+  name = "The Law of Clavius"
+  tagline = {
+    If the negation of a statement implies the statement itself, then that
+    statement must be true.
+  }
+
+  var phi: Prop
+  
+  assertion = (!'phi => 'phi) => 'phi;
+}
+
+To understand this theorem intuitively, think about what it would mean if we
+manage to derive \(!'phi => 'phi\). This is actually a perfectly good statement
+and it can be derived without issue for many \('phi\). However, let's say that
+later on we also derive \(!'phi\). Then \('phi\) would immediately follow by
+<ref ClassicalLogic.ModusPonens />, and that would be a huge problem because of
+<ref ClassicalLogic.PropExplosion />. So you'd better hope that \('phi\) is
+true, otherwise all of logic breaks down and nothing makes sense anymore.
+
+Aristotle made this famous statement which is an argument roughly of this form.
+
+<quote>
+  <original aristotle_protrepticus>
+    εἰ μὲνφιλοσοφητέον φιλοσοφητέον, καὶ εἰ μὴ φιλοσοφητέον φιλοσοφητέον πάντως
+    ἄρα φιλοσοφητέον
+  </original>
+
+  <value kneale_consequentia>
+    If we ought to philosophise, then we ought to philosophise; and if we ought
+    not to philosophise, then we ought to philosophise (i.e. in order to justify
+    this view); in any case, therefore, we ought to philosophise.
+  </value>
+</quote>
+
+\Proof Clavius: ClassicalLogic {
+  This is derived from the axiom
+
+  |PropExplosion| !'phi => ('phi => !(!'phi => 'phi));.
+
+  If we distribute in the \(!'phi\),
+
+  |PropDistribInf| (!'phi => 'phi) => (!'phi => !(!'phi => 'phi));,
+
+  then take the contrapositive of the consequent,
+
+  |PropContra| (!'phi => !(!'phi => 'phi)) => ((!'phi => 'phi) => 'phi);
+  |Syllogism| (!'phi => 'phi) => ((!'phi => 'phi) => 'phi);,
+
+  then we almost get what we're looking for. We need only to remove the
+  redundant antecedent.
+
+  |RedundantAntecedent| (!'phi => 'phi) => 'phi;
+}
+
+<todo>
+  This law was apparently described by Christopher Clavius, the person this was
+  named after. Find the work in which this happened. I will not accept a
+  citation from something else, even if it's a reliable source.
+
+  His complete mathematical works may be found here:
+
+  <mla>
+    title = { Christophori Clavii ... Opera mathematica V tomis distributa }
+    container {
+      publisher = {
+        Moguntiae \text[Mainz\text]: sumptibus Antonii Hierat, excudebat Reinhard Eltz
+      }
+      publication_date = { 1611-1612 }
+      location = {
+        ETH-Bibliothek Zürich, Rar 9661,
+        <a https://doi.org/10.3931/e-rara-3802>
+          https://doi.org/10.3931/e-rara-3802
+        </a>
+        Public Domain Mark
+      }
+    }
+  </mla>
+
+  It's in Latin, so I will also need a translation.
+</todo>
+
+# Double Negatives
+
+And now, after all of that toil, we can derive the goal I set at the beginning
+of the page. We will actually prove two equivalent forms of the same principle,
+<ref ClassicalLogic.DNegElim /> and <ref ClassicalLogic.DNegIntro />.
+
+\Theorem DNegElim: ClassicalLogic {
+  name = "Double Negative Elimination"
+  tagline = {
+    Double negatives cancel out.
+  }
+
+  var phi: Prop
+
+  assertion = !!'phi => 'phi;
+}
+
+\Proof DNegElim: ClassicalLogic {
+  This is proven by combining a particular form of
+  <ref ClassicalLogic.PropExplosion /> with <ref ClassicalLogic.Clavius /> using
+  a syllogism.
+
+  |PropExplosion| !!'phi => (!'phi => 'phi);
+  |Clavius| (!'phi => 'phi) => 'phi;
+  |Syllogism| !!'phi => 'phi;
+}
+
+\Theorem DNegIntro: ClassicalLogic {
+  name = "Double Negative Introduction"
+  tagline = {
+    We may always introduce a double negative without changing the meaning.
+  }
+
+  var phi: Prop
+
+  assertion = 'phi => !!'phi;
+}
+
+\Proof DNegIntro: ClassicalLogic {
+  This is just the contrapositive of a particular
+  <ref ClassicalLogic.DNegElim />.
+
+  |DNegElim| !!!'phi => !'phi;
+  |PropContraInf| 'phi => !!'phi;
+}
