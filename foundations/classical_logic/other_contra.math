@@ -1,8 +1,8 @@
 In <ref ClassicalLogic.PropContra/>, we take a statement which already has a
 negation on both the antecedent and consequent, and then remove them while
-reversing their order. This is actually equivalent to adding a negation while
-reversing their order, which we can see from <ref ClassicalLogic.DNegElim />
-which we proved on the last page.
+reversing their order. This is actually equivalent to <em>adding</em> a negation
+while reversing their order, which we can see from
+<ref ClassicalLogic.DNegElim />.
 
 Consider what would happen if we took \(!'psi => !'phi\), reversed the order,
 and then <em>added</em> a negation. We would get \(!!'phi => !!'psi\), and after
@@ -23,7 +23,7 @@ derive the other three sibilings as theorems.
 \Theorem PropContraLeft: ClassicalLogic {
   name = "Contrapositive with Negation on Antecedent"
   tagline = {
-    A statement implies its contraposition.
+    A statement implies its contrapositive.
   }
   description = {
     Hehehe... were you surprised that there are two of us? We're twins!
@@ -57,7 +57,7 @@ derive the other three sibilings as theorems.
 \Theorem PropContraRight: ClassicalLogic {
   name = "Contrapositive with Negation on Consequent"
   tagline = {
-    A statement implies its contraposition.
+    A statement implies its contrapositive.
   }
   description = {
     Fufufu... were you surprised that there are two of us? We're twins!
@@ -70,14 +70,13 @@ derive the other three sibilings as theorems.
 }
 
 \Proof PropContraRight: ClassicalLogic {
-  This theorem is proven using the same trick as last time. However, the initial
-  setup is slightly different. We begin with this tautology:
+  We begin with this tautology:
 
   |PropIdentity| ('phi => !'psi) => ('phi => !'psi);.
 
-  This is almost usable, but the \('phi\) in the consequent should be doubly
-  negated before we can use the trick. To get this, we first bring the \('phi\)
-  outside for easier access.
+  This is almost usable. However, for what we're about to do, we need the
+  \('phi\) in the consequent to be doubly negated. To get this, we first bring
+  that \('phi\) outside for easier access.
 
   |PropCommutation, #1| 'phi => (('phi => !'psi) => !'psi);
 
@@ -105,7 +104,7 @@ derive the other three sibilings as theorems.
 \Theorem PropContraConv: ClassicalLogic {
   name = "Converse of The Axiom of Contraposition"
   tagline = {
-    A statement implies its contraposition.
+    A statement implies its contrapositive.
   }
   description = {
     I am nothing like my brother.
@@ -119,7 +118,7 @@ derive the other three sibilings as theorems.
 
 \Proof PropContraConv: ClassicalLogic {
   The proof for this is exactly the same as the last, except we use a different
-  form of the contraposition. We again begin with 
+  form of the contrapositive. We again begin with 
 
   |PropIdentity| ('phi => 'psi) => ('phi => 'psi);.
 
@@ -153,7 +152,7 @@ family.
 \Theorem PropContraLeftInf: ClassicalLogic {
   name = "Inference using Contrapositive with Negation on Antecedent"
   tagline = {
-    A statement implies its contraposition.
+    A statement implies its contrapositive.
   }
 
   var phi: Prop
@@ -174,7 +173,7 @@ family.
 \Theorem PropContraRightInf: ClassicalLogic {
   name = "Inference using Contrapositive with Negation on Consequent"
   tagline = {
-    A statement implies its contraposition.
+    A statement implies its contrapositive.
   }
 
   var phi: Prop
@@ -195,7 +194,7 @@ family.
 \Theorem PropContraConvInf: ClassicalLogic {
   name = "Inference using The Converse of The Axiom of Contraposition"
   tagline = {
-    A statement implies its contraposition.
+    A statement implies its contrapositive.
   }
 
   var phi: Prop

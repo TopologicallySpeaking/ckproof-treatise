@@ -1,17 +1,15 @@
-In the last section, we discussed what <ref ClassicalLogic /> is. In this
-section, we will begin to describe how it works. This is a common pattern you
-will see throughout this treatise. I'm not sure if there's any kind of deeper
-meaning we can derive from it, but this pattern works really well with the proof
-checker. First I tell the checker what the symbols are, then I tell it what
-rules the symbols follow. After that, it can check any proof I throw at it.
+On the last page, we discussed what <ref ClassicalLogic /> is. On this page, we
+will begin to describe how it works. This is a common pattern you will see
+throughout this treatise: first we tell the proof checker what the symbols are,
+then we tell it what rules the symbols follow. After that, it can check any
+proof thrown at it.
 
-For a human who already has some intuition on logic, the truth tables in the
-last chapter are sufficient. However, this does not help a computer to
-understand it, nor does it scale to more complicated systems. The correct way to
-do this is to define axioms, which are the rules for how a system works. In
-particular, it describes the rules for what statements may be derived given a
-list of assumptions. As stated on the last page, this is the thing which math
-specialized in.
+For a human who already has some intuition on logic, the truth tables on the
+previous page are sufficient. However, this does not help a computer to
+understand it, nor does it scale to more complicated systems. Rather, we will
+define axioms, which are the rules for how a system works. In particular, it
+describes the rules for what statements may be derived given a list of
+assumptions.
 
 <ref ClassicalLogic /> requires only four axioms. The first three are all of the
 same general form:
@@ -56,9 +54,8 @@ same general form:
       ('phi => 'psi) => ('phi => 'chi)
     \].
 
-    Thus, the intuitive way to understand this axiom is, as stated in the
-    tagline, that the <ref ClassicalLogic.implies /> operator distributes over
-    itself.
+    Thus, the intuitive way to understand this axiom is that the
+    <ref ClassicalLogic.implies /> operator distributes over itself.
   }
 
   var phi: Prop
@@ -86,28 +83,29 @@ same general form:
   assertion = (!'psi => !'phi) => ('phi => 'psi);
 }
 
-Now's a good time to describe how to use these axioms. These are technically
-axiom <em>schemas</em>, each of which stand for infinitely many axioms. Those
-variables, which may be recognized by the apostrophe before them, are actually
-a placeholder for any expression of the proper type.  For example,
-\(p => (p => p)\) is an axiom (provided \(p\) is a proposition) because it can
-be derived from <ref ClassicalLogic.PropSimple /> by making the following
-substitutions:
+Now's a good time to describe how to use these axioms. The statement immediately
+after the turnstile symbol is called the assertion of the axiom. Some axioms and
+theorems will also have a premise in addition to the assertion. Some extra work
+will have to be done before such axioms and theorems can be used. However,
+because <ref ClassicalLogic.PropSimple />, <ref ClassicalLogic.PropDistrib />
+and <ref ClassicalLogic.PropContra /> each have no premise, we can use them
+anywhere in a proof.
+
+Technically, these axioms are actually axiom <em>schemas</em>, each of which
+stand for infinitely many axioms. The variables in these axiom schemas, which
+may be recognized by the apostrophe before them, are actually placeholders for
+any expression of the proper type. For example, \(p => (p => p)\) is an axiom
+(provided \(p\) is a proposition) because it can be derived from <ref
+ClassicalLogic.PropSimple /> by making the following substitutions:
 
 <sublist>
   'phi >>> p;
   'psi >>> p;
 </sublist>
 
-None of these three axioms have a premise. That is, anywhere in our proof, we
-may derive any of these axiom for any reason. If you want an optional exercise,
-you can work out the truth table for the axioms and verify that regardless of
-which propositions you substitute for the variables, the axioms are always a
-true statement.
-
-Obviously, most statements which may derived are not of any of these forms, so
-we need more axioms if we want to cover everything. Fortuitously, we only need
-one more:
+Obviously, most statements which may be derived are not of any of these forms,
+so we need more axioms if we want to cover everything. Fortuitously, we only
+need one more axiom:
 
 \Axiom ModusPonens: ClassicalLogic {
   name = "Modus Ponens"
@@ -138,8 +136,8 @@ and \('phi\). Only then may we derive \('psi\).
 
 To prove any theorem, we simply have to find axioms from which we can use
 <ref ClassicalLogic.ModusPonens /> to derive the theorem. As an example to see
-this in action, let's derive the simplest theorem I can think of: that any
-proposition implies itself.
+this in action, let's derive the simple theorem that any proposition implies
+itself.
 
 \Theorem PropIdentity: ClassicalLogic {
   name = "Propositional Identity"
@@ -153,14 +151,18 @@ proposition implies itself.
 }
 
 If this were listed as an axiom and not a theorem, then we could just use it in
-exactly the same way as any other axiom. However, this is not favorable, as too
-many assumptions can become unwieldy. It's very easy to come up with a set of
-axioms from which you can derive both a statement and its negation. That is,
-some assumptions would claim that this statement is true, while the others claim
-it's false. Thus, it's favorable to keep the number of axioms to a minimum.
+exactly the same way as any other axiom. However, that would be both redundant
+and dangerous.
+
+It would be redundant because <ref ClassicalLogic.PropIdentity /> can already be
+derived from the axioms, you don't need another axiom just for this. Worse, it
+would be dangerous because, in a system with many axioms, it's prone to human
+error. It's very easy to mistakingly create an inconsistent system where some
+statements are both true and false at the same time. As we will see when we
+discuss <ref ClassicalLogic.PropExplosion />, this would be disastrous.
 
 By marking this as a theorem we are declaring that this theorem is not an
-axiom, but rather a fact which may be derived from the axioms. This derivation
+axiom, but rather a fact which may be derived from the axioms. Such a derivation
 is called a ``proof", and once we write the proof we may use the theorem in
 exactly the same way as we do the axioms.
 
@@ -196,7 +198,7 @@ exactly the same way as we do the axioms.
     => (('phi => ('phi => 'phi)) => ('phi => 'phi));.
 
   As you can probably tell by now, if all proofs were like this, they would be
-  too tedious to use for any practical purpose. Fear not, in the next chapter we
+  too tedious to use for any practical purpose. Fear not: on the next page, we
   will start to build up quality-of-life improvements so that future proofs
   won't make the reader want to blow their brains out.
 
@@ -222,8 +224,8 @@ exactly the same way as we do the axioms.
   which is what we wanted to show.
 }
 
-All that work, and for something so trivial, and believe me it will get worse
+All that work, and for something so trivial! Believe me, it will get worse
 before it gets better. Obviously, we will need a better way to do these proofs,
-or else the proof checker will be practically unusable. In the next few
-sections, we will prove a few more theorems to bootstrap a technique which will
-make our lives much easier.
+or else the proof checker will be practically unusable. On the next few pages,
+we will prove a few more theorems to bootstrap a technique which will make our
+lives much easier.

@@ -148,7 +148,7 @@ the negation operator:
       <cell>True</cell>
     </row>
   </body>
-  <caption>Truth Table for the Negation Operator</caption>
+  <caption>Truth Table for the <ref ClassicalLogic.negation /> Operator</caption>
 </table>
 
 The first column is the possible truth-values of \('phi\). The second column
@@ -188,7 +188,7 @@ somewhat non-trivial.
       <cell>True</cell>
     </row>
   </body>
-  <caption>Truth Table for the Material Implication Operator</caption>
+  <caption>Truth Table for the <ref ClassicalLogic.implies /> Operator</caption>
 </table>
 
 Let's go through this table row-by-row. The first row says that if \('phi\) and

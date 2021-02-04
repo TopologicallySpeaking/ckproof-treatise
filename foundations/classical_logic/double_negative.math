@@ -119,8 +119,8 @@ and \('psi => 'chi\). If we were to then derive \('phi\), then we could derive
 \('psi\), we can again use <ref ClassicalLogic.ModusPonens /> to derive
 \('chi\). The net effect is that from \('phi\), we can derive \('chi\).
 
-Said another way, deriving both \('phi => 'psi\) and \('psi => 'chi\) is
-equivalent to \('phi => 'chi\). This transitive property of chaining together
+Said another way, the combination of \('phi => 'psi\) and \('psi => 'chi\) can
+be shortened to \('phi => 'chi\). This transitive property of chaining together
 implications is called <ref ClassicalLogic.Syllogism />.
 
 \Theorem Syllogism: ClassicalLogic {
@@ -239,14 +239,14 @@ the statement may be reduced to just \('phi => 'psi\).
 
 # Contradictory Antecedents
 
-As we have established with the truth tables on the previous page, a false
-antecedent in <ref ClassicalLogic /> can imply anything. This is an extremely
-powerful notion, and here we will explore two consequences of it.
+As we have previously established with the truth tables, a false antecedent in
+<ref ClassicalLogic /> can imply anything. This is an extremely powerful
+notion, and here we will explore two consequences of it.
 
 First up, we have <ref ClassicalLogic.PropExplosion />. Let's say we have
 managed to derive some statement \('phi\) as well as its negation \(!'phi\).
 This should hopefully never happen, but let's explore the consequences if it
-did. It particular, what would we be able to derive as a result of such a
+did. In particular, what would we be able to derive as a result of such a
 contradiction? Well, either \('phi\) is false or \(!'phi\) is false. And so, at
 least one of \('phi => 'psi\) or \(!'phi => 'psi\) is true, because a false
 statement can imply anything. Thus, by <ref ClassicalLogic.ModusPonens />, we
@@ -275,8 +275,8 @@ would be able to derive \('psi\), no matter what \('psi\) is.
   |PropSimpleInf| !'psi => (!'phi => !'phi);
   |PropCommutation| !'phi => (!'psi => !'phi);
 
-  This is almost what we wanted to show, we need only take the contrapositive
-  of the consequent.
+  This is almost what we wanted to show. From here, we need only take the
+  contrapositive of the consequent.
 
   |PropContra| (!'psi => !'phi) => ('phi => 'psi);
   |Syllogism| !'phi => ('phi => 'psi);
