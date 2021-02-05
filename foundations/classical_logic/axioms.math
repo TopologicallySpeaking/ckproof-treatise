@@ -170,7 +170,7 @@ exactly the same way as we do the axioms.
   We begin by deriving an axiom in the form of
   <ref ClassicalLogic.PropSimple />.
 
-  |PropSimple, #1| 'phi => ('phi => 'phi => 'phi);.
+  |PropSimple, #1| 'phi => (('phi => 'phi) => 'phi);.
 
   Specifically, this axiom is found by making the following substitutions:
 
@@ -194,7 +194,7 @@ exactly the same way as we do the axioms.
     'chi >>> 'phi;
   </sublist>
 
-  |PropDistrib, #2| ('phi => ('phi => 'phi => 'phi))
+  |PropDistrib, #2| ('phi => (('phi => 'phi) => 'phi))
     => (('phi => ('phi => 'phi)) => ('phi => 'phi));.
 
   As you can probably tell by now, if all proofs were like this, they would be
