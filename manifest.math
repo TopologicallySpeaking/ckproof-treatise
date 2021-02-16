@@ -23,6 +23,7 @@ foundations: "Foundations" {
         double_negative: "Double Negatives",
         other_contra: "Other Forms of Contrapositive",
         conjunction: "Logical Conjunction",
+        disjunction: "Logical Disjunction",
       ]
     }
   ]

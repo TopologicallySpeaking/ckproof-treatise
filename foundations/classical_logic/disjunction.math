@@ -1,0 +1,108 @@
+TODO: Write commentary.
+
+\Definition or: ClassicalLogic {
+  name = "Logical Disjunction"
+  tagline = {
+    A statement which is true if either of its inputs are true.
+  }
+
+  inputs = [
+    phi: Prop,
+    psi: Prop,
+  ]
+  read = Infix |
+  expanded = !'phi => 'psi;
+}
+
+# Introduction
+
+\Theorem OrLeftIntro: ClassicalLogic {
+  name = "Logical Disjunction Introduction on the Left"
+  tagline = {
+    Given any statement, we may introduce any disjunction to its left.
+  }
+
+  var phi: Prop
+  var psi: Prop
+
+  assertion = 'psi => 'phi | 'psi;
+}
+
+\Proof OrLeftIntro: ClassicalLogic {
+  |PropSimple| 'psi => (!'phi => 'psi);
+  |!def| 'psi => 'phi | 'psi;
+}
+
+\Theorem OrRightIntro: ClassicalLogic {
+  name = "Logical Disjunction Introduction on the Right"
+  tagline = {
+    Given any statement, we may introduce any disjunction to its right.
+  }
+
+  var phi: Prop
+  var psi: Prop
+
+  assertion = 'phi => 'phi | 'psi;
+}
+
+\Proof OrRightIntro: ClassicalLogic {
+  |PropExplosion| !'phi => ('phi => 'psi);
+  |PropCommutation| 'phi => (!'phi => 'psi);
+  |!def| 'phi => 'phi | 'psi;
+}
+
+# Elimination and Proof By Cases
+
+\Theorem ContraAntecedentElim: ClassicalLogic {
+  name = "Elimination of Contradictary Antecedents"
+  tagline = {
+    If we can derive \('psi\) regardless of whether \('phi\) is true, then
+    \('psi\) is definitely true.
+  }
+
+  var phi: Prop
+  var psi: Prop
+
+  premise = [
+    'phi => 'psi;
+    !'phi => 'psi;
+  ]
+  assertion = 'psi;
+}
+
+\Proof ContraAntecedentElim: ClassicalLogic {
+  |1| 'phi => 'psi;
+  |PropContraConvInf| !'psi => !'phi;
+  |2| !'phi => 'psi;
+  |Syllogism| !'psi => 'psi;
+  |Clavius| (!'psi => 'psi) => 'psi;
+  |ModusPonens| 'psi;
+}
+
+\Theorem OrElim: ClassicalLogic {
+  name = "Logical Disjunction Elimination"
+  tagline = {
+    If either side of a disjunction lead to the same conclusion, then we can
+    derive that conclusion.
+  }
+
+  var phi: Prop
+  var psi: Prop
+  var chi: Prop
+
+  premise = [
+    'phi | 'psi;
+    'psi => 'chi;
+    'phi => 'chi;
+  ]
+  assertion = 'chi;
+}
+
+\Proof OrElim: ClassicalLogic {
+  |1| 'phi | 'psi;
+  |!def| !'phi => 'psi;
+  |2| 'psi => 'chi;
+  |Syllogism| !'phi => 'chi;
+  |3| 'phi => 'chi;
+  |ContraAntecedentElim| 'chi;
+}

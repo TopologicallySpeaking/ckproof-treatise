@@ -1,1 +1,180 @@
-This page has not been written yet.
+Up until now, we have only used two logical connectives:
+<ref ClassicalLogic.implies /> and <ref ClassicalLogic.negation />. However,
+there are many others. For example, we haven't even touched on
+<ref ClassicalLogic.and />. The <ref ClassicalLogic.and /> of two statements,
+written \('phi & 'psi\), is true if and only if the two statements \('phi\) and
+\('psi\) are both true on their own. This corresponds to the English word
+``and".
+
+<table>
+  <head>
+    <row>
+      <cell>\('phi\)</cell>
+      <cell>\('psi\)</cell>
+      <cell>\('phi & 'psi\)</cell>
+    </row>
+  </head>
+  <body>
+    <row>
+      <cell>True</cell>
+      <cell>True</cell>
+      <cell>True</cell>
+    </row>
+    <row>
+      <cell>True</cell>
+      <cell>False</cell>
+      <cell>False</cell>
+    </row>
+    <row>
+      <cell>False</cell>
+      <cell>True</cell>
+      <cell>False</cell>
+    </row>
+    <row>
+      <cell>False</cell>
+      <cell>False</cell>
+      <cell>False</cell>
+    </row>
+  </body>
+  <caption>Truth Table for the <ref ClassicalLogic.and /> Operator</caption>
+</table>
+
+TODO: Center the text in the truth tables.
+
+For <ref ClassicalLogic.implies /> and <ref ClassicalLogic.negation />, we had
+to create two new symbols and specify their axioms. However, to do this for
+<ref ClassicalLogic.and /> would be redundant. Actually, you can define
+<ref ClassicalLogic.and /> in terms of <ref ClassicalLogic.implies /> and
+<ref ClassicalLogic.negation />. If you work out the truth table for
+\(!('phi => !'psi)\), you will find that it's identical to that of
+\('phi & 'psi\).
+
+To avoid doing work we don't have to, we can tell define \(&\) as notational
+shorthand for \(!('phi => !'psi)\). Upon doing this, anywhere we write \(&\),
+the proof checker will automatically interpret it as its expanded version.
+
+\Definition and: ClassicalLogic {
+  name = "Logical Conjunction"
+  tagline = {
+    A statement which is only true if both of its inputs are true.
+  }
+
+  inputs = [
+    phi: Prop,
+    psi: Prop,
+  ]
+  read = Infix &
+  expanded = !('phi => !'psi);
+}
+
+# Elimination and Introduction
+
+TODO: Write commentary
+
+\Theorem AndLeftElim: ClassicalLogic {
+  name = "Logical Conjunction Elimination on the Left"
+  tagline = {
+    Given any conjunction, we may simply remove the statement on the left.
+  }
+
+  var phi: Prop
+  var psi: Prop
+
+  assertion = 'phi & 'psi => 'psi;
+}
+
+\Proof AndLeftElim: ClassicalLogic {
+  |PropSimple| !'psi => ('phi => !'psi);
+  |PropContraLeftInf| !('phi => !'psi) => 'psi;
+  |!def| 'phi & 'psi => 'psi;
+}
+
+\Theorem AndRightElim: ClassicalLogic {
+  name = "Logical Conjunction Elimination on the Right"
+  tagline = {
+    Given any conjunction, we may simply remove the statement on the right.
+  }
+
+  var phi: Prop
+  var psi: Prop
+
+  assertion = 'phi & 'psi => 'phi;
+}
+
+\Proof AndRightElim: ClassicalLogic {
+  |PropExplosion| !'phi => ('phi => !'psi);
+  |PropContraLeftInf| !('phi => !'psi) => 'phi;
+  |!def| 'phi & 'psi => 'phi;
+}
+
+\Theorem AndIntro: ClassicalLogic {
+  name = "Logical Conjunction Introduction"
+  tagline = {
+    If we derive \('phi\) and \('psi\), then we may derive \('phi & 'psi\)
+  }
+
+  var phi: Prop
+  var psi: Prop
+
+  assertion = 'phi => ('psi => 'phi & 'psi);
+}
+
+\Proof AndIntro: ClassicalLogic {
+  |DNegElim| !!('phi => !'psi) => ('phi => !'psi);
+  |!def| !('phi & 'psi) => ('phi => !'psi);
+  |PropCommutation| 'phi => (!('phi & 'psi) => !'psi);
+  |PropContra| (!('phi & 'psi) => !'psi) => ('psi => 'phi & 'psi);
+  |Syllogism| 'phi => ('psi => 'phi & 'psi);
+}
+
+# Logical Importation and Exportation
+
+\Theorem PropImport: ClassicalLogic {
+  name = "Logical Importation"
+  tagline = {
+    A nested antecedent may be converted to a <ref ClassicalLogic.and />.
+  }
+
+  var phi: Prop
+  var psi: Prop
+  var chi: Prop
+
+  premise = [
+    'phi => ('psi => 'chi);
+  ]
+  assertion = 'phi & 'psi => 'chi;
+}
+
+\Proof PropImport: ClassicalLogic {
+  |1| 'phi => ('psi => 'chi);
+  |PropContraConv| ('psi => 'chi) => (!'chi => !'psi);
+  |Syllogism| 'phi => (!'chi => !'psi);
+  |PropCommutation| !'chi => ('phi => !'psi);
+  |PropContraLeftInf| !('phi => !'psi) => 'chi;
+  |!def| 'phi & 'psi => 'chi;
+}
+
+\Theorem PropExport: ClassicalLogic {
+  name = "Logical Exportation"
+  tagline = {
+    A statement with a <ref ClassicalLogic.and /> as an antecedent may be
+    converted to a nested antecedent.
+  }
+
+  var phi: Prop
+  var psi: Prop
+  var chi: Prop
+
+  premise = [
+    'phi & 'psi => 'chi;
+  ]
+  assertion = 'phi => ('psi => 'chi);
+}
+
+\Proof PropExport: ClassicalLogic {
+  |1| 'phi & 'psi => 'chi;
+  |PropSimpleInf| 'psi => ('phi & 'psi => 'chi);
+  |PropDistribInf| ('psi => 'phi & 'psi) => ('psi => 'chi);
+  |AndIntro| 'phi => ('psi => 'phi & 'psi);
+  |Syllogism| 'phi => ('psi => 'chi);
+}
