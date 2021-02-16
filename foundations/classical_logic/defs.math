@@ -92,7 +92,7 @@ own symbol.
     you can immediately derive the consequent \('psi\).
   }
 
-  type = (Prop, Prop) -> Prop
+  type = Prop -> Prop -> Prop
   read = Infix =>
 }
 
@@ -105,7 +105,7 @@ frequently: the negation operator.
     The negation of a statement.
   }
 
-  type = (Prop) -> Prop
+  type = Prop -> Prop
   read = Prefix !
 }
 
