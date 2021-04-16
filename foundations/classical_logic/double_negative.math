@@ -129,6 +129,10 @@ implications is called <ref ClassicalLogic.Syllogism />.
     If \('phi => 'psi\) and \('psi => 'chi\), then \('phi => 'chi\).
   }
 
+  flags = [
+    transitive,
+  ]
+
   var phi: Prop
   var psi: Prop
   var chi: Prop
@@ -393,7 +397,7 @@ Aristotle made this famous statement which is an argument roughly of this form.
 
   His complete mathematical works may be found here:
 
-  <mla>
+  <raw_citation>
     title = { Christophori Clavii ... Opera mathematica V tomis distributa }
     container {
       publisher = {
@@ -408,7 +412,7 @@ Aristotle made this famous statement which is an argument roughly of this form.
         Public Domain Mark
       }
     }
-  </mla>
+  </raw_citation>
 
   It's in Latin, so I will also need a translation.
 </todo>

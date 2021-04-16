@@ -145,6 +145,10 @@ itself.
     Propositions imply themselves.
   }
 
+  flags = [
+    reflexive,
+  ]
+
   var phi: Prop
 
   assertion = 'phi => 'phi;

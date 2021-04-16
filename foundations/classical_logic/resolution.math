@@ -1,0 +1,181 @@
+\Theorem ImpliesCNF: ClassicalLogic {
+  name = "Conjunctive Normal Form of Material Implication"
+  tagline = {
+    TODO: Tagline.
+  }
+
+  var phi: Prop
+  var psi: Prop
+
+  assertion = ('phi => 'psi) <=> (!'phi | 'psi);
+}
+
+\Proof ImpliesCNF: ClassicalLogic {
+  |DNegEquiv| 'phi <=> !!'phi;
+
+  |!sub| ('phi => 'psi) <=> (!!'phi => 'psi);
+
+  |!def| ('phi => 'psi) <=> (!'phi | 'psi);
+}
+
+\Theorem EquivCNF: ClassicalLogic {
+  name = "Conjunctive Normal Form of Material Equivalence"
+  tagline = {
+    TODO: Tagline.
+  }
+
+  var phi: Prop
+  var psi: Prop
+
+  assertion = ('phi <=> 'psi) <=> (!'phi | 'psi) & (!'psi | 'phi);
+}
+
+\Proof EquivCNF: ClassicalLogic {
+  |ImpliesCNF| ('phi => 'psi) <=> (!'phi | 'psi);
+  |ImpliesCNF| ('psi => 'phi) <=> (!'psi | 'phi);
+  |!sub| ('phi => 'psi) & ('psi => 'phi) <=> (!'phi | 'psi) & (!'psi | 'phi);
+  |!def| ('phi <=> 'psi) <=> (!'phi | 'psi) & (!'psi | 'phi);
+}
+
+\Theorem DeMorganAnd: ClassicalLogic {
+  name = "De Morgan's Law for Logical Conjunction"
+  tagline = {
+    TODO: Tagline.
+  }
+
+  var phi: Prop
+  var psi: Prop
+
+  assertion = !('phi & 'psi) <=> (!'phi | !'psi);
+}
+
+\Proof DeMorganAnd: ClassicalLogic {
+  |DNegEquiv| ('phi => !'psi) <=> !!('phi => !'psi);
+  |!def| ('phi => !'psi) <=> !('phi & 'psi);
+  |EquivSymmetric| !('phi & 'psi) <=> ('phi => !'psi);
+
+  |ImpliesCNF| ('phi => !'psi) <=> (!'phi | !'psi);
+  |EquivTransitive| !('phi & 'psi) <=> (!'phi | !'psi);
+}
+
+\Theorem DeMorganOr: ClassicalLogic {
+  name = "De Morgan's Law for Logical Disjunction"
+  tagline = {
+    TODO: Name.
+  }
+
+  var phi: Prop
+  var psi: Prop
+
+  assertion = !('phi | 'psi) <=> (!'phi & !'psi);
+}
+
+\Proof DeMorganOr: ClassicalLogic {
+  |EquivReflexive| !(!'phi => 'psi) <=> !(!'phi => 'psi);
+  |!def| !('phi | 'psi) <=> !(!'phi => 'psi);
+
+  |DNegEquiv| 'psi <=> !!'psi;
+  |!sub| !(!'phi => 'psi) <=> !(!'phi => !!'psi);
+  |EquivTransitive| !('phi | 'psi) <=> !(!'phi => !!'psi);
+
+  |!def| !('phi | 'psi) <=> (!'phi & !'psi);
+}
+
+\Theorem OrDistribAnd: ClassicalLogic {
+  name = "Logical Disjunction Distributes Over Logical Conjunction"
+  tagline = {
+    TODO: Tagline.
+  }
+
+  var phi: Prop
+  var psi: Prop
+  var chi: Prop
+
+  assertion = 'phi | ('psi & 'chi) <=> ('phi | 'psi) & ('phi | 'chi);
+}
+
+\Proof OrDistribAnd: ClassicalLogic {
+  |ImpliesDistribAnd|
+    (!'phi => ('psi & 'chi)) <=> ((!'phi => 'psi) & (!'phi => 'chi));
+  |!def| 'phi | ('psi & 'chi) <=> (('phi | 'psi) & ('phi | 'chi));
+}
+
+\Theorem AndDistribOr: ClassicalLogic {
+  name = "Logical Conjunction Distributes over Logical Disjunction"
+  tagline = {
+    TODO: Tagline.
+  }
+
+  var phi: Prop
+  var psi: Prop
+  var chi: Prop
+
+  assertion = 'phi & ('psi | 'chi) <=> ('phi & 'psi) | ('phi & 'chi);
+}
+
+\Proof AndDistribOr: ClassicalLogic {
+  |OrRightIntro| ('phi & 'psi) => ('phi & 'psi) | ('phi & 'chi);
+  |PropExport| 'phi => ('psi => ('phi & 'psi) | ('phi & 'chi));
+  |PropCommutation| 'psi => ('phi => ('phi & 'psi) | ('phi & 'chi));
+
+  |OrLeftIntro| ('phi & 'chi) => ('phi & 'psi) | ('phi & 'chi);
+  |PropExport| 'phi => ('chi => ('phi & 'psi) | ('phi & 'chi));
+  |PropCommutation| 'chi => ('phi => ('phi & 'psi) | ('phi & 'chi));
+
+  |OrElim| ('psi | 'chi) => ('phi => ('phi & 'psi) | ('phi & 'chi));
+  |PropCommutation| 'phi => (('psi | 'chi) => ('phi & 'psi) | ('phi & 'chi));
+  |PropImport| ('phi & ('psi | 'chi)) => ('phi & 'psi) | ('phi & 'chi);
+
+  |OrRightIntro| 'psi => 'psi | 'chi;
+  |!sub| ('phi & 'psi) => 'phi & ('psi | 'chi);
+  |OrLeftIntro| 'chi => 'psi | 'chi;
+  |!sub| ('phi & 'chi) => 'phi & ('psi | 'chi);
+  |OrElim| ('phi & 'psi) | ('phi & 'chi) => 'phi & ('psi | 'chi);
+
+  |EquivIntroInf| 'phi & ('psi | 'chi) <=> ('phi & 'psi) | ('phi & 'chi);
+}
+
+\Theorem PropResolution: ClassicalLogic {
+  name = "Propositional Resolution"
+
+  tagline = {
+    TODO: Tagline.
+  }
+
+  var phi: Prop
+  var psi: Prop
+  var chi: Prop
+
+  assertion = ('phi | 'psi) & (!'phi | 'chi) => 'psi | 'chi;
+}
+
+\Proof PropResolution: ClassicalLogic {
+  |PropExplosion| !'phi => ('phi => 'psi | 'chi);
+  |PropImport| (!'phi & 'phi) => 'psi | 'chi;
+
+  |AndLeftElim| (!'phi & 'psi) => 'psi;
+  |OrRightIntro| 'psi => 'psi | 'chi;
+  |Syllogism| (!'phi & 'psi) => 'psi | 'chi;
+
+  |OrElim| (!'phi & 'phi) | (!'phi & 'psi) => 'psi | 'chi;
+
+  |AndSymmetry| ('phi | 'psi) & !'phi => !'phi & ('phi | 'psi);
+  |AndDistribOr| !'phi & ('phi | 'psi) <=> (!'phi & 'phi) | (!'phi & 'psi);
+  |EquivForwardInf| !'phi & ('phi | 'psi) => (!'phi & 'phi) | (!'phi & 'psi);
+  |Syllogism| ('phi | 'psi) & !'phi => (!'phi & 'phi) | (!'phi & 'psi);
+
+  |Syllogism| ('phi | 'psi) & !'phi => 'psi | 'chi;
+
+  |AndLeftElim| ('phi | 'psi) & 'chi => 'chi;
+  |OrLeftIntro| 'chi => 'psi | 'chi;
+  |Syllogism| ('phi | 'psi) & 'chi => 'psi | 'chi;
+
+  |OrElim| (('phi | 'psi) & !'phi) | (('phi | 'psi) & 'chi) => 'psi | 'chi;
+  |AndDistribOr|
+    ('phi | 'psi) & (!'phi | 'chi)
+      <=> (('phi | 'psi) & !'phi) | (('phi | 'psi) & 'chi);
+  |EquivForwardInf|
+    ('phi | 'psi) & (!'phi | 'chi)
+      => (('phi | 'psi) & !'phi) | (('phi | 'psi) & 'chi);
+  |Syllogism| ('phi | 'psi) & (!'phi | 'chi) => 'psi | 'chi;
+}

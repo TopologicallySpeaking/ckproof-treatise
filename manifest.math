@@ -24,6 +24,9 @@ foundations: "Foundations" {
         other_contra: "Other Forms of Contrapositive",
         conjunction: "Logical Conjunction",
         disjunction: "Logical Disjunction",
+        equivalence: "Material Equivalence",
+        substitution: "Substitution",
+        resolution: "Resolution Calculus",
       ]
     }
   ]

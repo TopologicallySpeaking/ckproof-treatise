@@ -1,4 +1,56 @@
-TODO: Write commentary.
+On this page we define <ref ClassicalLogic.or />. <ref ClassicalLogic.or /> is a
+statement \('phi | 'psi\) which is true if either \('phi\) is true or \('psi\)
+is true.
+
+<table>
+  <head>
+    <row>
+      <cell>\('phi\)</cell>
+      <cell>\('psi\)</cell>
+      <cell>\('phi | 'psi\)</cell>
+    </row>
+  </head>
+  <body>
+    <row>
+      <cell>True</cell>
+      <cell>True</cell>
+      <cell>True</cell>
+    </row>
+    <row>
+      <cell>True</cell>
+      <cell>False</cell>
+      <cell>True</cell>
+    </row>
+    <row>
+      <cell>False</cell>
+      <cell>True</cell>
+      <cell>True</cell>
+    </row>
+    <row>
+      <cell>False</cell>
+      <cell>False</cell>
+      <cell>False</cell>
+    </row>
+  </body>
+  <caption>Truth Table for the <ref ClassicalLogic.or /> Operator</caption>
+</table>
+
+Notice what happens if \('phi\) and \('psi\) are both true, which corresponds to
+the top row of the truth table. Normally in English, when we write ``either
+\('phi\) or \('psi\)", it implies that only one or the other is true, but not
+both. This convention is called the Exclusive Or.
+
+However, in mathematics, we do not exclude the possibility that both \('phi\)
+and \('psi\) are true. This convention is called the Inclusive Or. That is not
+to say that one usage is better than the other. You could chose to adopt either
+convention and adapt the theorems accordingly. Ultimately, you just have to pick
+one and stick with it, and mathematicians have chosen the Inclusive Or.
+
+Again, just like with <ref ClassicalLogic.and />, this symbol may be derived
+using only <ref ClassicalLogic.implies /> and <ref ClassicalLogic.negation />.
+If you work out the truth table for \(!'phi => 'psi\), it is identical to the
+truth table of <ref ClassicalLogic.or />. And so, we define \('phi | 'psi\) as
+notational shorthand for \(!'phi => 'psi\).
 
 \Definition or: ClassicalLogic {
   name = "Logical Disjunction"
@@ -14,7 +66,16 @@ TODO: Write commentary.
   expanded = !'phi => 'psi;
 }
 
+Surprisingly, we don't need very many theorems about <ref ClassicalLogic.or />
+as of right now, so this page won't be very long. We'll come back to prove more
+theorems later on.
+
 # Introduction
+
+Let's say we have already proven that \('phi\) is true. The statement
+\('phi | 'psi\) is true if either of its inputs are true. And so, because we
+know \('phi\) is true, we also know that \('phi | 'psi\) is also true. This
+process is called Disjunction Introduction.
 
 \Theorem OrLeftIntro: ClassicalLogic {
   name = "Logical Disjunction Introduction on the Left"
@@ -29,7 +90,12 @@ TODO: Write commentary.
 }
 
 \Proof OrLeftIntro: ClassicalLogic {
+  Cnsider this axiom:
+
   |PropSimple| 'psi => (!'phi => 'psi);
+
+  The consequent is, by definition, what we're trying to prove.
+
   |!def| 'psi => 'phi | 'psi;
 }
 
@@ -46,44 +112,56 @@ TODO: Write commentary.
 }
 
 \Proof OrRightIntro: ClassicalLogic {
-  |PropExplosion| !'phi => ('phi => 'psi);
-  |PropCommutation| 'phi => (!'phi => 'psi);
+  We can rearrenge <ref ClassicalLogic.PropExplosion />,
+  
+  |PropExplosion| !'phi => ('phi => 'psi);,
+
+  to get
+
+  |PropCommutation| 'phi => (!'phi => 'psi);.
+
+  This is, by definition, what we're trying to prove.
+
   |!def| 'phi => 'phi | 'psi;
 }
 
 # Elimination and Proof By Cases
 
-\Theorem ContraAntecedentElim: ClassicalLogic {
-  name = "Elimination of Contradictary Antecedents"
-  tagline = {
-    If we can derive \('psi\) regardless of whether \('phi\) is true, then
-    \('psi\) is definitely true.
-  }
+You may have noticed the similarities between Disjunction Introduction and
+Conjunction Eliminitaion. Indeed, most of the properties of <ref
+ClassicalLogic.or /> are in some sense dual to those of
+<ref ClassicalLogic.and />. The theorem we are about to prove is an important
+exception to the pattern. <ref ClassicalLogic.OrElim /> requires some nuance
+which is not present in <ref ClassicalLogic.AndIntro />.
 
-  var phi: Prop
-  var psi: Prop
+You see, if <ref ClassicalLogic.OrElim /> were truely dual to 
+<ref ClassicalLogic.AndIntro />, then we would be able to, for example, derive
+\('phi\) from \('phi | 'psi\). Unfortunately, this is not a justified deduction.
+In particular, if \('psi\) is true but \('phi\) is false, then we could derive
+\('phi | 'psi\) but not \('phi\). In the general case, we would be able to
+derive either \('phi\) or \('psi\) from \('phi | 'psi\), but there is no way to
+know which it is.
 
-  premise = [
-    'phi => 'psi;
-    !'phi => 'psi;
-  ]
-  assertion = 'psi;
-}
+Instead, we use a technique known as Proof by Cases. Let's say we have derived
+\('phi | 'psi\). As we have already seen, we don't know which of \('phi\) or
+\('psi\) are true. But, let's say we can also derive \('phi => 'chi\) and
+\('psi => 'chi\). If it were \('phi\) that were true, then by
+<ref ClassicalLogic.ModusPonens />, we could derive \('chi\), and similarly if
+it were \('psi\) that were true, then we could still derive \('chi\). Thus,
+overall, if we can derive that \('phi => 'chi\) and \('psi => 'chi\), then
+\('phi | 'psi => 'chi\).
 
-\Proof ContraAntecedentElim: ClassicalLogic {
-  |1| 'phi => 'psi;
-  |PropContraConvInf| !'psi => !'phi;
-  |2| !'phi => 'psi;
-  |Syllogism| !'psi => 'psi;
-  |Clavius| (!'psi => 'psi) => 'psi;
-  |ModusPonens| 'psi;
-}
+Intuitively, this says that if we have a complicated antecedent, then we can
+break it up into a number of simpler cases. For example, if we have an integer
+\(x\), we can look at the separate cases where \(x < 0\), \(x = 0\), and \(x >
+0\). Then, if each of those cases lead to the same conclusion, that conclusion
+must be valid for all integers.
 
 \Theorem OrElim: ClassicalLogic {
   name = "Logical Disjunction Elimination"
   tagline = {
     If either side of a disjunction lead to the same conclusion, then we can
-    derive that conclusion.
+    derive that conclusion from the disjunction.
   }
 
   var phi: Prop
@@ -91,18 +169,43 @@ TODO: Write commentary.
   var chi: Prop
 
   premise = [
-    'phi | 'psi;
-    'psi => 'chi;
     'phi => 'chi;
+    'psi => 'chi;
   ]
-  assertion = 'chi;
+  assertion = 'phi | 'psi => 'chi;
 }
 
 \Proof OrElim: ClassicalLogic {
-  |1| 'phi | 'psi;
-  |!def| !'phi => 'psi;
+  We begin with some simple reararngements of the second hypothesis.
+
   |2| 'psi => 'chi;
-  |Syllogism| !'phi => 'chi;
-  |3| 'phi => 'chi;
-  |ContraAntecedentElim| 'chi;
+  |PropSimpleInf| !'phi => ('psi => 'chi);
+  |PropDistribInf| (!'phi => 'psi) => (!'phi => 'chi);
+  |PropCommutation, #1| !'phi => ((!'phi => 'psi) => 'chi);
+
+  Now consider the contrapositive of the first hypothesis:
+
+  |1| 'phi => 'chi;
+  |PropContraConvInf, #2| !'chi => !'phi;.
+
+  The consequent of <ref #2 /> is equal to the antecedent of <ref #1 />. Thus,
+  by syllogism,
+
+  |Syllogism| !'chi => ((!'phi => 'psi) => 'chi);.
+
+  Now commute \(!'chi\) back inside.
+
+  |PropCommutation| (!'phi => 'psi) => (!'chi => 'chi);
+
+  Compare this consequent with <ref ClassicalLogic.Clavius />.
+
+  |Clavius| (!'chi => 'chi) => 'chi;
+
+  Thus, by syllogism,
+
+  |Syllogism| (!'phi => 'psi) => 'chi;.
+
+  This is the definition of what we're trying to prove.
+
+  |!def| 'phi | 'psi => 'chi;
 }

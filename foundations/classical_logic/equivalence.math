@@ -1,0 +1,261 @@
+\Definition equiv: ClassicalLogic {
+  name = "Material Equivalence"
+  tagline = {
+    A bidirectional if-then statement.
+  }
+
+  inputs = [
+    phi: Prop,
+    psi: Prop,
+  ]
+  read = Infix <=>
+  expanded = ('phi => 'psi) & ('psi => 'phi);
+}
+
+\Theorem EquivForward: ClassicalLogic {
+  name = "Forward Implication of Material Equivalence"
+  tagline = {
+    TODO: Tagline
+  }
+
+  var phi: Prop
+  var psi: Prop
+
+  assertion = ('phi <=> 'psi) => ('phi => 'psi);
+}
+
+\Proof EquivForward: ClassicalLogic {
+  |AndRightElim| (('phi => 'psi) & ('psi => 'phi)) => ('phi => 'psi);
+  |!def| ('phi <=> 'psi) => ('phi => 'psi);
+}
+
+\Theorem EquivBackward: ClassicalLogic {
+  name = "Backward Implication of Material Equivalence"
+  tagline = {
+    TODO: Tagline
+  }
+
+  var phi: Prop
+  var psi: Prop
+
+  assertion = ('phi <=> 'psi) => ('psi => 'phi);
+}
+
+\Proof EquivBackward: ClassicalLogic {
+  |AndLeftElim| (('phi => 'psi) & ('psi => 'phi)) => ('psi => 'phi);
+  |!def| ('phi <=> 'psi) => ('psi => 'phi);
+}
+
+\Theorem EquivForwardInf: ClassicalLogic {
+  name = "Inference using Forward Implication of Material Equivalence"
+  tagline = {
+    TODO: Tagline.
+  }
+
+  var phi: Prop
+  var psi: Prop
+
+  premise = [
+    'phi <=> 'psi;
+  ]
+  assertion = 'phi => 'psi;
+}
+
+\Proof EquivForwardInf: ClassicalLogic {
+  |EquivForward| ('phi <=> 'psi) => ('phi => 'psi);
+  |1| 'phi <=> 'psi;
+  |ModusPonens| 'phi => 'psi;
+}
+
+\Theorem EquivBackwardInf: ClassicalLogic {
+  name = "Inference using Backward Implication of Material Equivalence"
+  tagline = {
+    TODO: Tagline.
+  }
+
+  var phi: Prop
+  var psi: Prop
+
+  premise = [
+    'phi <=> 'psi;
+  ]
+  assertion = 'psi => 'phi;
+}
+
+\Proof EquivBackwardInf: ClassicalLogic {
+  |EquivBackward| ('phi <=> 'psi) => ('psi => 'phi);
+  |1| 'phi <=> 'psi;
+  |ModusPonens| 'psi => 'phi;
+}
+
+\Theorem EquivIntro: ClassicalLogic {
+  name = "Material Equivalence Introduction"
+  tagline = {
+    TODO: Tagline.
+  }
+
+  var phi: Prop
+  var psi: Prop
+
+  assertion = ('phi => 'psi) => (('psi => 'phi) => ('phi <=> 'psi));
+}
+
+\Proof EquivIntro: ClassicalLogic {
+  |AndIntro| ('phi => 'psi) => (('psi => 'phi) => (('phi => 'psi) & ('psi => 'phi)));
+  |!def| ('phi => 'psi) => (('psi => 'phi) => ('phi <=> 'psi));
+}
+
+\Theorem EquivIntroInf: ClassicalLogic {
+  name = "Inference using Material Equivalence Introduction"
+  tagline = {
+    TODO: Tagline.
+  }
+
+  var phi: Prop
+  var psi: Prop
+
+  premise = [
+    'phi => 'psi;
+    'psi => 'phi;
+  ]
+  assertion = 'phi <=> 'psi;
+}
+
+\Proof EquivIntroInf: ClassicalLogic {
+  |EquivIntro| ('phi => 'psi) => (('psi => 'phi) => ('phi <=> 'psi));
+  |1| 'phi => 'psi;
+  |ModusPonens| ('psi => 'phi) => ('phi <=> 'psi);
+  |2| 'psi => 'phi;
+  |ModusPonens| 'phi <=> 'psi;
+}
+
+\Theorem EquivReflexive: ClassicalLogic {
+  name = "Material Equivalence is Reflexive"
+  tagline = {
+    Propositions are equivalent to themselves
+  }
+
+  flags = [
+    reflexive,
+  ]
+
+  var phi: Prop
+  
+  assertion = 'phi <=> 'phi;
+}
+
+\Proof EquivReflexive: ClassicalLogic {
+  |PropIdentity| 'phi => 'phi;
+  |AndIntroInf| ('phi => 'phi) & ('phi => 'phi);
+  |!def| 'phi <=> 'phi;
+}
+
+\Theorem EquivSymmetric: ClassicalLogic {
+  name = "Material Equivalence is Symmetric"
+  tagline = {
+    TODO: Tagline.
+  }
+
+  flags = [
+    symmetric,
+  ]
+
+  var phi: Prop
+  var psi: Prop
+
+  premise = [
+    'phi <=> 'psi;
+  ]
+  assertion = 'psi <=> 'phi;
+}
+
+\Proof EquivSymmetric: ClassicalLogic {
+  |1| 'phi <=> 'psi;
+  |!def| ('phi => 'psi) & ('psi => 'phi);
+  |AndSymmetryInf| ('psi => 'phi) & ('phi => 'psi);
+  |!def| 'psi <=> 'phi;
+}
+
+\Theorem EquivTransitive: ClassicalLogic {
+  name = "Material Equivalence is Transitive"
+  tagline = {
+    TODO: Tagline.
+  }
+
+  flags = [
+    transitive,
+  ]
+
+  var phi: Prop
+  var psi: Prop
+  var chi: Prop
+
+  premise = [
+    'phi <=> 'psi;
+    'psi <=> 'chi;
+  ]
+  assertion = 'phi <=> 'chi;
+}
+
+\Proof EquivTransitive: ClassicalLogic {
+  |1| 'phi <=> 'psi;
+  |2| 'psi <=> 'chi;
+  |EquivForwardInf| 'phi => 'psi;
+  |EquivForwardInf| 'psi => 'chi;
+  |Syllogism| 'phi => 'chi;
+  |EquivBackwardInf| 'chi => 'psi;
+  |EquivBackwardInf| 'psi => 'phi;
+  |Syllogism| 'chi => 'phi;
+  |EquivIntroInf| 'phi <=> 'chi;
+}
+
+\Theorem DNegEquiv: ClassicalLogic {
+  name = "Double Negative Equivalence"
+  tagline = {
+    Statemnts are equivalent to their double negatives.
+  }
+
+  var phi: Prop
+
+  assertion = 'phi <=> !!'phi;
+}
+
+\Proof DNegEquiv: ClassicalLogic {
+  |DNegIntro| 'phi => !!'phi;
+  |DNegElim| !!'phi => 'phi;
+  |AndIntroInf| ('phi => !!'phi) & (!!'phi => 'phi);
+  |!def| 'phi <=> !!'phi;
+}
+
+\Theorem ImpliesDistribAnd: ClassicalLogic {
+  name = "Material Implication Distributes Over Logical Conjunction"
+  tagline = {
+    TODO: Tagline.
+  }
+
+  var phi: Prop
+  var psi: Prop
+  var chi: Prop
+
+  assertion = ('phi => ('psi & 'chi)) <=> ('phi => 'psi) & ('phi => 'chi);
+}
+
+\Proof ImpliesDistribAnd: ClassicalLogic {
+  |AndRightElim| ('psi & 'chi) => 'psi;
+  |PropSimpleInf| 'phi => (('psi & 'chi) => 'psi);
+  |PropDistribInf| ('phi => ('psi & 'chi)) => ('phi => 'psi);
+
+  |AndLeftElim| ('psi & 'chi) => 'chi;
+  |PropSimpleInf| 'phi => (('psi & 'chi) => 'chi);
+  |PropDistribInf| ('phi => ('psi & 'chi)) => ('phi => 'chi);
+
+  |JoinConsequentInf|
+    ('phi => ('psi & 'chi)) => (('phi => 'psi) & ('phi => 'chi));
+
+  |JoinConsequent|
+    ('phi => 'psi) => (('phi => 'chi) => ('phi => ('psi & 'chi)));
+  |PropImport| (('phi => 'psi) & ('phi => 'chi)) => ('phi => ('psi & 'chi));
+
+  |EquivIntroInf|
+    ('phi => ('psi & 'chi)) <=> ('phi => 'psi) & ('phi => 'chi);
+}

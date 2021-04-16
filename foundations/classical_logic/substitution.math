@@ -1,0 +1,215 @@
+\Theorem NegationFunctionEquiv: ClassicalLogic {
+  name = "Negation is a Function over Material Implication"
+  tagline = {
+    TODO: Tagline.
+  }
+
+  flags = [
+    function,
+  ]
+
+  var phi: Prop
+  var psi: Prop
+
+  premise = [
+    'phi <=> 'psi;
+  ]
+  assertion = !'phi <=> !'psi;
+}
+
+\Proof NegationFunctionEquiv: ClassicalLogic {
+  |1| 'phi <=> 'psi;
+  |EquivForwardInf| 'phi => 'psi;
+  |PropContraConvInf| !'psi => !'phi;
+  |EquivBackwardInf| 'psi => 'phi;
+  |PropContraConvInf| !'phi => !'psi;
+  |EquivIntroInf| !'phi <=> !'psi;
+}
+
+\Theorem ImpliesFunctionEquiv: ClassicalLogic {
+  name = "Material Implication is a Function over Material Equivalence"
+  tagline = {
+    TODO: Tagline.
+  }
+
+  flags = [
+    function,
+  ]
+
+  var phi: Prop
+  var psi: Prop
+  var chi: Prop
+  var theta: Prop
+
+  premise = [
+    'phi <=> 'psi;
+    'chi <=> 'theta;
+  ]
+  assertion = ('phi => 'chi) <=> ('psi => 'theta);
+}
+
+\Proof ImpliesFunctionEquiv: ClassicalLogic {
+  |1| 'phi <=> 'psi;
+  |2| 'chi <=> 'theta;
+
+  |EquivForwardInf| 'chi => 'theta;
+  |PropSimpleInf| 'phi => ('chi => 'theta);
+  |PropDistribInf| ('phi => 'chi) => ('phi => 'theta);
+  |PropCommutation| 'phi => (('phi => 'chi) => 'theta);
+  |EquivBackwardInf| 'psi => 'phi;
+  |Syllogism| 'psi => (('phi => 'chi) => 'theta);
+  |PropCommutation| ('phi => 'chi) => ('psi => 'theta);
+
+  |EquivBackwardInf| 'theta => 'chi;
+  |PropSimpleInf| 'psi => ('theta => 'chi);
+  |PropDistribInf| ('psi => 'theta) => ('psi => 'chi);
+  |PropCommutation| 'psi => (('psi => 'theta) => 'chi);
+  |EquivForwardInf| 'phi => 'psi;
+  |Syllogism| 'phi => (('psi => 'theta) => 'chi);
+  |PropCommutation| ('psi => 'theta) => ('phi => 'chi);
+
+  |EquivIntroInf| ('phi => 'chi) <=> ('psi => 'theta);
+}
+
+\Theorem AndFunctionImplies: ClassicalLogic {
+  name = "Logical Conjunction is a Function over Material Implication"
+  tagline = {
+    TODO: Tagline.
+  }
+
+  flags = [
+    function,
+  ]
+
+  var phi: Prop
+  var psi: Prop
+  var chi: Prop
+  var theta: Prop
+
+  premise = [
+    'phi => 'psi;
+    'chi => 'theta;
+  ]
+  assertion = ('phi & 'chi) => ('psi & 'theta);
+}
+
+\Proof AndFunctionImplies: ClassicalLogic {
+  |2| 'chi => 'theta;
+  |PropContraConvInf| !'theta => !'chi;
+  |PropSimpleInf| 'psi => (!'theta => !'chi);
+  |PropDistribInf| ('psi => !'theta) => ('psi => !'chi);
+  |PropCommutation| 'psi => (('psi => !'theta) => !'chi);
+  |1| 'phi => 'psi;
+  |Syllogism| 'phi => (('psi => !'theta) => !'chi);
+  |PropCommutation| ('psi => !'theta) => ('phi => !'chi);
+  |PropContraConvInf| !('phi => !'chi) => !('psi => !'theta);
+  |!def| ('phi & 'chi) => ('psi & 'theta);
+}
+
+\Theorem AndFunctionEquiv: ClassicalLogic {
+  name = "Logical Conjunction is a Function over Material Equivalence"
+  tagline = {
+    TODO: Tagline.
+  }
+
+  flags = [
+    function,
+  ]
+
+  var phi: Prop
+  var psi: Prop
+  var chi: Prop
+  var theta: Prop
+
+  premise = [
+    'phi <=> 'psi;
+    'chi <=> 'theta;
+  ]
+  assertion = ('phi & 'chi) <=> ('psi & 'theta);
+}
+
+\Proof AndFunctionEquiv: ClassicalLogic {
+  |1| 'phi <=> 'psi;
+  |2| 'chi <=> 'theta;
+
+  |EquivForwardInf| 'phi => 'psi;
+  |EquivForwardInf| 'chi => 'theta;
+  |AndFunctionImplies| ('phi & 'chi) => ('psi & 'theta);
+
+  |EquivBackwardInf| 'psi => 'phi;
+  |EquivBackwardInf| 'theta => 'chi;
+  |AndFunctionImplies| ('psi & 'theta) => ('phi & 'chi);
+
+  |EquivIntroInf| ('phi & 'chi) <=> ('psi & 'theta);
+}
+
+\Theorem OrFunctionImplies: ClassicalLogic {
+  name = "Logical Disjunction is a Function over Material Implication"
+  tagline = {
+    TODO: Tagline.
+  }
+
+  flags = [
+    function,
+  ]
+
+  var phi: Prop
+  var psi: Prop
+  var chi: Prop
+  var theta: Prop
+
+  premise = [
+    'phi => 'psi;
+    'chi => 'theta;
+  ]
+  assertion = ('phi | 'chi) => ('psi | 'theta);
+}
+
+\Proof OrFunctionImplies: ClassicalLogic {
+  |2| 'chi => 'theta;
+  |PropSimpleInf| !'phi => ('chi => 'theta);
+  |PropDistribInf| (!'phi => 'chi) => (!'phi => 'theta);
+  |PropCommutation| !'phi => ((!'phi => 'chi) => 'theta);
+  |1| 'phi => 'psi;
+  |PropContraConvInf| !'psi => !'phi;
+  |Syllogism| !'psi => ((!'phi => 'chi) => 'theta);
+  |PropCommutation| (!'phi => 'chi) => (!'psi => 'theta);
+  |!def| ('phi | 'chi) => ('psi | 'theta);
+}
+
+\Theorem OrFunctionEquiv: ClassicalLogic {
+  name = "Logic Disjunction is a Function over Material Equivalence"
+  tagline = {
+    TODO: Tagline.
+  }
+
+  flags = [
+    function,
+  ]
+
+  var phi: Prop
+  var psi: Prop
+  var chi: Prop
+  var theta: Prop
+
+  premise = [
+    'phi <=> 'psi;
+    'chi <=> 'theta;
+  ]
+  assertion = ('phi | 'chi) <=> ('psi | 'theta);
+}
+
+\Proof OrFunctionEquiv: ClassicalLogic {
+  |1| 'phi <=> 'psi;
+  |2| 'chi <=> 'theta;
+
+  |EquivForwardInf| 'phi => 'psi;
+  |EquivForwardInf| 'chi => 'theta;
+  |OrFunctionImplies| ('phi | 'chi) => ('psi | 'theta);
+
+  |EquivBackwardInf| 'psi => 'phi;
+  |EquivBackwardInf| 'theta => 'chi;
+  |OrFunctionImplies| ('psi | 'theta) => ('phi | 'chi);
+
+  |EquivIntroInf| ('phi | 'chi) <=> ('psi | 'theta);
+}

@@ -2,7 +2,7 @@ Up until now, we have only used two logical connectives:
 <ref ClassicalLogic.implies /> and <ref ClassicalLogic.negation />. However,
 there are many others. For example, we haven't even touched on
 <ref ClassicalLogic.and />. The <ref ClassicalLogic.and /> of two statements,
-written \('phi & 'psi\), is true if and only if the two statements \('phi\) and
+written \('phi & 'psi\), is true if and only if the statements \('phi\) and
 \('psi\) are both true on their own. This corresponds to the English word
 ``and".
 
@@ -39,24 +39,20 @@ written \('phi & 'psi\), is true if and only if the two statements \('phi\) and
   <caption>Truth Table for the <ref ClassicalLogic.and /> Operator</caption>
 </table>
 
-TODO: Center the text in the truth tables.
-
 For <ref ClassicalLogic.implies /> and <ref ClassicalLogic.negation />, we had
 to create two new symbols and specify their axioms. However, to do this for
-<ref ClassicalLogic.and /> would be redundant. Actually, you can define
-<ref ClassicalLogic.and /> in terms of <ref ClassicalLogic.implies /> and
-<ref ClassicalLogic.negation />. If you work out the truth table for
-\(!('phi => !'psi)\), you will find that it's identical to that of
-\('phi & 'psi\).
+<ref ClassicalLogic.and /> would be redundant.
 
-To avoid doing work we don't have to, we can tell define \(&\) as notational
-shorthand for \(!('phi => !'psi)\). Upon doing this, anywhere we write \(&\),
-the proof checker will automatically interpret it as its expanded version.
+Actually, you can define <ref ClassicalLogic.and /> in terms of <ref
+ClassicalLogic.implies /> and <ref ClassicalLogic.negation />. If you work out
+the truth table for \(!('phi => !'psi)\), you will find that it's identical to
+that of \('phi & 'psi\). To avoid doing work we don't have to, we can tell
+define \('phi & 'psi\) as notational shorthand for \(!('phi => !'psi)\).
 
 \Definition and: ClassicalLogic {
   name = "Logical Conjunction"
   tagline = {
-    A statement which is only true if both of its inputs are true.
+    A statement which is true if and only if both of its inputs are true.
   }
 
   inputs = [
@@ -67,9 +63,19 @@ the proof checker will automatically interpret it as its expanded version.
   expanded = !('phi => !'psi);
 }
 
+On this page we will explore a number of properties of
+<ref ClassicalLogic.and />, but not all of them. For now, we will only prove
+what we'll need for the next few pages. As we continue, we will build up a lot
+of useful machinery which will make proofs much easier, and then we will come
+back and prove everything else.
+
 # Elimination and Introduction
 
-TODO: Write commentary
+Let's say we have just proven \('phi & 'psi\). By definition, that means that
+both \('phi\) and \('psi\) are true on their own. Thus, from \('phi & 'psi\), we
+should be able to derive \('phi\) as well as \('psi\). This process is called
+Conjunction Elimination because we are removing one of the terms in the
+conjunction.
 
 \Theorem AndLeftElim: ClassicalLogic {
   name = "Logical Conjunction Elimination on the Left"
@@ -84,9 +90,19 @@ TODO: Write commentary
 }
 
 \Proof AndLeftElim: ClassicalLogic {
+  Consider the following axiom:
+
   |PropSimple| !'psi => ('phi => !'psi);
-  |PropContraLeftInf| !('phi => !'psi) => 'psi;
-  |!def| 'phi & 'psi => 'psi;
+
+  The contrapositive of this statement is
+
+  |PropContraLeftInf| !('phi => !'psi) => 'psi;.
+
+  But \(!('phi => !'psi)\) is, by definition, \('phi & 'psi\). So, we may derive
+
+  |!def| 'phi & 'psi => 'psi;,
+
+  which is what we were trying to show.
 }
 
 \Theorem AndRightElim: ClassicalLogic {
@@ -102,15 +118,23 @@ TODO: Write commentary
 }
 
 \Proof AndRightElim: ClassicalLogic {
+  This proof is of the same format as the last, but we start with a different
+  axiom.
+
   |PropExplosion| !'phi => ('phi => !'psi);
   |PropContraLeftInf| !('phi => !'psi) => 'phi;
   |!def| 'phi & 'psi => 'phi;
 }
 
+Although we may eliminate a term of the conjunction at will, we cannot simply
+introduce a conjunction in the same way. In particular, to derive \('phi &
+'psi\), we must first guarantee that \('phi\) and \('psi\) are both true
+independently. But, once we do that, we may derive \('phi & 'psi\).
+
 \Theorem AndIntro: ClassicalLogic {
   name = "Logical Conjunction Introduction"
   tagline = {
-    If we derive \('phi\) and \('psi\), then we may derive \('phi & 'psi\)
+    If we derive \('phi\) and \('psi\), then we may also derive \('phi & 'psi\).
   }
 
   var phi: Prop
@@ -120,14 +144,207 @@ TODO: Write commentary
 }
 
 \Proof AndIntro: ClassicalLogic {
-  |DNegElim| !!('phi => !'psi) => ('phi => !'psi);
+  Consider this theorem:
+
+  |DNegElim| !!('phi => !'psi) => ('phi => !'psi);.
+
+  The antecedent happens to be the definition of \(!('phi & 'psi)\).
+
   |!def| !('phi & 'psi) => ('phi => !'psi);
-  |PropCommutation| 'phi => (!('phi & 'psi) => !'psi);
+
+  If we commute the antecedents,
+
+  |PropCommutation| 'phi => (!('phi & 'psi) => !'psi);,
+
+  we almost get what we are looking for. We need only take the contrapositive of
+  the consequent. TODO: Taking the contrapositive of the consequent is used
+  basically everywhere. Make it a theorem.
+
   |PropContra| (!('phi & 'psi) => !'psi) => ('psi => 'phi & 'psi);
   |Syllogism| 'phi => ('psi => 'phi & 'psi);
 }
 
+Are you getting the sense that these proofs are coming out of nowhere? Like,
+each step is clearly correct and they ultimately culminate in the statement
+we're looking to prove, but how? It's hard to describe, but these proofs no
+longer seem to ``flow" nicely from start to finish. Instead, we're just
+conglomerating a bunch of theorems which happen to give the right answer. There
+will be many proofs in this treatise which will have this problem, especially
+when we study Real and Complex Analysis. There's a reason for that.
+
+You see, these statements are starting to get very complicated. Try and
+translate <ref ClassicalLogic.AndIntro /> into English <em>after</em> expanding
+the \(&\) operator. It comes out to something like ``If \('phi\), then \('psi\)
+implies that \('phi\) does not imply \(!'psi\)." Without the convenience of the
+\(&\) operator, it's not even clear what this statement is supposed to mean, let
+alone that it's tautologically true.
+
+TODO: Mention near <ref ClassicalLogic.PropIdentity /> that theorems are also
+tautologically true.
+
+Ultimately, these ``badly flowing" proofs say two things. On the one hand, it's
+unfortunate that there is no proof of this statement which clearly explains why
+it's true. In many cases, you are forced to just try applying a bunch of
+theorems and hope it works out well. That's why there are so many unsolved
+problems in mathematics; they just don't have easy answers.
+
+On the other hand, it's rather incredible that we're able achieve meaningful
+results by pushing symbols around. This is one of the reasons that mathematics
+has found so many uses; through dumb symbol pushing simple enough for a trained
+monkey to perform, we may operate intricate clockwork far too complicated for
+our imagination to comprehend.
+
+Next up, we will consider a variation of <ref ClassicalLogic.PropIdentity />
+which acts on the consequent of a statement. Let's say that we manage to derive
+\('phi => 'psi\) and \('phi => 'chi\). What would this entail if we were to also
+derive \('phi\)? By <ref ClassicalLogic.ModusPonens />, we would be able to
+derive \('psi\) and \('chi\), and by <ref ClassicalLogic.AndIntro />, we would
+be able to derive \('psi & 'chi\). Overall, this reduces to
+\('phi => 'psi & 'chi\).
+
+\Theorem JoinConsequent: ClassicalLogic {
+  name = "Joining of Consequents using Logical Conjunction"
+  tagline = {
+    If we derive \('phi => 'psi\) and \('phi => 'chi\), then we may also derive
+    \('phi => 'psi & 'chi\).
+  }
+
+  var phi: Prop
+  var psi: Prop
+  var chi: Prop
+
+  assertion = ('phi => 'psi) => (('phi => 'chi) => ('phi => 'psi & 'chi));
+}
+
+\Proof JoinConsequent: ClassicalLogic {
+  This is derived from the closely related statement
+  
+  |AndIntro| 'psi => ('chi => 'psi & 'chi);.
+
+  First, we introduce \('phi\) into the beginning of the formula.
+
+  |PropSimpleInf| 'phi => ('psi => ('chi => 'psi & 'chi));
+
+  If we distribute this \('phi\) in, we almost get what we're looking for.
+
+  |PropDistribInf| ('phi => 'psi) => ('phi => ('chi => ('psi & 'chi)));
+
+  However, we also need to distribute in the \('phi\) in the consequent. We can
+  do this using a syllogism with <ref ClassicalLogic.PropDistrib />.
+
+  |PropDistrib|
+    ('phi => ('chi => ('psi & 'chi)))
+      => (('phi => 'chi) => ('phi => ('psi & 'chi)));
+  |Syllogism| ('phi => 'psi) => (('phi => 'chi) => ('phi => ('psi & 'chi)));
+}
+
+# Inference Forms
+
+You know the drill by now. It's time to derive the inference forms, same as
+always.
+
+\Theorem AndLeftElimInf: ClassicalLogic {
+  name = "Inference using Logical Conjunction Elimination on the Left"
+  tagline = {
+    Given any conjunction, we may simply remove the statement on the left.
+  }
+
+  var phi: Prop
+  var psi: Prop
+
+  premise = [
+    'phi & 'psi;
+  ]
+  assertion = 'psi;
+}
+
+\Proof AndLeftElimInf: ClassicalLogic {
+  |AndLeftElim| 'phi & 'psi => 'psi;
+  |1| 'phi & 'psi;
+  |ModusPonens| 'psi;
+}
+
+\Theorem AndRightElimInf: ClassicalLogic {
+  name = "Inference using Logical Conjunction Elimination on the Right"
+  tagline = {
+    Given any conjunction, we may simply remove the statement on the right.
+  }
+
+  var phi: Prop
+  var psi: Prop
+
+  premise = [
+    'phi & 'psi;
+  ]
+  assertion = 'phi;
+}
+
+\Proof AndRightElimInf: ClassicalLogic {
+  |AndRightElim| 'phi & 'psi => 'phi;
+  |1| 'phi & 'psi;
+  |ModusPonens| 'phi;
+}
+
+\Theorem AndIntroInf: ClassicalLogic {
+  name = "Inference using Logical Conjunction Introduction"
+  tagline = {
+    If we derive \('phi\) and \('psi\), then we may also derive \('phi & 'psi\).
+  }
+
+  var phi: Prop
+  var psi: Prop
+
+  premise = [
+    'phi;
+    'psi;
+  ]
+  assertion = 'phi & 'psi;
+}
+
+\Proof AndIntroInf: ClassicalLogic {
+  |AndIntro| 'phi => ('psi => 'phi & 'psi);
+  |1| 'phi;
+  |ModusPonens| 'psi => 'phi & 'psi;
+  |2| 'psi;
+  |ModusPonens| 'phi & 'psi;
+}
+
+\Theorem JoinConsequentInf: ClassicalLogic {
+  name = "Inference Joining Consequents using Logical Conjunction"
+  tagline = {
+    If we derive \('phi => 'psi\) and \('phi => 'chi\), then we may also derive
+    \('phi => 'psi & 'chi\).
+  }
+
+  var phi: Prop
+  var psi: Prop
+  var chi: Prop
+
+  premise = [
+    'phi => 'psi;
+    'phi => 'chi;
+  ]
+  assertion = 'phi => ('psi & 'chi);
+}
+
+\Proof JoinConsequentInf: ClassicalLogic {
+  |JoinConsequent|
+    ('phi => 'psi) => (('phi => 'chi) => ('phi => ('psi & 'chi)));
+  |1| 'phi => 'psi;
+  |ModusPonens| ('phi => 'chi) => ('phi => ('psi & 'chi));
+  |2| 'phi => 'chi;
+  |ModusPonens| 'phi => ('psi & 'chi);
+}
+
 # Logical Importation and Exportation
+
+<ref ClassicalLogic.and /> is closely related to nested antecedents. Consider
+the statement \('phi => ('psi => 'chi)\). If we derive \('phi\) and \('psi\),
+then we may derive \('chi\) by two applications of
+<ref ClassicalLogic.ModusPonens />. This is equivalent to saying that from
+\('phi & 'psi\), we may derive \('chi\). The conversion from a nested antecedent
+to a <ref ClassicalLogic.and /> is called <ref ClassicalLogic.PropImport />, and
+the reverse process is called <ref ClassicalLogic.PropExport />.
 
 \Theorem PropImport: ClassicalLogic {
   name = "Logical Importation"
@@ -146,11 +363,16 @@ TODO: Write commentary
 }
 
 \Proof PropImport: ClassicalLogic {
+  Some simple rearrangement of the hypothesis gives us
+
   |1| 'phi => ('psi => 'chi);
   |PropContraConv| ('psi => 'chi) => (!'chi => !'psi);
   |Syllogism| 'phi => (!'chi => !'psi);
   |PropCommutation| !'chi => ('phi => !'psi);
-  |PropContraLeftInf| !('phi => !'psi) => 'chi;
+  |PropContraLeftInf| !('phi => !'psi) => 'chi;.
+
+  But this is, by definition, what we are trying to show.
+
   |!def| 'phi & 'psi => 'chi;
 }
 
@@ -172,9 +394,108 @@ TODO: Write commentary
 }
 
 \Proof PropExport: ClassicalLogic {
+  Some rearrangement of the hypothesis gives us
+
   |1| 'phi & 'psi => 'chi;
   |PropSimpleInf| 'psi => ('phi & 'psi => 'chi);
-  |PropDistribInf| ('psi => 'phi & 'psi) => ('psi => 'chi);
+  |PropDistribInf, #1| ('psi => 'phi & 'psi) => ('psi => 'chi);.
+
+  Now consider this axiom:
+
   |AndIntro| 'phi => ('psi => 'phi & 'psi);
+
+  The consequent of this axiom is the antecedent of <ref #1 />. And so,
+
   |Syllogism| 'phi => ('psi => 'chi);
+}
+
+# Miscellaneous Theorems
+
+We'll need a couple more theorems which don't fit in nicely with the others.
+
+\Theorem AndSymmetry: ClassicalLogic {
+  name = "Logical Conjunction is Symmetric"
+  tagline = {
+    Logical Conjunction is a symmetric relation.
+  }
+
+  var phi: Prop
+  var psi: Prop
+
+  assertion = 'phi & 'psi => 'psi & 'phi;
+}
+
+\Proof AndSymmetry: ClassicalLogic {
+  This is another example of where <ref ClassicalLogic.and /> is related to
+  nested antecedents. We begin with
+
+  |AndIntro| 'psi => ('phi => 'psi & 'phi);,
+
+  and take advantage of how nested antecedents commute.
+
+  |PropCommutation| 'phi => ('psi => 'psi & 'phi);
+
+  Finally, we can convert that nested antecedent to a
+  <ref ClassicalLogic.and />.
+
+  |PropImport| 'phi & 'psi => 'psi & 'phi;
+}
+
+We will also need the inference form of this theorem.
+
+\Theorem AndSymmetryInf: ClassicalLogic {
+  name = "Inference using Symmetry of Logical Conjunction"
+  tagline = {
+    Logical Conjunction is a symmetric relation.
+  }
+
+  flags = [
+    symmetric
+  ]
+
+  var phi: Prop
+  var psi: Prop
+
+  premise = [
+    'phi & 'psi;
+  ]
+  assertion = 'psi & 'phi;
+}
+
+\Proof AndSymmetryInf: ClassicalLogic {
+  |AndSymmetry| 'phi & 'psi => 'psi & 'phi;
+  |1| 'phi & 'psi;
+  |ModusPonens| 'psi & 'phi;
+}
+
+Finally, consider what would happen if we were to derive \('phi & !'phi\). We
+could then use elimination to derive \('phi\) and \(!'phi\). This would be a
+disaster, as we have already seen with <ref ClassicalLogic.PropExplosion />. And
+so, such contraditions are forbidden.
+
+\Theorem PropNonContradiction: ClassicalLogic {
+  name = "Propositions are Never Contradictory"
+  tagline = {
+    It is impossible to derive \('phi & !'phi\).
+  }
+
+  var phi: Prop
+  
+  assertion = !('phi & !'phi);
+}
+
+\Proof PropNonContradiction: ClassicalLogic {
+  This fun little proof starts with two instances of
+  <ref ClassicalLogic.DNegIntro />.
+
+  |DNegIntro, #1| 'phi => !!'phi;
+  |DNegIntro, #2| ('phi => !!'phi) => !!('phi => !!'phi);
+
+  The antecedent of <ref #2 /> is equal to <ref #1 />, and so
+
+  |ModusPonens| !!('phi => !!'phi);.
+
+  This has magically produced the definition of what we're tring to prove.
+
+  |!def| !('phi & !'phi);
 }
