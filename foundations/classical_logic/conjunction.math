@@ -194,12 +194,12 @@ has found so many uses; through dumb symbol pushing simple enough for a trained
 monkey to perform, we may operate intricate clockwork far too complicated for
 our imagination to comprehend.
 
-Next up, we will consider a variation of <ref ClassicalLogic.PropIdentity />
-which acts on the consequent of a statement. Let's say that we manage to derive
-\('phi => 'psi\) and \('phi => 'chi\). What would this entail if we were to also
-derive \('phi\)? By <ref ClassicalLogic.ModusPonens />, we would be able to
-derive \('psi\) and \('chi\), and by <ref ClassicalLogic.AndIntro />, we would
-be able to derive \('psi & 'chi\). Overall, this reduces to
+Next up, we will consider a variation of <ref ClassicalLogic.AndIntro /> which
+acts on the consequent of a statement. Let's say that we manage to derive
+\('phi => 'psi\) and \('phi => 'chi\). What would this entail if we were to
+also derive \('phi\)? By <ref ClassicalLogic.ModusPonens />, we would be able
+to derive \('psi\) and \('chi\), and by <ref ClassicalLogic.AndIntro />, we
+would be able to derive \('psi & 'chi\). Overall, this reduces to
 \('phi => 'psi & 'chi\).
 
 \Theorem JoinConsequent: ClassicalLogic {
