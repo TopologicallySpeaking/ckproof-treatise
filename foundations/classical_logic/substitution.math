@@ -66,6 +66,12 @@ TODO: Add subscripts to the x's and y's.
 
 First, we will prove that various symbols we have derived so far are functions.
 
+## Negation and Implication
+
+<ref ClassicalLogic.negation /> is the simplest example of all the symbols we
+have defined so far, mainly because it only has one input. Specifically, it is a
+function over <ref ClassicalLogic.equiv />.
+
 \Theorem NegationFunctionEquiv: ClassicalLogic {
   name = "Negation is a Function over Material Implication"
   tagline = {
@@ -106,6 +112,15 @@ First, we will prove that various symbols we have derived so far are functions.
 
   which is what we were trying to prove.
 }
+
+This does not, however, work for <ref ClassicalLogic.implies />, which you can
+see if you work out the truth tables for \('phi => 'psi\) and
+\(!'phi => !'psi\).
+
+The proofs for two-input functions are not significantly more complicated, but
+they do tend to be quite a bit longer. As a surprising yet commonly used
+example, we shall prove that <ref ClassicalLogic.implies /> is a function over
+<ref ClassicalLogic.equiv />.
 
 \Theorem ImpliesFunctionEquiv: ClassicalLogic {
   name = "Material Implication is a Function over Material Equivalence"
@@ -165,8 +180,8 @@ First, we will prove that various symbols we have derived so far are functions.
   |PropSimpleInf| 'psi => ('theta => 'chi);
   |PropDistribInf| ('psi => 'theta) => ('psi => 'chi);
 
-  The \('psi\) in the consequent should be a \('phi\), and we can do this with
-  the forward implication of <ref #h1 />.
+  The \('psi\) in the consequent should be a \('phi\), and we can do this by
+  using the forward implication of <ref #h1 />.
 
   |PropCommutation| 'psi => (('psi => 'theta) => 'chi);
   |EquivForwardInf| 'phi => 'psi;
@@ -177,6 +192,11 @@ First, we will prove that various symbols we have derived so far are functions.
 
   |EquivIntroInf| ('phi => 'chi) <=> ('psi => 'theta);.
 }
+
+## Conjunction and Disjunction
+
+<ref ClassicalLogic.and /> and <ref ClassicalLogic.or /> are both functions over
+<ref ClassicalLogic.implies />.
 
 \Theorem AndFunctionImplies: ClassicalLogic {
   name = "Logical Conjunction is a Function over Material Implication"
@@ -203,20 +223,81 @@ First, we will prove that various symbols we have derived so far are functions.
 
 \Proof AndFunctionImplies: ClassicalLogic {
   Unfortunately, this is one of those proofs which is correct, and it's easy to
-  see that each step a valid argument, but it does not have any intuitive
+  see that each step a is valid argument, but it does not have any intuitive
   interpretation.
+
+  We begin by distributing \('psi\) into the contrapositive of the second
+  hypothesis.
 
   |2| 'chi => 'theta;
   |PropContraConvInf| !'theta => !'chi;
   |PropSimpleInf| 'psi => (!'theta => !'chi);
   |PropDistribInf| ('psi => !'theta) => ('psi => !'chi);
+
+  Next, we change the \('psi\) in the consequent into a \('phi\), which we can
+  do by using the first hypothesis.
+
   |PropCommutation| 'psi => (('psi => !'theta) => !'chi);
   |1| 'phi => 'psi;
   |Syllogism| 'phi => (('psi => !'theta) => !'chi);
   |PropCommutation| ('psi => !'theta) => ('phi => !'chi);
-  |PropContraConvInf| !('phi => !'chi) => !('psi => !'theta);
+
+  The contrapositive of this statement,
+
+  |PropContraConvInf| !('phi => !'chi) => !('psi => !'theta);,
+
+  is the definition of what we were trying to show.
+
   |!def| ('phi & 'chi) => ('psi & 'theta);
 }
+
+\Theorem OrFunctionImplies: ClassicalLogic {
+  name = "Logical Disjunction is a Function over Material Implication"
+  tagline = {
+    If \('phi => 'psi\) and \('chi => 'theta\), then
+    \(('phi | 'chi) => ('psi | 'theta)\).
+  }
+
+  flags = [
+    function,
+  ]
+
+  var phi: Prop
+  var psi: Prop
+  var chi: Prop
+  var theta: Prop
+
+  premise = [
+    'phi => 'psi;
+    'chi => 'theta;
+  ]
+  assertion = ('phi | 'chi) => ('psi | 'theta);
+}
+
+\Proof OrFunctionImplies: ClassicalLogic {
+  This proof is similar to the last. Begin by distributing \(!'phi\) into the
+  second hypothesis.
+
+  |2| 'chi => 'theta;
+  |PropSimpleInf| !'phi => ('chi => 'theta);
+  |PropDistribInf| (!'phi => 'chi) => (!'phi => 'theta);
+
+  Next, we change the \(!'phi\) in the consequent into a \(!'psi\), which we can
+  do by using the contrapositive of the first hypothesis.
+
+  |PropCommutation| !'phi => ((!'phi => 'chi) => 'theta);
+  |1| 'phi => 'psi;
+  |PropContraConvInf| !'psi => !'phi;
+  |Syllogism| !'psi => ((!'phi => 'chi) => 'theta);
+  |PropCommutation| (!'phi => 'chi) => (!'psi => 'theta);
+
+  This is the definition of what we were trying to show.
+
+  |!def| ('phi | 'chi) => ('psi | 'theta);
+}
+
+This property can be inherited to prove that they are both functions over
+<ref ClassicalLogic.equiv /> as well.
 
 \Theorem AndFunctionEquiv: ClassicalLogic {
   name = "Logical Conjunction is a Function over Material Equivalence"
@@ -265,45 +346,6 @@ First, we will prove that various symbols we have derived so far are functions.
   Altogether, we get
 
   |EquivIntroInf| ('phi & 'chi) <=> ('psi & 'theta);.
-}
-
-\Theorem OrFunctionImplies: ClassicalLogic {
-  name = "Logical Disjunction is a Function over Material Implication"
-  tagline = {
-    If \('phi => 'psi\) and \('chi => 'theta\), then
-    \(('phi | 'chi) => ('psi | 'theta)\).
-  }
-
-  flags = [
-    function,
-  ]
-
-  var phi: Prop
-  var psi: Prop
-  var chi: Prop
-  var theta: Prop
-
-  premise = [
-    'phi => 'psi;
-    'chi => 'theta;
-  ]
-  assertion = ('phi | 'chi) => ('psi | 'theta);
-}
-
-\Proof OrFunctionImplies: ClassicalLogic {
-  Unfortunately, this is one of those proofs which is correct, and it's easy to
-  see that each step a valid argument, but it does not have any intuitive
-  interpretation.
-
-  |2| 'chi => 'theta;
-  |PropSimpleInf| !'phi => ('chi => 'theta);
-  |PropDistribInf| (!'phi => 'chi) => (!'phi => 'theta);
-  |PropCommutation| !'phi => ((!'phi => 'chi) => 'theta);
-  |1| 'phi => 'psi;
-  |PropContraConvInf| !'psi => !'phi;
-  |Syllogism| !'psi => ((!'phi => 'chi) => 'theta);
-  |PropCommutation| (!'phi => 'chi) => (!'psi => 'theta);
-  |!def| ('phi | 'chi) => ('psi | 'theta);
 }
 
 \Theorem OrFunctionEquiv: ClassicalLogic {
