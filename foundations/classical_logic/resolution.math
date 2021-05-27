@@ -1,3 +1,19 @@
+\Theorem DNegEquiv: ClassicalLogic {
+  name = "Double Negative Equivalence"
+  tagline = {
+    Statements are equivalent to their double negatives.
+  }
+
+  var phi: Prop
+
+  assertion = 'phi <=> !!'phi;
+}
+
+\Proof DNegEquiv: ClassicalLogic {
+  |DNegIntro| 'phi => !!'phi;
+  |DNegElim| !!'phi => 'phi;
+  |EquivIntroInf| 'phi <=> !!'phi;
+}
 \Theorem ImpliesCNF: ClassicalLogic {
   name = "Conjunctive Normal Form of Material Implication"
   tagline = {
@@ -81,6 +97,39 @@
   |!def| !('phi | 'psi) <=> (!'phi & !'psi);
 }
 
+\Theorem ImpliesDistribAnd: ClassicalLogic {
+  name = "Material Implication Distributes Over Logical Conjunction"
+  tagline = {
+    TODO: Tagline.
+  }
+
+  var phi: Prop
+  var psi: Prop
+  var chi: Prop
+
+  assertion = ('phi => ('psi & 'chi)) <=> ('phi => 'psi) & ('phi => 'chi);
+}
+
+\Proof ImpliesDistribAnd: ClassicalLogic {
+  |AndRightElim| ('psi & 'chi) => 'psi;
+  |PropSimpleInf| 'phi => (('psi & 'chi) => 'psi);
+  |PropDistribInf| ('phi => ('psi & 'chi)) => ('phi => 'psi);
+
+  |AndLeftElim| ('psi & 'chi) => 'chi;
+  |PropSimpleInf| 'phi => (('psi & 'chi) => 'chi);
+  |PropDistribInf| ('phi => ('psi & 'chi)) => ('phi => 'chi);
+
+  |JoinConsequentInf|
+    ('phi => ('psi & 'chi)) => (('phi => 'psi) & ('phi => 'chi));
+
+  |JoinConsequent|
+    ('phi => 'psi) => (('phi => 'chi) => ('phi => ('psi & 'chi)));
+  |PropImport| (('phi => 'psi) & ('phi => 'chi)) => ('phi => ('psi & 'chi));
+
+  |EquivIntroInf|
+    ('phi => ('psi & 'chi)) <=> ('phi => 'psi) & ('phi => 'chi);
+}
+
 \Theorem OrDistribAnd: ClassicalLogic {
   name = "Logical Disjunction Distributes Over Logical Conjunction"
   tagline = {
@@ -97,6 +146,7 @@
 \Proof OrDistribAnd: ClassicalLogic {
   |ImpliesDistribAnd|
     (!'phi => ('psi & 'chi)) <=> ((!'phi => 'psi) & (!'phi => 'chi));
+
   |!def| 'phi | ('psi & 'chi) <=> (('phi | 'psi) & ('phi | 'chi));
 }
 

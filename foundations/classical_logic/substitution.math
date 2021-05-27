@@ -1,7 +1,75 @@
+Here we will explore the first substantial concept in this treatise:
+substitution. A substitution is an argument of this form: let's say that we have
+derived the equations
+
+\[ 'y = 15 * 'x - 17 \]
+
+and
+
+\[ 'x = sin('t) \].
+
+We should be able to derive from these equations that
+
+\[ 'y = 15 * sin('t) - 17 \].
+
+Unfortunately, the only proper way to do this is to first derive
+
+\[ 15 * 'x = 15 * sin('t) \]
+\[ 15 * 'x - 17 = 15 * sin('t) - 17 \],
+
+and by transitivity of equality we get
+
+\[ 'y = 15 * sin('t) - 17 \].
+
+TODO: Implement better formatting for this text.
+
+TODO: MathJax fails to render these properly on Firefox.
+
+This would be a lot of menial work for something which should be just one step
+of the proof, and it would only get worse as equations become longer. Because of
+this, ckproof is able to perform these substitutions automatically. First,
+though, there is a bit of nuance which we should discuss.
+
+# Functions
+
+In elementary math classes, we learn that if we ``do the same thing to both
+sides of an equation", then the resulting equation is still valid.
+Unfortunately, when we study mathematics at the level of rigor used in this
+treatise, it's not that simple. Indeed, not all symbols can be applied in this
+way. A classic example is the square root. Given the equation
+
+\[ \pow{'y, 2} = 4 \],
+
+you may naïvely expect that you can take the square root of both sides to get
+
+\[ \sqrt{\pow{'y, 2}} = \sqrt{4} \]
+\[ 'y = 2 \].
+
+TODO: Implement multiline display math with alignment.
+
+Unfortunately, this is not a valid deduction. You cannot guarantee from just the
+first equation that \('y = 2\).
+
+TODO: References to display math.
+
+In particular, it could also be that \('y = -2\). This often comes as a surprise
+to students, who up until that point had been blindly doing the same thing to
+both sides of an equation and gotten the right answer.
+
+A symbol for which this process does work is called a function. More precisely,
+let \(~\) be a symbol with two inputs, and let \(f\) be a symbol with \(n\)
+inputs. Let's say we manage to derive \('x ~ 'y\), \('x ~ 'y\), \(...\), 
+\('x ~ 'y\). We say that \(f\) is a function if we are able to also derive
+\(f('x\,...\,'x) ~ f('y\,...\,'y)\).
+
+TODO: Add subscripts to the x's and y's.
+
+First, we will prove that various symbols we have derived so far are functions.
+
 \Theorem NegationFunctionEquiv: ClassicalLogic {
   name = "Negation is a Function over Material Implication"
   tagline = {
-    TODO: Tagline.
+    If \('phi <=> 'psi\), then \(!'phi <=> !'psi\).
   }
 
   flags = [
@@ -18,18 +86,32 @@
 }
 
 \Proof NegationFunctionEquiv: ClassicalLogic {
+  This can be derived directly from the hypothesis.
+
   |1| 'phi <=> 'psi;
+
+  In the forward direction,
+
   |EquivForwardInf| 'phi => 'psi;
-  |PropContraConvInf| !'psi => !'phi;
+  |PropContraConvInf| !'psi => !'phi;.
+
+  Similarly, in the backward direction,
+
   |EquivBackwardInf| 'psi => 'phi;
-  |PropContraConvInf| !'phi => !'psi;
-  |EquivIntroInf| !'phi <=> !'psi;
+  |PropContraConvInf| !'phi => !'psi;.
+
+  Altogether, this gives us
+
+  |EquivIntroInf| !'phi <=> !'psi;,
+
+  which is what we were trying to prove.
 }
 
 \Theorem ImpliesFunctionEquiv: ClassicalLogic {
   name = "Material Implication is a Function over Material Equivalence"
   tagline = {
-    TODO: Tagline.
+    If \('phi <=> 'psi\) and \('chi <=> 'theta\), then
+    \(('phi => 'chi) <=> ('psi => 'theta)\).
   }
 
   flags = [
@@ -49,32 +131,58 @@
 }
 
 \Proof ImpliesFunctionEquiv: ClassicalLogic {
-  |1| 'phi <=> 'psi;
-  |2| 'chi <=> 'theta;
+  Starting from the hypotheses
+
+  |1, #h1| 'phi <=> 'psi;
+  |2, #h2| 'chi <=> 'theta;,
+
+  we distribute \('phi\) into the forward implication of <ref #h2 />.
 
   |EquivForwardInf| 'chi => 'theta;
   |PropSimpleInf| 'phi => ('chi => 'theta);
   |PropDistribInf| ('phi => 'chi) => ('phi => 'theta);
+
+  This is almost the forward implication of what we are trying to show, but the
+  \('phi\) in the consequent should be replaced with \('psi\). To do this, we
+  start by bringing that \('phi\) out to the front.
+
   |PropCommutation| 'phi => (('phi => 'chi) => 'theta);
+
+  From here, we may use the backward implication of <ref #h1 /> to derive
+
   |EquivBackwardInf| 'psi => 'phi;
-  |Syllogism| 'psi => (('phi => 'chi) => 'theta);
+  |Syllogism| 'psi => (('phi => 'chi) => 'theta);.
+
+  We can bring that \('psi\) back in to get the forward implication of what we
+  are looking for.
+
   |PropCommutation| ('phi => 'chi) => ('psi => 'theta);
+
+  The backward implication is similar. We begin by working the backward
+  implication of <ref #h2 />.
 
   |EquivBackwardInf| 'theta => 'chi;
   |PropSimpleInf| 'psi => ('theta => 'chi);
   |PropDistribInf| ('psi => 'theta) => ('psi => 'chi);
+
+  The \('psi\) in the consequent should be a \('phi\), and we can do this with
+  the forward implication of <ref #h1 />.
+
   |PropCommutation| 'psi => (('psi => 'theta) => 'chi);
   |EquivForwardInf| 'phi => 'psi;
   |Syllogism| 'phi => (('psi => 'theta) => 'chi);
   |PropCommutation| ('psi => 'theta) => ('phi => 'chi);
 
-  |EquivIntroInf| ('phi => 'chi) <=> ('psi => 'theta);
+  Altogether, we have
+
+  |EquivIntroInf| ('phi => 'chi) <=> ('psi => 'theta);.
 }
 
 \Theorem AndFunctionImplies: ClassicalLogic {
   name = "Logical Conjunction is a Function over Material Implication"
   tagline = {
-    TODO: Tagline.
+    If \('phi => 'psi\) and \('chi => 'theta\), then
+    \(('phi & 'chi) => ('psi & 'theta)\).
   }
 
   flags = [
@@ -94,6 +202,10 @@
 }
 
 \Proof AndFunctionImplies: ClassicalLogic {
+  Unfortunately, this is one of those proofs which is correct, and it's easy to
+  see that each step a valid argument, but it does not have any intuitive
+  interpretation.
+
   |2| 'chi => 'theta;
   |PropContraConvInf| !'theta => !'chi;
   |PropSimpleInf| 'psi => (!'theta => !'chi);
@@ -109,7 +221,8 @@
 \Theorem AndFunctionEquiv: ClassicalLogic {
   name = "Logical Conjunction is a Function over Material Equivalence"
   tagline = {
-    TODO: Tagline.
+    If \('phi <=> 'psi\) and \('chi <=> 'theta\), then
+    \(('phi & 'chi) <=> ('psi & 'theta)\).
   }
 
   flags = [
@@ -129,24 +242,36 @@
 }
 
 \Proof AndFunctionEquiv: ClassicalLogic {
+  This property is inherited from <ref ClassicalLogic.AndFunctionImplies />. We
+  begin with the hypotheses.
+
   |1| 'phi <=> 'psi;
   |2| 'chi <=> 'theta;
+
+  From the forward implications of the hypotheses, we can apply <ref
+  ClassicalLogic.and /> as a function.
 
   |EquivForwardInf| 'phi => 'psi;
   |EquivForwardInf| 'chi => 'theta;
   |AndFunctionImplies| ('phi & 'chi) => ('psi & 'theta);
 
+  This gives us the forward implication for what we are trying to show. We get
+  the backward implication similarly.
+
   |EquivBackwardInf| 'psi => 'phi;
   |EquivBackwardInf| 'theta => 'chi;
   |AndFunctionImplies| ('psi & 'theta) => ('phi & 'chi);
 
-  |EquivIntroInf| ('phi & 'chi) <=> ('psi & 'theta);
+  Altogether, we get
+
+  |EquivIntroInf| ('phi & 'chi) <=> ('psi & 'theta);.
 }
 
 \Theorem OrFunctionImplies: ClassicalLogic {
   name = "Logical Disjunction is a Function over Material Implication"
   tagline = {
-    TODO: Tagline.
+    If \('phi => 'psi\) and \('chi => 'theta\), then
+    \(('phi | 'chi) => ('psi | 'theta)\).
   }
 
   flags = [
@@ -166,6 +291,10 @@
 }
 
 \Proof OrFunctionImplies: ClassicalLogic {
+  Unfortunately, this is one of those proofs which is correct, and it's easy to
+  see that each step a valid argument, but it does not have any intuitive
+  interpretation.
+
   |2| 'chi => 'theta;
   |PropSimpleInf| !'phi => ('chi => 'theta);
   |PropDistribInf| (!'phi => 'chi) => (!'phi => 'theta);
@@ -180,7 +309,8 @@
 \Theorem OrFunctionEquiv: ClassicalLogic {
   name = "Logic Disjunction is a Function over Material Equivalence"
   tagline = {
-    TODO: Tagline.
+    If \('phi <=> 'psi\) and \('chi <=> 'theta\), then
+    \(('phi | 'chi) <=> ('psi | 'theta)\).
   }
 
   flags = [
@@ -200,16 +330,34 @@
 }
 
 \Proof OrFunctionEquiv: ClassicalLogic {
+  This property is inherited from <ref ClassicalLogic.OrFunctionImplies />. We
+  begin with the hypotheses.
+
   |1| 'phi <=> 'psi;
   |2| 'chi <=> 'theta;
+
+  From the forward implications of the hypotheses, we can apply <ref
+  ClassicalLogic.and /> as a function.
 
   |EquivForwardInf| 'phi => 'psi;
   |EquivForwardInf| 'chi => 'theta;
   |OrFunctionImplies| ('phi | 'chi) => ('psi | 'theta);
 
+  This gives us the forward implication for what we are trying to show. We get
+  the backward implication similarly.
+
   |EquivBackwardInf| 'psi => 'phi;
   |EquivBackwardInf| 'theta => 'chi;
   |OrFunctionImplies| ('psi | 'theta) => ('phi | 'chi);
 
+  Altogether, we get
+
   |EquivIntroInf| ('phi | 'chi) <=> ('psi | 'theta);
 }
+
+# Automatic Function Application
+
+TODO: Write.
+
+TODO: Rename what is currently called substitution to function application, and
+implement substitution as a separate capability of ckproof.
