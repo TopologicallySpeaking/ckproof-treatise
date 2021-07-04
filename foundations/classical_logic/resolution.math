@@ -1,23 +1,102 @@
-\Theorem DNegEquiv: ClassicalLogic {
+On the last page, we saw how ckproof can automatically perform some parts of our
+proofs for us. On this page, we will build up enough machinery to allow ckproof
+to do all classical propositional calculus automatically. This will allow us to
+finally move on to more interesting things.
+
+# Conjunctive Normal Form
+
+The technique used for the purpose of automatically proving statements in
+<ref ClassicalLogic /> makes heavy use of Conjunctive Normal Form (CNF). This is
+a kind of propositional statement which is formed by the following process:
+
+<ol>
+  <li>
+    Take a bunch of variables. These variables, along with their negations, are
+    called ``literals".
+  </li>
+  <li>
+    Combine the some of the literals, whichever ones you wish, into a bunch of
+    groups using <ref ClassicalLogic.or />. These combinations are called
+    ``terms".
+  </li>
+  <li>
+    Combine all of the terms which you've created using
+    <ref ClassicalLogic.and />. The resulting statement is now in CNF.
+  </li>
+</ol>
+
+In <ref ClassicalLogic />, all statements are equivalent to some other statement
+written in CNF. For example,
+
+\[
+  !('phi & ('psi => 'chi))
+\]
+
+is equivalent to
+
+\[
+  (!'phi | 'psi) & (!'phi | !'chi)
+\].
+
+You can see that this statement is in CNF by breaking it up into its component
+parts. The statement is formed from two terms: \(!'phi | 'psi\) and \(!'phi |
+!'chi\) which are combined by a <ref ClassicalLogic.and />. Furthermore, both of
+the terms are formed using <ref ClassicalLogic.or /> on the variables \('phi\),
+\('psi\), \('chi\) and their negations.
+
+As a counterexample, the statement
+
+\[
+  !('phi & 'psi)
+\]
+
+is <em>not</em> written in CNF because you are only allowed use negation on
+variables.
+
+This form has some nice properties which ckproof takes advantage of. The first
+thing we need to do is prove some theorems which allow ckproof to convert a
+statement into its equivalent CNF.
+
+## CNF for The Operators of Classical Logic
+
+Each of the operators in <ref ClassicalLogic /> have a canonical CNF. Most
+trivially, \(!'phi\), \('phi | 'psi\), and \('phi & 'psi\) are already in CNF.
+For the other operators, we must be a little more clever. We'll start with a
+lemma which is used in the proofs which follow.
+
+\Lemma DNegEquiv: ClassicalLogic {
   name = "Double Negative Equivalence"
   tagline = {
     Statements are equivalent to their double negatives.
   }
+  description = {
+    This lemma is nothing more than a combination of
+    <ref ClassicalLogic.DNegElim /> and <ref ClassicalLogic.DNegIntro />. It's
+    worth proving simply because this combined form can save a few steps in
+    certain proofs.
+  }
 
   var phi: Prop
 
-  assertion = 'phi <=> !!'phi;
+  assertion = !!'phi <=> 'phi;
 }
 
 \Proof DNegEquiv: ClassicalLogic {
-  |DNegIntro| 'phi => !!'phi;
+  The proof is trivial.
+
   |DNegElim| !!'phi => 'phi;
-  |EquivIntroInf| 'phi <=> !!'phi;
+  |DNegIntro| 'phi => !!'phi;
+  |EquivIntroInf| !!'phi <=> 'phi;
 }
+
+Using this lemma, we derive the CNF for <ref ClassicalLogic.implies /> and
+<ref ClassicalLogic.equiv />.
+
 \Theorem ImpliesCNF: ClassicalLogic {
   name = "Conjunctive Normal Form of Material Implication"
   tagline = {
-    TODO: Tagline.
+    The canonical Conjunctive Normal Form of <ref ClassicalLogic.implies /> is
+    \(!'phi | 'psi\).
   }
 
   var phi: Prop
@@ -27,9 +106,16 @@
 }
 
 \Proof ImpliesCNF: ClassicalLogic {
-  |DNegEquiv| 'phi <=> !!'phi;
+  This is derived from <ref ClassicalLogic.DNegEquiv />.
+
+  |DNegEquiv| !!'phi <=> 'phi;
+  |EquivSymmetric| 'phi <=> !!'phi;
+
+  We then apply <ref ClassicalLogic.implies /> to both sides of the equivalence.
 
   |!sub| ('phi => 'psi) <=> (!!'phi => 'psi);
+
+  By definition, this is what we were trying to show.
 
   |!def| ('phi => 'psi) <=> (!'phi | 'psi);
 }
@@ -37,7 +123,8 @@
 \Theorem EquivCNF: ClassicalLogic {
   name = "Conjunctive Normal Form of Material Equivalence"
   tagline = {
-    TODO: Tagline.
+    The canonical Conjunctive Normal Form of <ref ClassicalLogic.equiv /> is
+    \((!'phi | 'psi) & ('psi | 'phi)\).
   }
 
   var phi: Prop
@@ -47,11 +134,24 @@
 }
 
 \Proof EquivCNF: ClassicalLogic {
+  This is derived from the Conjunctive Normal Form for both the forward and
+  backward implications of \('phi <=> 'psi\).
+
   |ImpliesCNF| ('phi => 'psi) <=> (!'phi | 'psi);
   |ImpliesCNF| ('psi => 'phi) <=> (!'psi | 'phi);
-  |!sub| ('phi => 'psi) & ('psi => 'phi) <=> (!'phi | 'psi) & (!'psi | 'phi);
+
+  Because <ref ClassicalLogic.and /> is a function over
+  <ref ClassicalLogic.equiv />, we can conclude
+
+  |AndFunctionEquiv|
+    ('phi => 'psi) & ('psi => 'phi) <=> (!'phi | 'psi) & (!'psi | 'phi);.
+
+  By definition, this is what were trying to show.
+
   |!def| ('phi <=> 'psi) <=> (!'phi | 'psi) & (!'psi | 'phi);
 }
+
+## Constructing CNF for Larger Statements
 
 \Theorem DeMorganAnd: ClassicalLogic {
   name = "De Morgan's Law for Logical Conjunction"
@@ -66,9 +166,8 @@
 }
 
 \Proof DeMorganAnd: ClassicalLogic {
-  |DNegEquiv| ('phi => !'psi) <=> !!('phi => !'psi);
-  |!def| ('phi => !'psi) <=> !('phi & 'psi);
-  |EquivSymmetric| !('phi & 'psi) <=> ('phi => !'psi);
+  |DNegEquiv| !!('phi => !'psi) <=> ('phi => !'psi);
+  |!def| !('phi & 'psi) <=> ('phi => !'psi);
 
   |ImpliesCNF| ('phi => !'psi) <=> (!'phi | !'psi);
   |EquivTransitive| !('phi & 'psi) <=> (!'phi | !'psi);
@@ -90,7 +189,8 @@
   |EquivReflexive| !(!'phi => 'psi) <=> !(!'phi => 'psi);
   |!def| !('phi | 'psi) <=> !(!'phi => 'psi);
 
-  |DNegEquiv| 'psi <=> !!'psi;
+  |DNegEquiv| !!'psi <=> 'psi;
+  |EquivSymmetric| 'psi <=> !!'psi;
   |!sub| !(!'phi => 'psi) <=> !(!'phi => !!'psi);
   |EquivTransitive| !('phi | 'psi) <=> !(!'phi => !!'psi);
 
@@ -164,26 +264,55 @@
 }
 
 \Proof AndDistribOr: ClassicalLogic {
-  |OrRightIntro| ('phi & 'psi) => ('phi & 'psi) | ('phi & 'chi);
+  The forward implication is derived from these two theorems.
+
+  |OrRightIntro, #right1| ('phi & 'psi) => ('phi & 'psi) | ('phi & 'chi);
+  |OrLeftIntro, #left1| ('phi & 'chi) => ('phi & 'psi) | ('phi & 'chi);
+
+  We can rearrange <ref #right1 /> to get
+
   |PropExport| 'phi => ('psi => ('phi & 'psi) | ('phi & 'chi));
-  |PropCommutation| 'psi => ('phi => ('phi & 'psi) | ('phi & 'chi));
+  |PropCommutation, #right2| 'psi => ('phi => ('phi & 'psi) | ('phi & 'chi));.
 
-  |OrLeftIntro| ('phi & 'chi) => ('phi & 'psi) | ('phi & 'chi);
+  Similarly, for <ref #left1 />, we get
+
   |PropExport| 'phi => ('chi => ('phi & 'psi) | ('phi & 'chi));
-  |PropCommutation| 'chi => ('phi => ('phi & 'psi) | ('phi & 'chi));
+  |PropCommutation, #left2| 'chi => ('phi => ('phi & 'psi) | ('phi & 'chi));.
 
-  |OrElim| ('psi | 'chi) => ('phi => ('phi & 'psi) | ('phi & 'chi));
+  We can combine <ref #right2 /> and <ref #left2 /> to get
+
+  |OrElim| ('psi | 'chi) => ('phi => ('phi & 'psi) | ('phi & 'chi));.
+
+  From here, it's just a simple rearrangement to get the forward implication.
+
   |PropCommutation| 'phi => (('psi | 'chi) => ('phi & 'psi) | ('phi & 'chi));
-  |PropImport| ('phi & ('psi | 'chi)) => ('phi & 'psi) | ('phi & 'chi);
+  |PropImport| 'phi & ('psi | 'chi) => ('phi & 'psi) | ('phi & 'chi);
 
-  |OrRightIntro| 'psi => 'psi | 'chi;
-  |!sub| ('phi & 'psi) => 'phi & ('psi | 'chi);
+  The backward implication is a little easier. From
+
+  |OrRightIntro| 'psi => 'psi | 'chi;,
+
+  we can apply <ref ClassicalLogic.and /> to both sides of the implication to
+  get
+
+  |!sub, #right3| ('phi & 'psi) => 'phi & ('psi | 'chi);.
+
+  Similarly,
+
   |OrLeftIntro| 'chi => 'psi | 'chi;
-  |!sub| ('phi & 'chi) => 'phi & ('psi | 'chi);
+  |!sub, #left3| ('phi & 'chi) => 'phi & ('psi | 'chi);.
+
+  Finally, <ref #right3 /> and <ref #left3 /> can be combined to get the
+  backward implication.
+
   |OrElim| ('phi & 'psi) | ('phi & 'chi) => 'phi & ('psi | 'chi);
 
-  |EquivIntroInf| 'phi & ('psi | 'chi) <=> ('phi & 'psi) | ('phi & 'chi);
+  Altogether, we get
+
+  |EquivIntroInf| 'phi & ('psi | 'chi) <=> ('phi & 'psi) | ('phi & 'chi);.
 }
+
+# Propositional Resolution
 
 \Theorem PropResolution: ClassicalLogic {
   name = "Propositional Resolution"
@@ -229,3 +358,5 @@
       => (('phi | 'psi) & !'phi) | (('phi | 'psi) & 'chi);
   |Syllogism| ('phi | 'psi) & (!'phi | 'chi) => 'psi | 'chi;
 }
+
+# Automatically Proofs Using Propositional Calculus
