@@ -4,8 +4,8 @@ works only in one direction. TODO: Elaborate.
 Although it does not work in general, there are some specific cases where the
 implication does work in both directions. Such (relatively rare) statements are
 said to be <ref ClassicalLogic.equiv>Materially Equivalent</ref>, and they get
-their own symbol: \(<=>\). The statement that this operator ``works in both
-directions" can be formalized as \(('phi => 'psi) & ('psi => 'phi)\). The truth
+their own symbol: \(<->\). The statement that this operator ``works in both
+directions" can be formalized as \(('phi -> 'psi) & ('psi -> 'phi)\). The truth
 table follows from this formalization.
 
 <table>
@@ -13,7 +13,7 @@ table follows from this formalization.
     <row>
       <cell>\('phi\)</cell>
       <cell>\('psi\)</cell>
-      <cell>\('phi <=> 'psi\)</cell>
+      <cell>\('phi <-> 'psi\)</cell>
     </row>
   </head>
   <body>
@@ -42,7 +42,7 @@ table follows from this formalization.
 </table>
 
 The truth table also provides a nice alternative interpretation of
-<ref ClassicalLogic.equiv />: the statement \('phi <=> 'psi\) means that
+<ref ClassicalLogic.equiv />: the statement \('phi <-> 'psi\) means that
 \('phi\) and \('psi\) both have the same truth-value, and that's why they are
 said to be equivalent.
 
@@ -56,8 +56,8 @@ said to be equivalent.
     phi: Prop,
     psi: Prop,
   ]
-  read = Infix <=>
-  expanded = ('phi => 'psi) & ('psi => 'phi);
+  read = Infix <->
+  expanded = ('phi -> 'psi) & ('psi -> 'phi);
 }
 
 # Introduction and Elimination
@@ -66,8 +66,8 @@ Ultimately, <ref ClassicalLogic.equiv /> is defined in terms of
 <ref ClassicalLogic.implies />, and so to prove things about
 <ref ClassicalLogic.equiv />, you must reduce problems down to things about
 <ref ClassicalLogic.implies />. Let's say you manage to derive
-\('phi <=> 'psi\). Because this implication works in both directions, you should
-be able to derive from this both \('phi => 'psi\) and \('psi => 'phi\).
+\('phi <-> 'psi\). Because this implication works in both directions, you should
+be able to derive from this both \('phi -> 'psi\) and \('psi -> 'phi\).
 
 \Theorem EquivForward: ClassicalLogic {
   name = "Forward Implication of Material Equivalence"
@@ -79,17 +79,17 @@ be able to derive from this both \('phi => 'psi\) and \('psi => 'phi\).
   var phi: Prop
   var psi: Prop
 
-  assertion = ('phi <=> 'psi) => ('phi => 'psi);
+  assertion = ('phi <-> 'psi) -> ('phi -> 'psi);
 }
 
 \Proof EquivForward: ClassicalLogic {
   This is just derived from <ref ClassicalLogic.AndRightElim />,
 
-  |AndRightElim| (('phi => 'psi) & ('psi => 'phi)) => ('phi => 'psi);,
+  |AndRightElim| (('phi -> 'psi) & ('psi -> 'phi)) -> ('phi -> 'psi);,
 
   which is, by definition,
 
-  |!def| ('phi <=> 'psi) => ('phi => 'psi);.
+  |!def| ('phi <-> 'psi) -> ('phi -> 'psi);.
 }
 
 \Theorem EquivBackward: ClassicalLogic {
@@ -102,19 +102,19 @@ be able to derive from this both \('phi => 'psi\) and \('psi => 'phi\).
   var phi: Prop
   var psi: Prop
 
-  assertion = ('phi <=> 'psi) => ('psi => 'phi);
+  assertion = ('phi <-> 'psi) -> ('psi -> 'phi);
 }
 
 \Proof EquivBackward: ClassicalLogic {
   This proof is the same as the last.
 
-  |AndLeftElim| (('phi => 'psi) & ('psi => 'phi)) => ('psi => 'phi);
-  |!def| ('phi <=> 'psi) => ('psi => 'phi);
+  |AndLeftElim| (('phi -> 'psi) & ('psi -> 'phi)) -> ('psi -> 'phi);
+  |!def| ('phi <-> 'psi) -> ('psi -> 'phi);
 }
 
-Conversely, if we can derive both \('phi => 'psi\) and \('psi => 'phi\), that's
+Conversely, if we can derive both \('phi -> 'psi\) and \('psi -> 'phi\), that's
 an implicatin which works in both directions. From these two statements, we
-should be able to derive \('phi <=> 'psi\).
+should be able to derive \('phi <-> 'psi\).
 
 \Theorem EquivIntro: ClassicalLogic {
   name = "Material Equivalence Introduction"
@@ -126,15 +126,15 @@ should be able to derive \('phi <=> 'psi\).
   var phi: Prop
   var psi: Prop
 
-  assertion = ('phi => 'psi) => (('psi => 'phi) => ('phi <=> 'psi));
+  assertion = ('phi -> 'psi) -> (('psi -> 'phi) -> ('phi <-> 'psi));
 }
 
 \Proof EquivIntro: ClassicalLogic {
   This is derived from <ref ClassicalLogic.AndIntro />, similarly to the
   elimination properties.
 
-  |AndIntro| ('phi => 'psi) => (('psi => 'phi) => (('phi => 'psi) & ('psi => 'phi)));
-  |!def| ('phi => 'psi) => (('psi => 'phi) => ('phi <=> 'psi));
+  |AndIntro| ('phi -> 'psi) -> (('psi -> 'phi) -> (('phi -> 'psi) & ('psi -> 'phi)));
+  |!def| ('phi -> 'psi) -> (('psi -> 'phi) -> ('phi <-> 'psi));
 }
 
 # Inference Forms
@@ -152,15 +152,15 @@ Here we prove the inference forms of the three theorems so far.
   var psi: Prop
 
   premise = [
-    'phi <=> 'psi;
+    'phi <-> 'psi;
   ]
-  assertion = 'phi => 'psi;
+  assertion = 'phi -> 'psi;
 }
 
 \Proof EquivForwardInf: ClassicalLogic {
-  |EquivForward| ('phi <=> 'psi) => ('phi => 'psi);
-  |1| 'phi <=> 'psi;
-  |ModusPonens| 'phi => 'psi;
+  |EquivForward| ('phi <-> 'psi) -> ('phi -> 'psi);
+  |1| 'phi <-> 'psi;
+  |ModusPonens| 'phi -> 'psi;
 }
 
 \Theorem EquivBackwardInf: ClassicalLogic {
@@ -174,15 +174,15 @@ Here we prove the inference forms of the three theorems so far.
   var psi: Prop
 
   premise = [
-    'phi <=> 'psi;
+    'phi <-> 'psi;
   ]
-  assertion = 'psi => 'phi;
+  assertion = 'psi -> 'phi;
 }
 
 \Proof EquivBackwardInf: ClassicalLogic {
-  |EquivBackward| ('phi <=> 'psi) => ('psi => 'phi);
-  |1| 'phi <=> 'psi;
-  |ModusPonens| 'psi => 'phi;
+  |EquivBackward| ('phi <-> 'psi) -> ('psi -> 'phi);
+  |1| 'phi <-> 'psi;
+  |ModusPonens| 'psi -> 'phi;
 }
 
 \Theorem EquivIntroInf: ClassicalLogic {
@@ -196,18 +196,18 @@ Here we prove the inference forms of the three theorems so far.
   var psi: Prop
 
   premise = [
-    'phi => 'psi;
-    'psi => 'phi;
+    'phi -> 'psi;
+    'psi -> 'phi;
   ]
-  assertion = 'phi <=> 'psi;
+  assertion = 'phi <-> 'psi;
 }
 
 \Proof EquivIntroInf: ClassicalLogic {
-  |EquivIntro| ('phi => 'psi) => (('psi => 'phi) => ('phi <=> 'psi));
-  |1| 'phi => 'psi;
-  |ModusPonens| ('psi => 'phi) => ('phi <=> 'psi);
-  |2| 'psi => 'phi;
-  |ModusPonens| 'phi <=> 'psi;
+  |EquivIntro| ('phi -> 'psi) -> (('psi -> 'phi) -> ('phi <-> 'psi));
+  |1| 'phi -> 'psi;
+  |ModusPonens| ('psi -> 'phi) -> ('phi <-> 'psi);
+  |2| 'psi -> 'phi;
+  |ModusPonens| 'phi <-> 'psi;
 }
 
 # Material Equivalence is an Equivalence Relation
@@ -233,24 +233,24 @@ glossary.
 
   var phi: Prop
   
-  assertion = 'phi <=> 'phi;
+  assertion = 'phi <-> 'phi;
 }
 
 \Proof EquivReflexive: ClassicalLogic {
   This is derived from
 
-  |PropIdentity| 'phi => 'phi;.
+  |PropIdentity| 'phi -> 'phi;.
 
   Interestingly, this immediately gives us
 
-  |AndIntroInf, #2| ('phi => 'phi) & ('phi => 'phi);.
+  |AndIntroInf, #2| ('phi -> 'phi) & ('phi -> 'phi);.
 
   That step might take a little thought to figure out why that's allowed.
   Remember, to derive \('phi & 'psi\) with <ref ClassicalLogic.AndIntroInf />,
   we must first derive \('phi\) and \('psi\). But we never said \('phi\) and
   \('psi\) had to be different statements! Anyway, <ref #2 /> is the same as
 
-  |!def| 'phi <=> 'phi;,
+  |!def| 'phi <-> 'phi;,
 
   which is what we were trying to show.
 }
@@ -269,21 +269,21 @@ glossary.
   var psi: Prop
 
   premise = [
-    'phi <=> 'psi;
+    'phi <-> 'psi;
   ]
-  assertion = 'psi <=> 'phi;
+  assertion = 'psi <-> 'phi;
 }
 
 \Proof EquivSymmetric: ClassicalLogic {
   Consider the hypothesis.
 
-  |1| 'phi <=> 'psi;
-  |!def| ('phi => 'psi) & ('psi => 'phi);
+  |1| 'phi <-> 'psi;
+  |!def| ('phi -> 'psi) & ('psi -> 'phi);
 
   Using the symmetry of <ref ClassicalLogic.and />, we get
 
-  |AndSymmetryInf| ('psi => 'phi) & ('phi => 'psi);
-  |!def| 'psi <=> 'phi;.
+  |AndSymmetryInf| ('psi -> 'phi) & ('phi -> 'psi);
+  |!def| 'psi <-> 'phi;.
 }
 
 \Theorem EquivTransitive: ClassicalLogic {
@@ -301,31 +301,31 @@ glossary.
   var chi: Prop
 
   premise = [
-    'phi <=> 'psi;
-    'psi <=> 'chi;
+    'phi <-> 'psi;
+    'psi <-> 'chi;
   ]
-  assertion = 'phi <=> 'chi;
+  assertion = 'phi <-> 'chi;
 }
 
 \Proof EquivTransitive: ClassicalLogic {
   This is derived directly from the hypotheses.
 
-  |1| 'phi <=> 'psi;
-  |2| 'psi <=> 'chi;
+  |1| 'phi <-> 'psi;
+  |2| 'psi <-> 'chi;
 
   In the forward direction, we have
 
-  |EquivForwardInf| 'phi => 'psi;
-  |EquivForwardInf| 'psi => 'chi;
-  |Syllogism, #forward| 'phi => 'chi;.
+  |EquivForwardInf| 'phi -> 'psi;
+  |EquivForwardInf| 'psi -> 'chi;
+  |Syllogism, #forward| 'phi -> 'chi;.
 
   Similarly, in the backward direction, we have
 
-  |EquivBackwardInf| 'chi => 'psi;
-  |EquivBackwardInf| 'psi => 'phi;
-  |Syllogism, #backward| 'chi => 'phi;.
+  |EquivBackwardInf| 'chi -> 'psi;
+  |EquivBackwardInf| 'psi -> 'phi;
+  |Syllogism, #backward| 'chi -> 'phi;.
 
   Altogether, <ref #forward /> and <ref #backward /> combine to give us
 
-  |EquivIntroInf| 'phi <=> 'chi;.
+  |EquivIntroInf| 'phi <-> 'chi;.
 }

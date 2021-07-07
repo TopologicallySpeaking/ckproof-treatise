@@ -29,7 +29,7 @@ In <ref ClassicalLogic />, all statements are equivalent to some other statement
 written in CNF. For example,
 
 \[
-  !('phi & ('psi => 'chi))
+  !('phi & ('psi -> 'chi))
 \]
 
 is equivalent to
@@ -78,15 +78,15 @@ lemma which is used in the proofs which follow.
 
   var phi: Prop
 
-  assertion = !!'phi <=> 'phi;
+  assertion = !!'phi <-> 'phi;
 }
 
 \Proof DNegEquiv: ClassicalLogic {
   The proof is trivial.
 
-  |DNegElim| !!'phi => 'phi;
-  |DNegIntro| 'phi => !!'phi;
-  |EquivIntroInf| !!'phi <=> 'phi;
+  |DNegElim| !!'phi -> 'phi;
+  |DNegIntro| 'phi -> !!'phi;
+  |EquivIntroInf| !!'phi <-> 'phi;
 }
 
 Using this lemma, we derive the CNF for <ref ClassicalLogic.implies /> and
@@ -102,22 +102,22 @@ Using this lemma, we derive the CNF for <ref ClassicalLogic.implies /> and
   var phi: Prop
   var psi: Prop
 
-  assertion = ('phi => 'psi) <=> (!'phi | 'psi);
+  assertion = ('phi -> 'psi) <-> (!'phi | 'psi);
 }
 
 \Proof ImpliesCNF: ClassicalLogic {
   This is derived from <ref ClassicalLogic.DNegEquiv />.
 
-  |DNegEquiv| !!'phi <=> 'phi;
-  |EquivSymmetric| 'phi <=> !!'phi;
+  |DNegEquiv| !!'phi <-> 'phi;
+  |EquivSymmetric| 'phi <-> !!'phi;
 
   We then apply <ref ClassicalLogic.implies /> to both sides of the equivalence.
 
-  |!sub| ('phi => 'psi) <=> (!!'phi => 'psi);
+  |!sub| ('phi -> 'psi) <-> (!!'phi -> 'psi);
 
   By definition, this is what we were trying to show.
 
-  |!def| ('phi => 'psi) <=> (!'phi | 'psi);
+  |!def| ('phi -> 'psi) <-> (!'phi | 'psi);
 }
 
 \Theorem EquivCNF: ClassicalLogic {
@@ -130,25 +130,25 @@ Using this lemma, we derive the CNF for <ref ClassicalLogic.implies /> and
   var phi: Prop
   var psi: Prop
 
-  assertion = ('phi <=> 'psi) <=> (!'phi | 'psi) & (!'psi | 'phi);
+  assertion = ('phi <-> 'psi) <-> (!'phi | 'psi) & (!'psi | 'phi);
 }
 
 \Proof EquivCNF: ClassicalLogic {
   This is derived from the Conjunctive Normal Form for both the forward and
-  backward implications of \('phi <=> 'psi\).
+  backward implications of \('phi <-> 'psi\).
 
-  |ImpliesCNF| ('phi => 'psi) <=> (!'phi | 'psi);
-  |ImpliesCNF| ('psi => 'phi) <=> (!'psi | 'phi);
+  |ImpliesCNF| ('phi -> 'psi) <-> (!'phi | 'psi);
+  |ImpliesCNF| ('psi -> 'phi) <-> (!'psi | 'phi);
 
   Because <ref ClassicalLogic.and /> is a function over
   <ref ClassicalLogic.equiv />, we can conclude
 
   |AndFunctionEquiv|
-    ('phi => 'psi) & ('psi => 'phi) <=> (!'phi | 'psi) & (!'psi | 'phi);.
+    ('phi -> 'psi) & ('psi -> 'phi) <-> (!'phi | 'psi) & (!'psi | 'phi);.
 
   By definition, this is what were trying to show.
 
-  |!def| ('phi <=> 'psi) <=> (!'phi | 'psi) & (!'psi | 'phi);
+  |!def| ('phi <-> 'psi) <-> (!'phi | 'psi) & (!'psi | 'phi);
 }
 
 ## Constructing CNF for Larger Statements
@@ -162,15 +162,15 @@ Using this lemma, we derive the CNF for <ref ClassicalLogic.implies /> and
   var phi: Prop
   var psi: Prop
 
-  assertion = !('phi & 'psi) <=> (!'phi | !'psi);
+  assertion = !('phi & 'psi) <-> (!'phi | !'psi);
 }
 
 \Proof DeMorganAnd: ClassicalLogic {
-  |DNegEquiv| !!('phi => !'psi) <=> ('phi => !'psi);
-  |!def| !('phi & 'psi) <=> ('phi => !'psi);
+  |DNegEquiv| !!('phi -> !'psi) <-> ('phi -> !'psi);
+  |!def| !('phi & 'psi) <-> ('phi -> !'psi);
 
-  |ImpliesCNF| ('phi => !'psi) <=> (!'phi | !'psi);
-  |EquivTransitive| !('phi & 'psi) <=> (!'phi | !'psi);
+  |ImpliesCNF| ('phi -> !'psi) <-> (!'phi | !'psi);
+  |EquivTransitive| !('phi & 'psi) <-> (!'phi | !'psi);
 }
 
 \Theorem DeMorganOr: ClassicalLogic {
@@ -182,19 +182,19 @@ Using this lemma, we derive the CNF for <ref ClassicalLogic.implies /> and
   var phi: Prop
   var psi: Prop
 
-  assertion = !('phi | 'psi) <=> (!'phi & !'psi);
+  assertion = !('phi | 'psi) <-> (!'phi & !'psi);
 }
 
 \Proof DeMorganOr: ClassicalLogic {
-  |EquivReflexive| !(!'phi => 'psi) <=> !(!'phi => 'psi);
-  |!def| !('phi | 'psi) <=> !(!'phi => 'psi);
+  |EquivReflexive| !(!'phi -> 'psi) <-> !(!'phi -> 'psi);
+  |!def| !('phi | 'psi) <-> !(!'phi -> 'psi);
 
-  |DNegEquiv| !!'psi <=> 'psi;
-  |EquivSymmetric| 'psi <=> !!'psi;
-  |!sub| !(!'phi => 'psi) <=> !(!'phi => !!'psi);
-  |EquivTransitive| !('phi | 'psi) <=> !(!'phi => !!'psi);
+  |DNegEquiv| !!'psi <-> 'psi;
+  |EquivSymmetric| 'psi <-> !!'psi;
+  |!sub| !(!'phi -> 'psi) <-> !(!'phi -> !!'psi);
+  |EquivTransitive| !('phi | 'psi) <-> !(!'phi -> !!'psi);
 
-  |!def| !('phi | 'psi) <=> (!'phi & !'psi);
+  |!def| !('phi | 'psi) <-> (!'phi & !'psi);
 }
 
 \Theorem ImpliesDistribAnd: ClassicalLogic {
@@ -207,27 +207,27 @@ Using this lemma, we derive the CNF for <ref ClassicalLogic.implies /> and
   var psi: Prop
   var chi: Prop
 
-  assertion = ('phi => ('psi & 'chi)) <=> ('phi => 'psi) & ('phi => 'chi);
+  assertion = ('phi -> ('psi & 'chi)) <-> ('phi -> 'psi) & ('phi -> 'chi);
 }
 
 \Proof ImpliesDistribAnd: ClassicalLogic {
-  |AndRightElim| ('psi & 'chi) => 'psi;
-  |PropSimpleInf| 'phi => (('psi & 'chi) => 'psi);
-  |PropDistribInf| ('phi => ('psi & 'chi)) => ('phi => 'psi);
+  |AndRightElim| ('psi & 'chi) -> 'psi;
+  |PropSimpleInf| 'phi -> (('psi & 'chi) -> 'psi);
+  |PropDistribInf| ('phi -> ('psi & 'chi)) -> ('phi -> 'psi);
 
-  |AndLeftElim| ('psi & 'chi) => 'chi;
-  |PropSimpleInf| 'phi => (('psi & 'chi) => 'chi);
-  |PropDistribInf| ('phi => ('psi & 'chi)) => ('phi => 'chi);
+  |AndLeftElim| ('psi & 'chi) -> 'chi;
+  |PropSimpleInf| 'phi -> (('psi & 'chi) -> 'chi);
+  |PropDistribInf| ('phi -> ('psi & 'chi)) -> ('phi -> 'chi);
 
   |JoinConsequentInf|
-    ('phi => ('psi & 'chi)) => (('phi => 'psi) & ('phi => 'chi));
+    ('phi -> ('psi & 'chi)) -> (('phi -> 'psi) & ('phi -> 'chi));
 
   |JoinConsequent|
-    ('phi => 'psi) => (('phi => 'chi) => ('phi => ('psi & 'chi)));
-  |PropImport| (('phi => 'psi) & ('phi => 'chi)) => ('phi => ('psi & 'chi));
+    ('phi -> 'psi) -> (('phi -> 'chi) -> ('phi -> ('psi & 'chi)));
+  |PropImport| (('phi -> 'psi) & ('phi -> 'chi)) -> ('phi -> ('psi & 'chi));
 
   |EquivIntroInf|
-    ('phi => ('psi & 'chi)) <=> ('phi => 'psi) & ('phi => 'chi);
+    ('phi -> ('psi & 'chi)) <-> ('phi -> 'psi) & ('phi -> 'chi);
 }
 
 \Theorem OrDistribAnd: ClassicalLogic {
@@ -240,14 +240,14 @@ Using this lemma, we derive the CNF for <ref ClassicalLogic.implies /> and
   var psi: Prop
   var chi: Prop
 
-  assertion = 'phi | ('psi & 'chi) <=> ('phi | 'psi) & ('phi | 'chi);
+  assertion = 'phi | ('psi & 'chi) <-> ('phi | 'psi) & ('phi | 'chi);
 }
 
 \Proof OrDistribAnd: ClassicalLogic {
   |ImpliesDistribAnd|
-    (!'phi => ('psi & 'chi)) <=> ((!'phi => 'psi) & (!'phi => 'chi));
+    (!'phi -> ('psi & 'chi)) <-> ((!'phi -> 'psi) & (!'phi -> 'chi));
 
-  |!def| 'phi | ('psi & 'chi) <=> (('phi | 'psi) & ('phi | 'chi));
+  |!def| 'phi | ('psi & 'chi) <-> (('phi | 'psi) & ('phi | 'chi));
 }
 
 \Theorem AndDistribOr: ClassicalLogic {
@@ -260,56 +260,56 @@ Using this lemma, we derive the CNF for <ref ClassicalLogic.implies /> and
   var psi: Prop
   var chi: Prop
 
-  assertion = 'phi & ('psi | 'chi) <=> ('phi & 'psi) | ('phi & 'chi);
+  assertion = 'phi & ('psi | 'chi) <-> ('phi & 'psi) | ('phi & 'chi);
 }
 
 \Proof AndDistribOr: ClassicalLogic {
   The forward implication is derived from these two theorems.
 
-  |OrRightIntro, #right1| ('phi & 'psi) => ('phi & 'psi) | ('phi & 'chi);
-  |OrLeftIntro, #left1| ('phi & 'chi) => ('phi & 'psi) | ('phi & 'chi);
+  |OrRightIntro, #right1| ('phi & 'psi) -> ('phi & 'psi) | ('phi & 'chi);
+  |OrLeftIntro, #left1| ('phi & 'chi) -> ('phi & 'psi) | ('phi & 'chi);
 
   We can rearrange <ref #right1 /> to get
 
-  |PropExport| 'phi => ('psi => ('phi & 'psi) | ('phi & 'chi));
-  |PropCommutation, #right2| 'psi => ('phi => ('phi & 'psi) | ('phi & 'chi));.
+  |PropExport| 'phi -> ('psi -> ('phi & 'psi) | ('phi & 'chi));
+  |PropCommutation, #right2| 'psi -> ('phi -> ('phi & 'psi) | ('phi & 'chi));.
 
   Similarly, for <ref #left1 />, we get
 
-  |PropExport| 'phi => ('chi => ('phi & 'psi) | ('phi & 'chi));
-  |PropCommutation, #left2| 'chi => ('phi => ('phi & 'psi) | ('phi & 'chi));.
+  |PropExport| 'phi -> ('chi -> ('phi & 'psi) | ('phi & 'chi));
+  |PropCommutation, #left2| 'chi -> ('phi -> ('phi & 'psi) | ('phi & 'chi));.
 
   We can combine <ref #right2 /> and <ref #left2 /> to get
 
-  |OrElim| ('psi | 'chi) => ('phi => ('phi & 'psi) | ('phi & 'chi));.
+  |OrElim| ('psi | 'chi) -> ('phi -> ('phi & 'psi) | ('phi & 'chi));.
 
   From here, it's just a simple rearrangement to get the forward implication.
 
-  |PropCommutation| 'phi => (('psi | 'chi) => ('phi & 'psi) | ('phi & 'chi));
-  |PropImport| 'phi & ('psi | 'chi) => ('phi & 'psi) | ('phi & 'chi);
+  |PropCommutation| 'phi -> (('psi | 'chi) -> ('phi & 'psi) | ('phi & 'chi));
+  |PropImport| 'phi & ('psi | 'chi) -> ('phi & 'psi) | ('phi & 'chi);
 
   The backward implication is a little easier. From
 
-  |OrRightIntro| 'psi => 'psi | 'chi;,
+  |OrRightIntro| 'psi -> 'psi | 'chi;,
 
   we can apply <ref ClassicalLogic.and /> to both sides of the implication to
   get
 
-  |!sub, #right3| ('phi & 'psi) => 'phi & ('psi | 'chi);.
+  |!sub, #right3| ('phi & 'psi) -> 'phi & ('psi | 'chi);.
 
   Similarly,
 
-  |OrLeftIntro| 'chi => 'psi | 'chi;
-  |!sub, #left3| ('phi & 'chi) => 'phi & ('psi | 'chi);.
+  |OrLeftIntro| 'chi -> 'psi | 'chi;
+  |!sub, #left3| ('phi & 'chi) -> 'phi & ('psi | 'chi);.
 
   Finally, <ref #right3 /> and <ref #left3 /> can be combined to get the
   backward implication.
 
-  |OrElim| ('phi & 'psi) | ('phi & 'chi) => 'phi & ('psi | 'chi);
+  |OrElim| ('phi & 'psi) | ('phi & 'chi) -> 'phi & ('psi | 'chi);
 
   Altogether, we get
 
-  |EquivIntroInf| 'phi & ('psi | 'chi) <=> ('phi & 'psi) | ('phi & 'chi);.
+  |EquivIntroInf| 'phi & ('psi | 'chi) <-> ('phi & 'psi) | ('phi & 'chi);.
 }
 
 # Propositional Resolution
@@ -325,38 +325,38 @@ Using this lemma, we derive the CNF for <ref ClassicalLogic.implies /> and
   var psi: Prop
   var chi: Prop
 
-  assertion = ('phi | 'psi) & (!'phi | 'chi) => 'psi | 'chi;
+  assertion = ('phi | 'psi) & (!'phi | 'chi) -> 'psi | 'chi;
 }
 
 \Proof PropResolution: ClassicalLogic {
-  |PropExplosion| !'phi => ('phi => 'psi | 'chi);
-  |PropImport| (!'phi & 'phi) => 'psi | 'chi;
+  |PropExplosion| !'phi -> ('phi -> 'psi | 'chi);
+  |PropImport| (!'phi & 'phi) -> 'psi | 'chi;
 
-  |AndLeftElim| (!'phi & 'psi) => 'psi;
-  |OrRightIntro| 'psi => 'psi | 'chi;
-  |Syllogism| (!'phi & 'psi) => 'psi | 'chi;
+  |AndLeftElim| (!'phi & 'psi) -> 'psi;
+  |OrRightIntro| 'psi -> 'psi | 'chi;
+  |Syllogism| (!'phi & 'psi) -> 'psi | 'chi;
 
-  |OrElim| (!'phi & 'phi) | (!'phi & 'psi) => 'psi | 'chi;
+  |OrElim| (!'phi & 'phi) | (!'phi & 'psi) -> 'psi | 'chi;
 
-  |AndSymmetry| ('phi | 'psi) & !'phi => !'phi & ('phi | 'psi);
-  |AndDistribOr| !'phi & ('phi | 'psi) <=> (!'phi & 'phi) | (!'phi & 'psi);
-  |EquivForwardInf| !'phi & ('phi | 'psi) => (!'phi & 'phi) | (!'phi & 'psi);
-  |Syllogism| ('phi | 'psi) & !'phi => (!'phi & 'phi) | (!'phi & 'psi);
+  |AndSymmetry| ('phi | 'psi) & !'phi -> !'phi & ('phi | 'psi);
+  |AndDistribOr| !'phi & ('phi | 'psi) <-> (!'phi & 'phi) | (!'phi & 'psi);
+  |EquivForwardInf| !'phi & ('phi | 'psi) -> (!'phi & 'phi) | (!'phi & 'psi);
+  |Syllogism| ('phi | 'psi) & !'phi -> (!'phi & 'phi) | (!'phi & 'psi);
 
-  |Syllogism| ('phi | 'psi) & !'phi => 'psi | 'chi;
+  |Syllogism| ('phi | 'psi) & !'phi -> 'psi | 'chi;
 
-  |AndLeftElim| ('phi | 'psi) & 'chi => 'chi;
-  |OrLeftIntro| 'chi => 'psi | 'chi;
-  |Syllogism| ('phi | 'psi) & 'chi => 'psi | 'chi;
+  |AndLeftElim| ('phi | 'psi) & 'chi -> 'chi;
+  |OrLeftIntro| 'chi -> 'psi | 'chi;
+  |Syllogism| ('phi | 'psi) & 'chi -> 'psi | 'chi;
 
-  |OrElim| (('phi | 'psi) & !'phi) | (('phi | 'psi) & 'chi) => 'psi | 'chi;
+  |OrElim| (('phi | 'psi) & !'phi) | (('phi | 'psi) & 'chi) -> 'psi | 'chi;
   |AndDistribOr|
     ('phi | 'psi) & (!'phi | 'chi)
-      <=> (('phi | 'psi) & !'phi) | (('phi | 'psi) & 'chi);
+      <-> (('phi | 'psi) & !'phi) | (('phi | 'psi) & 'chi);
   |EquivForwardInf|
     ('phi | 'psi) & (!'phi | 'chi)
-      => (('phi | 'psi) & !'phi) | (('phi | 'psi) & 'chi);
-  |Syllogism| ('phi | 'psi) & (!'phi | 'chi) => 'psi | 'chi;
+      -> (('phi | 'psi) & !'phi) | (('phi | 'psi) & 'chi);
+  |Syllogism| ('phi | 'psi) & (!'phi | 'chi) -> 'psi | 'chi;
 }
 
 # Automatically Proofs Using Propositional Calculus

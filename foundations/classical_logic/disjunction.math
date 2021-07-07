@@ -48,9 +48,9 @@ one and stick with it, and mathematicians have chosen the Inclusive Or.
 
 Again, just like with <ref ClassicalLogic.and />, this symbol may be derived
 using only <ref ClassicalLogic.implies /> and <ref ClassicalLogic.negation />.
-If you work out the truth table for \(!'phi => 'psi\), it is identical to the
+If you work out the truth table for \(!'phi -> 'psi\), it is identical to the
 truth table of <ref ClassicalLogic.or />. And so, we define \('phi | 'psi\) as
-notational shorthand for \(!'phi => 'psi\).
+notational shorthand for \(!'phi -> 'psi\).
 
 \Definition or: ClassicalLogic {
   name = "Logical Disjunction"
@@ -63,7 +63,7 @@ notational shorthand for \(!'phi => 'psi\).
     psi: Prop,
   ]
   read = Infix |
-  expanded = !'phi => 'psi;
+  expanded = !'phi -> 'psi;
 }
 
 Surprisingly, we don't need very many theorems about <ref ClassicalLogic.or />
@@ -86,17 +86,17 @@ process is called Disjunction Introduction.
   var phi: Prop
   var psi: Prop
 
-  assertion = 'psi => 'phi | 'psi;
+  assertion = 'psi -> 'phi | 'psi;
 }
 
 \Proof OrLeftIntro: ClassicalLogic {
   Cnsider this axiom:
 
-  |PropSimple| 'psi => (!'phi => 'psi);
+  |PropSimple| 'psi -> (!'phi -> 'psi);
 
   The consequent is, by definition, what we're trying to prove.
 
-  |!def| 'psi => 'phi | 'psi;
+  |!def| 'psi -> 'phi | 'psi;
 }
 
 \Theorem OrRightIntro: ClassicalLogic {
@@ -108,21 +108,21 @@ process is called Disjunction Introduction.
   var phi: Prop
   var psi: Prop
 
-  assertion = 'phi => 'phi | 'psi;
+  assertion = 'phi -> 'phi | 'psi;
 }
 
 \Proof OrRightIntro: ClassicalLogic {
   We can rearrenge <ref ClassicalLogic.PropExplosion />,
   
-  |PropExplosion| !'phi => ('phi => 'psi);,
+  |PropExplosion| !'phi -> ('phi -> 'psi);,
 
   to get
 
-  |PropCommutation| 'phi => (!'phi => 'psi);.
+  |PropCommutation| 'phi -> (!'phi -> 'psi);.
 
   This is, by definition, what we're trying to prove.
 
-  |!def| 'phi => 'phi | 'psi;
+  |!def| 'phi -> 'phi | 'psi;
 }
 
 # Elimination and Proof By Cases
@@ -144,12 +144,12 @@ know which it is.
 
 Instead, we use a technique known as Proof by Cases. Let's say we have derived
 \('phi | 'psi\). As we have already seen, we don't know which of \('phi\) or
-\('psi\) are true. But, let's say we can also derive \('phi => 'chi\) and
-\('psi => 'chi\). If it were \('phi\) that were true, then by
+\('psi\) are true. But, let's say we can also derive \('phi -> 'chi\) and
+\('psi -> 'chi\). If it were \('phi\) that were true, then by
 <ref ClassicalLogic.ModusPonens />, we could derive \('chi\), and similarly if
 it were \('psi\) that were true, then we could still derive \('chi\). Thus,
-overall, if we can derive that \('phi => 'chi\) and \('psi => 'chi\), then
-\('phi | 'psi => 'chi\).
+overall, if we can derive that \('phi -> 'chi\) and \('psi -> 'chi\), then
+\('phi | 'psi -> 'chi\).
 
 Intuitively, this says that if we have a complicated antecedent, then we can
 break it up into a number of simpler cases. For example, if we have an integer
@@ -169,45 +169,45 @@ must be valid for all integers.
   var chi: Prop
 
   premise = [
-    'phi => 'chi;
-    'psi => 'chi;
+    'phi -> 'chi;
+    'psi -> 'chi;
   ]
-  assertion = 'phi | 'psi => 'chi;
+  assertion = 'phi | 'psi -> 'chi;
 }
 
 \Proof OrElim: ClassicalLogic {
   We begin with some simple reararngements of the second hypothesis.
 
-  |2| 'psi => 'chi;
-  |PropSimpleInf| !'phi => ('psi => 'chi);
-  |PropDistribInf| (!'phi => 'psi) => (!'phi => 'chi);
-  |PropCommutation, #1| !'phi => ((!'phi => 'psi) => 'chi);
+  |2| 'psi -> 'chi;
+  |PropSimpleInf| !'phi -> ('psi -> 'chi);
+  |PropDistribInf| (!'phi -> 'psi) -> (!'phi -> 'chi);
+  |PropCommutation, #1| !'phi -> ((!'phi -> 'psi) -> 'chi);
 
   Now consider the contrapositive of the first hypothesis:
 
-  |1| 'phi => 'chi;
-  |PropContraConvInf, #2| !'chi => !'phi;.
+  |1| 'phi -> 'chi;
+  |PropContraConvInf, #2| !'chi -> !'phi;.
 
   The consequent of <ref #2 /> is equal to the antecedent of <ref #1 />. Thus,
   by syllogism,
 
-  |Syllogism| !'chi => ((!'phi => 'psi) => 'chi);.
+  |Syllogism| !'chi -> ((!'phi -> 'psi) -> 'chi);.
 
   Now commute \(!'chi\) back inside.
 
-  |PropCommutation| (!'phi => 'psi) => (!'chi => 'chi);
+  |PropCommutation| (!'phi -> 'psi) -> (!'chi -> 'chi);
 
   Compare this consequent with <ref ClassicalLogic.Clavius />.
 
-  |Clavius| (!'chi => 'chi) => 'chi;
+  |Clavius| (!'chi -> 'chi) -> 'chi;
 
   Thus, by syllogism,
 
-  |Syllogism| (!'phi => 'psi) => 'chi;.
+  |Syllogism| (!'phi -> 'psi) -> 'chi;.
 
   This is the definition of what we're trying to prove.
 
-  |!def| 'phi | 'psi => 'chi;
+  |!def| 'phi | 'psi -> 'chi;
 }
 
 # The Law of Excluded Middle
@@ -226,6 +226,6 @@ TODO: Write about how controversial this is.
 }
 
 \Proof ExcludedMiddle: ClassicalLogic {
-  |PropIdentity| !'phi => !'phi;
+  |PropIdentity| !'phi -> !'phi;
   |!def| 'phi | !'phi;
 }

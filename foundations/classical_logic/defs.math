@@ -88,12 +88,12 @@ own symbol.
   description = {
     The left-hand side of the arrow is called the antecedent, and the right-hand
     side is called the consequent. Most importantly, the statement
-    \('phi => 'psi\) means that as soon as you derive the antecedent \('phi\),
+    \('phi -> 'psi\) means that as soon as you derive the antecedent \('phi\),
     you can immediately derive the consequent \('psi\).
   }
 
   type = Prop -> Prop -> Prop
-  read = Infix =>
+  read = Infix ->
 }
 
 While we're at it, we may as well define another symbol which we will need
@@ -163,7 +163,7 @@ somewhat non-trivial.
     <row>
       <cell>\('phi\)</cell>
       <cell>\('psi\)</cell>
-      <cell>\('phi => 'psi\)</cell>
+      <cell>\('phi -> 'psi\)</cell>
     </row>
   </head>
   <body>
@@ -192,7 +192,7 @@ somewhat non-trivial.
 </table>
 
 Let's go through this table row-by-row. The first row says that if \('phi\) and
-\('psi\) are both true, then the combined statement \('phi => 'psi\) is also
+\('psi\) are both true, then the combined statement \('phi -> 'psi\) is also
 true. At first, this may seem intuitively obvious, but something to bear in mind
 is that \('psi\) need not be related to \('phi\). All that's required is that
 they are both true.
@@ -205,7 +205,7 @@ from how if-then statements are used in natural language, as such statements
 usually imply a causal relationship.
 
 The second row says that if \('phi\) is true and \('psi\) is false, then the
-combined statement \('phi => 'psi\) is false. For example: ``I think, therefore
+combined statement \('phi -> 'psi\) is false. For example: ``I think, therefore
 I know everything." The first half, ``I think", is a true statement. However,
 the second half ``I know everything" is a false statement. And so, upon
 combining the two together with an if-then statement, we obtain a false
@@ -213,12 +213,12 @@ statement.
 
 This kind of statement is called a non-sequitur, and it's the only one of the
 four rows that people understand intuitively. That's because it's the only
-situation where the \(=>\) operator behaves the same as if-then statements in
+situation where the \(->\) operator behaves the same as if-then statements in
 natural language. That being said, non-sequiturs are an easy mistake to make,
 and you should learn how to recognize them.
 
 The third and fourth rows are the most surprising. They say that if \('phi\) is
-false, then \('phi => 'psi\) is always true, independent of \('psi\)! As it
+false, then \('phi -> 'psi\) is always true, independent of \('psi\)! As it
 turns out, this is <em>not</em> just some weird quirk which we can ignore in
 practice. It's not just common, it's <em>useful</em>; this is the thing which
 gives us proof by contradiction. The last row says that you can derive a false

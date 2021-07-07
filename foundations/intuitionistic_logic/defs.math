@@ -60,12 +60,12 @@ the scope of this treatise.
 \Symbol implies: IntuitionisticLogic {
   name = "Material Implication"
   tagline = {
-    The statement \('phi => 'psi\), which means that any proof of \('phi\) can
+    The statement \('phi -> 'psi\), which means that any proof of \('phi\) can
     be transformed into a proof of \('psi\).
   }
 
   type = Prop -> Prop -> Prop
-  read = Infix =>
+  read = Infix ->
 }
 
 \Symbol negation: IntuitionisticLogic {

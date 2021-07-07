@@ -4,15 +4,15 @@ reversing their order. This is actually equivalent to <em>adding</em> a negation
 while reversing their order, which we can see from
 <ref ClassicalLogic.DNegElim />.
 
-Consider what would happen if we took \(!'psi => !'phi\), reversed the order,
-and then <em>added</em> a negation. We would get \(!!'phi => !!'psi\), and after
-eliminating the double negatives, we do in fact get \('phi => 'psi\). This form
+Consider what would happen if we took \(!'psi -> !'phi\), reversed the order,
+and then <em>added</em> a negation. We would get \(!!'phi -> !!'psi\), and after
+eliminating the double negatives, we do in fact get \('phi -> 'psi\). This form
 of the contrapositive is basically the moody little brother of the axiom.
 
 Similar things happen if only one of the halves are negated. If you take the
-contrapositive of \(!'psi => 'phi\), you get \(!'phi => !!'psi\) which reduces
-to \(!'phi => 'psi\), and similarly the contrapositive of \('psi => !'phi\)
-reduces to \('phi => !'psi\). It's like
+contrapositive of \(!'psi -> 'phi\), you get \(!'phi -> !!'psi\) which reduces
+to \(!'phi -> 'psi\), and similarly the contrapositive of \('psi -> !'phi\)
+reduces to \('phi -> !'psi\). It's like
 <a https://bulbapedia.bulbagarden.net/wiki/Tate_and_Liza>that gym battle in
 Pokémon with the psychic twins</a>.
 
@@ -32,24 +32,24 @@ derive the other three sibilings as theorems.
   var phi: Prop
   var psi: Prop
 
-  assertion = (!'phi => 'psi) => (!'psi => 'phi);
+  assertion = (!'phi -> 'psi) -> (!'psi -> 'phi);
 }
 
 \Proof PropContraLeft: ClassicalLogic {
   We can derive this from
 
-  |DNegIntro| 'psi => !!'psi;.
+  |DNegIntro| 'psi -> !!'psi;.
 
   Begin by distributing in \(!'phi\).
 
-  |PropSimpleInf| !'phi => ('psi => !!'psi);
-  |PropDistribInf| (!'phi => 'psi) => (!'phi => !!'psi);
+  |PropSimpleInf| !'phi -> ('psi -> !!'psi);
+  |PropDistribInf| (!'phi -> 'psi) -> (!'phi -> !!'psi);
 
   This is almost what we're looking for; we just need to take the contrapositive
   of the consequent.
 
-  |PropContra| (!'phi => !!'psi) => (!'psi => 'phi);
-  |Syllogism| (!'phi => 'psi) => (!'psi => 'phi);
+  |PropContra| (!'phi -> !!'psi) -> (!'psi -> 'phi);
+  |Syllogism| (!'phi -> 'psi) -> (!'psi -> 'phi);
 
   Bada bing, bada boom, this completes the proof.
 }
@@ -66,39 +66,39 @@ derive the other three sibilings as theorems.
   var phi: Prop
   var psi: Prop
 
-  assertion = ('phi => !'psi) => ('psi => !'phi);
+  assertion = ('phi -> !'psi) -> ('psi -> !'phi);
 }
 
 \Proof PropContraRight: ClassicalLogic {
   We begin with this tautology:
 
-  |PropIdentity| ('phi => !'psi) => ('phi => !'psi);.
+  |PropIdentity| ('phi -> !'psi) -> ('phi -> !'psi);.
 
   This is almost usable. However, for what we're about to do, we need the
   \('phi\) in the consequent to be doubly negated. To get this, we first bring
   that \('phi\) outside for easier access.
 
-  |PropCommutation, #1| 'phi => (('phi => !'psi) => !'psi);
+  |PropCommutation, #1| 'phi -> (('phi -> !'psi) -> !'psi);
 
   We can use a syllogism with <ref #1 /> and
 
-  |DNegElim| !!'phi => 'phi;
+  |DNegElim| !!'phi -> 'phi;
 
   to get
 
-  |Syllogism| !!'phi => (('phi => !'psi) => !'psi);.
+  |Syllogism| !!'phi -> (('phi -> !'psi) -> !'psi);.
 
   Now we can bring the \(!!'phi\) back inside to get
 
-  |PropCommutation| ('phi => !'psi) => (!!'phi => !'psi);.
+  |PropCommutation| ('phi -> !'psi) -> (!!'phi -> !'psi);.
 
   The setup is complete. We can now take the contrapositive of the consequent
 
-  |PropContra| (!!'phi => !'psi) => ('psi => !'phi);,
+  |PropContra| (!!'phi -> !'psi) -> ('psi -> !'phi);,
 
   which gives us the statement we were looking for:
 
-  |Syllogism| ('phi => !'psi) => ('psi => !'phi);.
+  |Syllogism| ('phi -> !'psi) -> ('psi -> !'phi);.
 }
 
 \Theorem PropContraConv: ClassicalLogic {
@@ -113,35 +113,35 @@ derive the other three sibilings as theorems.
   var phi: Prop
   var psi: Prop
 
-  assertion = ('phi => 'psi) => (!'psi => !'phi);
+  assertion = ('phi -> 'psi) -> (!'psi -> !'phi);
 }
 
 \Proof PropContraConv: ClassicalLogic {
   The proof for this is exactly the same as the last, except we use a different
   form of the contrapositive. We again begin with 
 
-  |PropIdentity| ('phi => 'psi) => ('phi => 'psi);.
+  |PropIdentity| ('phi -> 'psi) -> ('phi -> 'psi);.
 
   We bring \('phi\) to the front,
 
-  |PropCommutation| 'phi => (('phi => 'psi) => 'psi);,
+  |PropCommutation| 'phi -> (('phi -> 'psi) -> 'psi);,
 
   and combine it with
 
-  |DNegElim| !!'phi => 'phi;
+  |DNegElim| !!'phi -> 'phi;
 
   to get
 
-  |Syllogism| !!'phi => (('phi => 'psi) => 'psi);.
+  |Syllogism| !!'phi -> (('phi -> 'psi) -> 'psi);.
 
   After bringing \(!!'phi\) back in,
 
-  |PropCommutation| ('phi => 'psi) => (!!'phi => 'psi);,
+  |PropCommutation| ('phi -> 'psi) -> (!!'phi -> 'psi);,
 
   we use <ref ClassicalLogic.PropContraLeft /> to get what we are looking for.
 
-  |PropContraLeft| (!!'phi => 'psi) => (!'psi => !'phi);
-  |Syllogism| ('phi => 'psi) => (!'psi => !'phi);
+  |PropContraLeft| (!!'phi -> 'psi) -> (!'psi -> !'phi);
+  |Syllogism| ('phi -> 'psi) -> (!'psi -> !'phi);
 }
 
 # Inference Forms of The Contrapositive Family
@@ -159,15 +159,15 @@ family.
   var psi: Prop
 
   premise = [
-    !'phi => 'psi;
+    !'phi -> 'psi;
   ]
-  assertion = !'psi => 'phi;
+  assertion = !'psi -> 'phi;
 }
 
 \Proof PropContraLeftInf: ClassicalLogic {
-  |PropContraLeft| (!'phi => 'psi) => (!'psi => 'phi);
-  |1| !'phi => 'psi;
-  |ModusPonens| !'psi => 'phi;
+  |PropContraLeft| (!'phi -> 'psi) -> (!'psi -> 'phi);
+  |1| !'phi -> 'psi;
+  |ModusPonens| !'psi -> 'phi;
 }
 
 \Theorem PropContraRightInf: ClassicalLogic {
@@ -180,15 +180,15 @@ family.
   var psi: Prop
 
   premise = [
-    'phi => !'psi;
+    'phi -> !'psi;
   ]
-  assertion = 'psi => !'phi;
+  assertion = 'psi -> !'phi;
 }
 
 \Proof PropContraRightInf: ClassicalLogic {
-  |PropContraRight| ('phi => !'psi) => ('psi => !'phi);
-  |1| 'phi => !'psi;
-  |ModusPonens| 'psi => !'phi;
+  |PropContraRight| ('phi -> !'psi) -> ('psi -> !'phi);
+  |1| 'phi -> !'psi;
+  |ModusPonens| 'psi -> !'phi;
 }
 
 \Theorem PropContraConvInf: ClassicalLogic {
@@ -201,13 +201,13 @@ family.
   var psi: Prop
 
   premise = [
-    'phi => 'psi;
+    'phi -> 'psi;
   ]
-  assertion = !'psi => !'phi;
+  assertion = !'psi -> !'phi;
 }
 
 \Proof PropContraConvInf: ClassicalLogic {
-  |PropContraConv| ('phi => 'psi) => (!'psi => !'phi);
-  |1| 'phi => 'psi;
-  |ModusPonens| !'psi => !'phi;
+  |PropContraConv| ('phi -> 'psi) -> (!'psi -> !'phi);
+  |1| 'phi -> 'psi;
+  |ModusPonens| !'psi -> !'phi;
 }

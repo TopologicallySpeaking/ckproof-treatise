@@ -31,7 +31,7 @@ same general form:
   var phi: Prop
   var psi: Prop
 
-  assertion = 'phi => ('psi => 'phi);
+  assertion = 'phi -> ('psi -> 'phi);
 }
 
 \Axiom PropDistrib: ClassicalLogic {
@@ -45,13 +45,13 @@ same general form:
     antecedent is
     
     \[
-      'phi => ('psi => 'chi)
+      'phi -> ('psi -> 'chi)
     \],
 
     and the consequent is
 
     \[
-      ('phi => 'psi) => ('phi => 'chi)
+      ('phi -> 'psi) -> ('phi -> 'chi)
     \].
 
     Thus, the intuitive way to understand this axiom is that the
@@ -62,7 +62,7 @@ same general form:
   var psi: Prop
   var chi: Prop
 
-  assertion = ('phi => ('psi => 'chi)) => (('phi => 'psi) => ('phi => 'chi));
+  assertion = ('phi -> ('psi -> 'chi)) -> (('phi -> 'psi) -> ('phi -> 'chi));
 }
 
 \Axiom PropContra: ClassicalLogic {
@@ -72,15 +72,15 @@ same general form:
   }
   description = {
     The contrapositive, if that was unclear, is obtained from the statement
-    \('phi => 'psi\) by negating both the antecedent and consequent, then
+    \('phi -> 'psi\) by negating both the antecedent and consequent, then
     swapping their order. In this case, the contrapositive would be
-    \(!'psi => !'phi\).
+    \(!'psi -> !'phi\).
   }
 
   var phi: Prop
   var psi: Prop
 
-  assertion = (!'psi => !'phi) => ('phi => 'psi);
+  assertion = (!'psi -> !'phi) -> ('phi -> 'psi);
 }
 
 Now's a good time to describe how to use these axioms. The statement immediately
@@ -94,7 +94,7 @@ anywhere in a proof.
 Technically, these axioms are actually axiom <em>schemas</em>, each of which
 stand for infinitely many axioms. The variables in these axiom schemas, which
 may be recognized by the apostrophe before them, are actually placeholders for
-any expression of the proper type. For example, \(p => (p => p)\) is an axiom
+any expression of the proper type. For example, \(p -> (p -> p)\) is an axiom
 (provided \(p\) is a proposition) because it can be derived from <ref
 ClassicalLogic.PropSimple /> by making the following substitutions:
 
@@ -122,7 +122,7 @@ need one more axiom:
   var psi: Prop
 
   premise = [
-    'phi => 'psi;
+    'phi -> 'psi;
     'phi;
   ]
   assertion = 'psi;
@@ -131,7 +131,7 @@ need one more axiom:
 This axiom is different from the other three because this axiom has a premise.
 Before we may derive the assertion, we must first derive every item in the
 premise. That is, when we write a proof and we wish to derive \('psi\) using
-<ref ClassicalLogic.ModusPonens />, we must first derive both \('phi => 'psi\)
+<ref ClassicalLogic.ModusPonens />, we must first derive both \('phi -> 'psi\)
 and \('phi\). Only then may we derive \('psi\).
 
 To prove any theorem, we simply have to find axioms from which we can use
@@ -151,7 +151,7 @@ itself.
 
   var phi: Prop
 
-  assertion = 'phi => 'phi;
+  assertion = 'phi -> 'phi;
 }
 
 If this were listed as an axiom and not a theorem, then we could just use it in
@@ -174,13 +174,13 @@ exactly the same way as we do the axioms.
   We begin by deriving an axiom in the form of
   <ref ClassicalLogic.PropSimple />.
 
-  |PropSimple, #1| 'phi => (('phi => 'phi) => 'phi);.
+  |PropSimple, #1| 'phi -> (('phi -> 'phi) -> 'phi);.
 
   Specifically, this axiom is found by making the following substitutions:
 
   <sublist>
     'phi >>> 'phi;
-    'psi >>> ('phi => 'phi);
+    'psi >>> ('phi -> 'phi);
   </sublist>
 
   Sometimes, a statement will be too long to easily recognize the substitutions.
@@ -194,12 +194,12 @@ exactly the same way as we do the axioms.
 
   <sublist>
     'phi >>> 'phi;
-    'psi >>> ('phi => 'phi);
+    'psi >>> ('phi -> 'phi);
     'chi >>> 'phi;
   </sublist>
 
-  |PropDistrib, #2| ('phi => (('phi => 'phi) => 'phi))
-    => (('phi => ('phi => 'phi)) => ('phi => 'phi));.
+  |PropDistrib, #2| ('phi -> (('phi -> 'phi) -> 'phi))
+    -> (('phi -> ('phi -> 'phi)) -> ('phi -> 'phi));.
 
   As you can probably tell by now, if all proofs were like this, they would be
   too tedious to use for any practical purpose. Fear not: on the next page, we
@@ -210,20 +210,20 @@ exactly the same way as we do the axioms.
   among you will have noticed that the antecedent of <ref #2 /> is equal to
   <ref #1 />. This means we can use <ref ClassicalLogic.ModusPonens /> to derive
 
-  |ModusPonens, #3| ('phi => ('phi => 'phi)) => ('phi => 'phi);.
+  |ModusPonens, #3| ('phi -> ('phi -> 'phi)) -> ('phi -> 'phi);.
 
-  This is progress because if we can derive \('phi => ('phi => 'phi)\), i.e. the
+  This is progress because if we can derive \('phi -> ('phi -> 'phi)\), i.e. the
   antecedent of <ref #3 />, then we can use another round of
   <ref ClassicalLogic.ModusPonens /> to derive the consequent of <ref #3 />,
   which happens to be the thing we want to show.
 
   Felicitiously, this antecedent happens to be an axiom:
 
-  |PropSimple| 'phi => ('phi => 'phi);.
+  |PropSimple| 'phi -> ('phi -> 'phi);.
 
   Finally, we can derive
 
-  |ModusPonens| 'phi => 'phi;,
+  |ModusPonens| 'phi -> 'phi;,
 
   which is what we wanted to show.
 }

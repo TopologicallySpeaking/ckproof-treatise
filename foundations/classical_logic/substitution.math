@@ -75,7 +75,7 @@ function over <ref ClassicalLogic.equiv />.
 \Theorem NegationFunctionEquiv: ClassicalLogic {
   name = "Negation is a Function over Material Implication"
   tagline = {
-    If \('phi <=> 'psi\), then \(!'phi <=> !'psi\).
+    If \('phi <-> 'psi\), then \(!'phi <-> !'psi\).
   }
 
   flags = [
@@ -86,36 +86,36 @@ function over <ref ClassicalLogic.equiv />.
   var psi: Prop
 
   premise = [
-    'phi <=> 'psi;
+    'phi <-> 'psi;
   ]
-  assertion = !'phi <=> !'psi;
+  assertion = !'phi <-> !'psi;
 }
 
 \Proof NegationFunctionEquiv: ClassicalLogic {
   This can be derived directly from the hypothesis.
 
-  |1| 'phi <=> 'psi;
+  |1| 'phi <-> 'psi;
 
   In the forward direction,
 
-  |EquivForwardInf| 'phi => 'psi;
-  |PropContraConvInf| !'psi => !'phi;.
+  |EquivForwardInf| 'phi -> 'psi;
+  |PropContraConvInf| !'psi -> !'phi;.
 
   Similarly, in the backward direction,
 
-  |EquivBackwardInf| 'psi => 'phi;
-  |PropContraConvInf| !'phi => !'psi;.
+  |EquivBackwardInf| 'psi -> 'phi;
+  |PropContraConvInf| !'phi -> !'psi;.
 
   Altogether, this gives us
 
-  |EquivIntroInf| !'phi <=> !'psi;,
+  |EquivIntroInf| !'phi <-> !'psi;,
 
   which is what we were trying to prove.
 }
 
 This does not, however, work for <ref ClassicalLogic.implies />, which you can
-see if you work out the truth tables for \('phi => 'psi\) and
-\(!'phi => !'psi\).
+see if you work out the truth tables for \('phi -> 'psi\) and
+\(!'phi -> !'psi\).
 
 The proofs for two-input functions are not significantly more complicated, but
 they do tend to be quite a bit longer. As a surprising yet commonly used
@@ -125,8 +125,8 @@ example, we shall prove that <ref ClassicalLogic.implies /> is a function over
 \Theorem ImpliesFunctionEquiv: ClassicalLogic {
   name = "Material Implication is a Function over Material Equivalence"
   tagline = {
-    If \('phi <=> 'psi\) and \('chi <=> 'theta\), then
-    \(('phi => 'chi) <=> ('psi => 'theta)\).
+    If \('phi <-> 'psi\) and \('chi <-> 'theta\), then
+    \(('phi -> 'chi) <-> ('psi -> 'theta)\).
   }
 
   flags = [
@@ -139,58 +139,58 @@ example, we shall prove that <ref ClassicalLogic.implies /> is a function over
   var theta: Prop
 
   premise = [
-    'phi <=> 'psi;
-    'chi <=> 'theta;
+    'phi <-> 'psi;
+    'chi <-> 'theta;
   ]
-  assertion = ('phi => 'chi) <=> ('psi => 'theta);
+  assertion = ('phi -> 'chi) <-> ('psi -> 'theta);
 }
 
 \Proof ImpliesFunctionEquiv: ClassicalLogic {
   Starting from the hypotheses
 
-  |1, #h1| 'phi <=> 'psi;
-  |2, #h2| 'chi <=> 'theta;,
+  |1, #h1| 'phi <-> 'psi;
+  |2, #h2| 'chi <-> 'theta;,
 
   we distribute \('phi\) into the forward implication of <ref #h2 />.
 
-  |EquivForwardInf| 'chi => 'theta;
-  |PropSimpleInf| 'phi => ('chi => 'theta);
-  |PropDistribInf| ('phi => 'chi) => ('phi => 'theta);
+  |EquivForwardInf| 'chi -> 'theta;
+  |PropSimpleInf| 'phi -> ('chi -> 'theta);
+  |PropDistribInf| ('phi -> 'chi) -> ('phi -> 'theta);
 
   This is almost the forward implication of what we are trying to show, but the
   \('phi\) in the consequent should be replaced with \('psi\). To do this, we
   start by bringing that \('phi\) out to the front.
 
-  |PropCommutation| 'phi => (('phi => 'chi) => 'theta);
+  |PropCommutation| 'phi -> (('phi -> 'chi) -> 'theta);
 
   From here, we may use the backward implication of <ref #h1 /> to derive
 
-  |EquivBackwardInf| 'psi => 'phi;
-  |Syllogism| 'psi => (('phi => 'chi) => 'theta);.
+  |EquivBackwardInf| 'psi -> 'phi;
+  |Syllogism| 'psi -> (('phi -> 'chi) -> 'theta);.
 
   We can bring that \('psi\) back in to get the forward implication of what we
   are looking for.
 
-  |PropCommutation| ('phi => 'chi) => ('psi => 'theta);
+  |PropCommutation| ('phi -> 'chi) -> ('psi -> 'theta);
 
   The backward implication is similar. We begin by working the backward
   implication of <ref #h2 />.
 
-  |EquivBackwardInf| 'theta => 'chi;
-  |PropSimpleInf| 'psi => ('theta => 'chi);
-  |PropDistribInf| ('psi => 'theta) => ('psi => 'chi);
+  |EquivBackwardInf| 'theta -> 'chi;
+  |PropSimpleInf| 'psi -> ('theta -> 'chi);
+  |PropDistribInf| ('psi -> 'theta) -> ('psi -> 'chi);
 
   The \('psi\) in the consequent should be a \('phi\), and we can do this by
   using the forward implication of <ref #h1 />.
 
-  |PropCommutation| 'psi => (('psi => 'theta) => 'chi);
-  |EquivForwardInf| 'phi => 'psi;
-  |Syllogism| 'phi => (('psi => 'theta) => 'chi);
-  |PropCommutation| ('psi => 'theta) => ('phi => 'chi);
+  |PropCommutation| 'psi -> (('psi -> 'theta) -> 'chi);
+  |EquivForwardInf| 'phi -> 'psi;
+  |Syllogism| 'phi -> (('psi -> 'theta) -> 'chi);
+  |PropCommutation| ('psi -> 'theta) -> ('phi -> 'chi);
 
   Altogether, we have
 
-  |EquivIntroInf| ('phi => 'chi) <=> ('psi => 'theta);.
+  |EquivIntroInf| ('phi -> 'chi) <-> ('psi -> 'theta);.
 }
 
 ## Conjunction and Disjunction
@@ -201,8 +201,8 @@ example, we shall prove that <ref ClassicalLogic.implies /> is a function over
 \Theorem AndFunctionImplies: ClassicalLogic {
   name = "Logical Conjunction is a Function over Material Implication"
   tagline = {
-    If \('phi => 'psi\) and \('chi => 'theta\), then
-    \(('phi & 'chi) => ('psi & 'theta)\).
+    If \('phi -> 'psi\) and \('chi -> 'theta\), then
+    \(('phi & 'chi) -> ('psi & 'theta)\).
   }
 
   flags = [
@@ -215,10 +215,10 @@ example, we shall prove that <ref ClassicalLogic.implies /> is a function over
   var theta: Prop
 
   premise = [
-    'phi => 'psi;
-    'chi => 'theta;
+    'phi -> 'psi;
+    'chi -> 'theta;
   ]
-  assertion = ('phi & 'chi) => ('psi & 'theta);
+  assertion = ('phi & 'chi) -> ('psi & 'theta);
 }
 
 \Proof AndFunctionImplies: ClassicalLogic {
@@ -229,33 +229,33 @@ example, we shall prove that <ref ClassicalLogic.implies /> is a function over
   We begin by distributing \('psi\) into the contrapositive of the second
   hypothesis.
 
-  |2| 'chi => 'theta;
-  |PropContraConvInf| !'theta => !'chi;
-  |PropSimpleInf| 'psi => (!'theta => !'chi);
-  |PropDistribInf| ('psi => !'theta) => ('psi => !'chi);
+  |2| 'chi -> 'theta;
+  |PropContraConvInf| !'theta -> !'chi;
+  |PropSimpleInf| 'psi -> (!'theta -> !'chi);
+  |PropDistribInf| ('psi -> !'theta) -> ('psi -> !'chi);
 
   Next, we change the \('psi\) in the consequent into a \('phi\), which we can
   do by using the first hypothesis.
 
-  |PropCommutation| 'psi => (('psi => !'theta) => !'chi);
-  |1| 'phi => 'psi;
-  |Syllogism| 'phi => (('psi => !'theta) => !'chi);
-  |PropCommutation| ('psi => !'theta) => ('phi => !'chi);
+  |PropCommutation| 'psi -> (('psi -> !'theta) -> !'chi);
+  |1| 'phi -> 'psi;
+  |Syllogism| 'phi -> (('psi -> !'theta) -> !'chi);
+  |PropCommutation| ('psi -> !'theta) -> ('phi -> !'chi);
 
   The contrapositive of this statement,
 
-  |PropContraConvInf| !('phi => !'chi) => !('psi => !'theta);,
+  |PropContraConvInf| !('phi -> !'chi) -> !('psi -> !'theta);,
 
   is the definition of what we were trying to show.
 
-  |!def| ('phi & 'chi) => ('psi & 'theta);
+  |!def| ('phi & 'chi) -> ('psi & 'theta);
 }
 
 \Theorem OrFunctionImplies: ClassicalLogic {
   name = "Logical Disjunction is a Function over Material Implication"
   tagline = {
-    If \('phi => 'psi\) and \('chi => 'theta\), then
-    \(('phi | 'chi) => ('psi | 'theta)\).
+    If \('phi -> 'psi\) and \('chi -> 'theta\), then
+    \(('phi | 'chi) -> ('psi | 'theta)\).
   }
 
   flags = [
@@ -268,32 +268,32 @@ example, we shall prove that <ref ClassicalLogic.implies /> is a function over
   var theta: Prop
 
   premise = [
-    'phi => 'psi;
-    'chi => 'theta;
+    'phi -> 'psi;
+    'chi -> 'theta;
   ]
-  assertion = ('phi | 'chi) => ('psi | 'theta);
+  assertion = ('phi | 'chi) -> ('psi | 'theta);
 }
 
 \Proof OrFunctionImplies: ClassicalLogic {
   This proof is similar to the last. Begin by distributing \(!'phi\) into the
   second hypothesis.
 
-  |2| 'chi => 'theta;
-  |PropSimpleInf| !'phi => ('chi => 'theta);
-  |PropDistribInf| (!'phi => 'chi) => (!'phi => 'theta);
+  |2| 'chi -> 'theta;
+  |PropSimpleInf| !'phi -> ('chi -> 'theta);
+  |PropDistribInf| (!'phi -> 'chi) -> (!'phi -> 'theta);
 
   Next, we change the \(!'phi\) in the consequent into a \(!'psi\), which we can
   do by using the contrapositive of the first hypothesis.
 
-  |PropCommutation| !'phi => ((!'phi => 'chi) => 'theta);
-  |1| 'phi => 'psi;
-  |PropContraConvInf| !'psi => !'phi;
-  |Syllogism| !'psi => ((!'phi => 'chi) => 'theta);
-  |PropCommutation| (!'phi => 'chi) => (!'psi => 'theta);
+  |PropCommutation| !'phi -> ((!'phi -> 'chi) -> 'theta);
+  |1| 'phi -> 'psi;
+  |PropContraConvInf| !'psi -> !'phi;
+  |Syllogism| !'psi -> ((!'phi -> 'chi) -> 'theta);
+  |PropCommutation| (!'phi -> 'chi) -> (!'psi -> 'theta);
 
   This is the definition of what we were trying to show.
 
-  |!def| ('phi | 'chi) => ('psi | 'theta);
+  |!def| ('phi | 'chi) -> ('psi | 'theta);
 }
 
 This property can be inherited to prove that they are both functions over
@@ -302,8 +302,8 @@ This property can be inherited to prove that they are both functions over
 \Theorem AndFunctionEquiv: ClassicalLogic {
   name = "Logical Conjunction is a Function over Material Equivalence"
   tagline = {
-    If \('phi <=> 'psi\) and \('chi <=> 'theta\), then
-    \(('phi & 'chi) <=> ('psi & 'theta)\).
+    If \('phi <-> 'psi\) and \('chi <-> 'theta\), then
+    \(('phi & 'chi) <-> ('psi & 'theta)\).
   }
 
   flags = [
@@ -316,43 +316,43 @@ This property can be inherited to prove that they are both functions over
   var theta: Prop
 
   premise = [
-    'phi <=> 'psi;
-    'chi <=> 'theta;
+    'phi <-> 'psi;
+    'chi <-> 'theta;
   ]
-  assertion = ('phi & 'chi) <=> ('psi & 'theta);
+  assertion = ('phi & 'chi) <-> ('psi & 'theta);
 }
 
 \Proof AndFunctionEquiv: ClassicalLogic {
   This property is inherited from <ref ClassicalLogic.AndFunctionImplies />. We
   begin with the hypotheses.
 
-  |1| 'phi <=> 'psi;
-  |2| 'chi <=> 'theta;
+  |1| 'phi <-> 'psi;
+  |2| 'chi <-> 'theta;
 
   From the forward implications of the hypotheses, we can apply <ref
   ClassicalLogic.and /> as a function.
 
-  |EquivForwardInf| 'phi => 'psi;
-  |EquivForwardInf| 'chi => 'theta;
-  |AndFunctionImplies| ('phi & 'chi) => ('psi & 'theta);
+  |EquivForwardInf| 'phi -> 'psi;
+  |EquivForwardInf| 'chi -> 'theta;
+  |AndFunctionImplies| ('phi & 'chi) -> ('psi & 'theta);
 
   This gives us the forward implication for what we are trying to show. We get
   the backward implication similarly.
 
-  |EquivBackwardInf| 'psi => 'phi;
-  |EquivBackwardInf| 'theta => 'chi;
-  |AndFunctionImplies| ('psi & 'theta) => ('phi & 'chi);
+  |EquivBackwardInf| 'psi -> 'phi;
+  |EquivBackwardInf| 'theta -> 'chi;
+  |AndFunctionImplies| ('psi & 'theta) -> ('phi & 'chi);
 
   Altogether, we get
 
-  |EquivIntroInf| ('phi & 'chi) <=> ('psi & 'theta);.
+  |EquivIntroInf| ('phi & 'chi) <-> ('psi & 'theta);.
 }
 
 \Theorem OrFunctionEquiv: ClassicalLogic {
   name = "Logic Disjunction is a Function over Material Equivalence"
   tagline = {
-    If \('phi <=> 'psi\) and \('chi <=> 'theta\), then
-    \(('phi | 'chi) <=> ('psi | 'theta)\).
+    If \('phi <-> 'psi\) and \('chi <-> 'theta\), then
+    \(('phi | 'chi) <-> ('psi | 'theta)\).
   }
 
   flags = [
@@ -365,36 +365,36 @@ This property can be inherited to prove that they are both functions over
   var theta: Prop
 
   premise = [
-    'phi <=> 'psi;
-    'chi <=> 'theta;
+    'phi <-> 'psi;
+    'chi <-> 'theta;
   ]
-  assertion = ('phi | 'chi) <=> ('psi | 'theta);
+  assertion = ('phi | 'chi) <-> ('psi | 'theta);
 }
 
 \Proof OrFunctionEquiv: ClassicalLogic {
   This property is inherited from <ref ClassicalLogic.OrFunctionImplies />. We
   begin with the hypotheses.
 
-  |1| 'phi <=> 'psi;
-  |2| 'chi <=> 'theta;
+  |1| 'phi <-> 'psi;
+  |2| 'chi <-> 'theta;
 
   From the forward implications of the hypotheses, we can apply <ref
   ClassicalLogic.and /> as a function.
 
-  |EquivForwardInf| 'phi => 'psi;
-  |EquivForwardInf| 'chi => 'theta;
-  |OrFunctionImplies| ('phi | 'chi) => ('psi | 'theta);
+  |EquivForwardInf| 'phi -> 'psi;
+  |EquivForwardInf| 'chi -> 'theta;
+  |OrFunctionImplies| ('phi | 'chi) -> ('psi | 'theta);
 
   This gives us the forward implication for what we are trying to show. We get
   the backward implication similarly.
 
-  |EquivBackwardInf| 'psi => 'phi;
-  |EquivBackwardInf| 'theta => 'chi;
-  |OrFunctionImplies| ('psi | 'theta) => ('phi | 'chi);
+  |EquivBackwardInf| 'psi -> 'phi;
+  |EquivBackwardInf| 'theta -> 'chi;
+  |OrFunctionImplies| ('psi | 'theta) -> ('phi | 'chi);
 
   Altogether, we get
 
-  |EquivIntroInf| ('phi | 'chi) <=> ('psi | 'theta);
+  |EquivIntroInf| ('phi | 'chi) <-> ('psi | 'theta);
 }
 
 # Automatic Function Application

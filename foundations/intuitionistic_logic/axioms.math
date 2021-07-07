@@ -8,7 +8,7 @@
   var psi: Prop
 
   premise = [
-    'phi => 'psi;
+    'phi -> 'psi;
     'phi;
   ]
   assertion = 'psi;
@@ -17,13 +17,13 @@
 \Axiom PropSimple: IntuitionisticLogic {
   name = "The Axiom of Simplification"
   tagline = {
-    We can transform a proof of \('phi\) into a proof of \('psi => 'phi\).
+    We can transform a proof of \('phi\) into a proof of \('psi -> 'phi\).
   }
 
   var phi: Prop
   var psi: Prop
 
-  assertion = 'phi => ('psi => 'phi);
+  assertion = 'phi -> ('psi -> 'phi);
 }
 
 TODO: This next axiom is just the commuted form of
@@ -35,15 +35,15 @@ TODO: This next name is stupid. If we need to use this form, rename it.
 \Axiom PropCommutedDistrib: IntuitionisticLogic {
   name = "The Commuted Axiom of Distribution"
   tagline = {
-    We can transform a proof of \('phi => 'psi\) and \('phi => ('psi => 'chi)\)
-    into a proof of \('phi => 'chi\).
+    We can transform a proof of \('phi -> 'psi\) and \('phi -> ('psi -> 'chi)\)
+    into a proof of \('phi -> 'chi\).
   }
 
   var phi: Prop
   var psi: Prop
   var chi: Prop
 
-  assertion = ('phi => 'psi) => (('phi => ('psi => 'chi)) => ('phi => 'chi));
+  assertion = ('phi -> 'psi) -> (('phi -> ('psi -> 'chi)) -> ('phi -> 'chi));
 }
 
 \Axiom AndIntro: IntuitionisticLogic {
@@ -56,7 +56,7 @@ TODO: This next name is stupid. If we need to use this form, rename it.
   var phi: Prop
   var psi: Prop
   
-  assertion = 'phi => ('psi => 'phi & 'psi);
+  assertion = 'phi -> ('psi -> 'phi & 'psi);
 }
 
 \Axiom AndLeftElim: IntuitionisticLogic {
@@ -68,7 +68,7 @@ TODO: This next name is stupid. If we need to use this form, rename it.
   var phi: Prop
   var psi: Prop
 
-  assertion = 'phi & 'psi => 'psi;
+  assertion = 'phi & 'psi -> 'psi;
 }
 
 \Axiom AndRightElim: IntuitionisticLogic {
@@ -80,7 +80,7 @@ TODO: This next name is stupid. If we need to use this form, rename it.
   var phi: Prop
   var psi: Prop
 
-  assertion = 'phi & 'psi => 'psi;
+  assertion = 'phi & 'psi -> 'psi;
 }
 
 \Axiom OrLeftIntro: IntuitionisticLogic {
@@ -92,7 +92,7 @@ TODO: This next name is stupid. If we need to use this form, rename it.
   var phi: Prop
   var psi: Prop
 
-  assertion = 'psi => 'phi | 'psi;
+  assertion = 'psi -> 'phi | 'psi;
 }
 
 \Axiom OrRightIntro: IntuitionisticLogic {
@@ -104,7 +104,7 @@ TODO: This next name is stupid. If we need to use this form, rename it.
   var phi: Prop
   var psi: Prop
 
-  assertion = 'phi => 'phi | 'psi;
+  assertion = 'phi -> 'phi | 'psi;
 }
 
 \Axiom OrElim: IntuitionisticLogic {
@@ -119,7 +119,7 @@ TODO: This next name is stupid. If we need to use this form, rename it.
   var psi: Prop
   var chi: Prop
 
-  assertion = ('phi => 'chi) => (('phi => 'chi) => (('phi | 'psi) => 'chi));
+  assertion = ('phi -> 'chi) -> (('phi -> 'chi) -> (('phi | 'psi) -> 'chi));
 }
 
 \Axiom NegationProof: IntuitionisticLogic{
@@ -132,5 +132,5 @@ TODO: This next name is stupid. If we need to use this form, rename it.
   var phi: Prop
   var psi: Prop
 
-  assertion = ('phi => 'psi) => (('phi => !'psi) => !'phi);
+  assertion = ('phi -> 'psi) -> (('phi -> !'psi) -> !'phi);
 }

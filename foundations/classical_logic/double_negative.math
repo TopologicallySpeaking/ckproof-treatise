@@ -12,7 +12,7 @@ everywhere, so it's worth spending time on them.
 # Inference Forms of The Axioms
 
 You may have noticed a similarity between if-then statements and theorems. After
-proving the statement \('phi => 'psi\), you may derive \('psi\) from \('phi\).
+proving the statement \('phi -> 'psi\), you may derive \('psi\) from \('phi\).
 And after proving a theorem with \('phi\) as a premise and \('psi\) as a
 conclusion, you may agian derive \('psi\) from \('phi\).
 
@@ -45,13 +45,13 @@ Here, we will prove the inference forms of <ref ClassicalLogic.PropSimple />,
   premise = [
     'phi;
   ]
-  assertion = 'psi => 'phi;
+  assertion = 'psi -> 'phi;
 }
 
 \Proof PropSimpleInf: ClassicalLogic {
   We begin with <ref ClassicalLogic.PropSimple />.
 
-  |PropSimple| 'phi => ('psi => 'phi);.
+  |PropSimple| 'phi -> ('psi -> 'phi);.
 
   The premise of this theorem is that we have already derived
 
@@ -59,7 +59,7 @@ Here, we will prove the inference forms of <ref ClassicalLogic.PropSimple />,
 
   which allows us to derive
 
-  |ModusPonens| 'psi => 'phi;.
+  |ModusPonens| 'psi -> 'phi;.
 }
 
 The proofs of all three of these inference laws have the same trivial form, so
@@ -76,18 +76,18 @@ no more commentary will be made.
   var chi: Prop
 
   premise = [
-    'phi => ('psi => 'chi);
+    'phi -> ('psi -> 'chi);
   ]
-  assertion = ('phi => 'psi) => ('phi => 'chi);
+  assertion = ('phi -> 'psi) -> ('phi -> 'chi);
 }
 
 \Proof PropDistribInf: ClassicalLogic {
   |PropDistrib|
-    ('phi => ('psi => 'chi))
-      => (('phi => 'psi) => ('phi => 'chi));
+    ('phi -> ('psi -> 'chi))
+      -> (('phi -> 'psi) -> ('phi -> 'chi));
 
-  |1| 'phi => ('psi => 'chi);
-  |ModusPonens| ('phi => 'psi) => ('phi => 'chi);
+  |1| 'phi -> ('psi -> 'chi);
+  |ModusPonens| ('phi -> 'psi) -> ('phi -> 'chi);
 }
 
 \Theorem PropContraInf: ClassicalLogic {
@@ -100,33 +100,33 @@ no more commentary will be made.
   var psi: Prop
 
   premise = [
-    !'psi => !'phi;
+    !'psi -> !'phi;
   ]
-  assertion = 'phi => 'psi;
+  assertion = 'phi -> 'psi;
 }
 
 \Proof PropContraInf: ClassicalLogic {
-  |PropContra| (!'psi => !'phi) => ('phi => 'psi);
-  |1| !'psi => !'phi;
-  |ModusPonens| 'phi => 'psi;
+  |PropContra| (!'psi -> !'phi) -> ('phi -> 'psi);
+  |1| !'psi -> !'phi;
+  |ModusPonens| 'phi -> 'psi;
 }
 
 # Syllogism
 
-Consider what it would mean if we derived the two statements \('phi => 'psi\)
-and \('psi => 'chi\). If we were to then derive \('phi\), then we could derive
+Consider what it would mean if we derived the two statements \('phi -> 'psi\)
+and \('psi -> 'chi\). If we were to then derive \('phi\), then we could derive
 \('psi\) by <ref ClassicalLogic.ModusPonens />. But now that we have derived
 \('psi\), we can again use <ref ClassicalLogic.ModusPonens /> to derive
 \('chi\). The net effect is that from \('phi\), we can derive \('chi\).
 
-Said another way, the combination of \('phi => 'psi\) and \('psi => 'chi\) can
-be shortened to \('phi => 'chi\). This transitive property of chaining together
+Said another way, the combination of \('phi -> 'psi\) and \('psi -> 'chi\) can
+be shortened to \('phi -> 'chi\). This transitive property of chaining together
 implications is called <ref ClassicalLogic.Syllogism />.
 
 \Theorem Syllogism: ClassicalLogic {
   name = "The Principal of Syllogism"
   tagline = {
-    If \('phi => 'psi\) and \('psi => 'chi\), then \('phi => 'chi\).
+    If \('phi -> 'psi\) and \('psi -> 'chi\), then \('phi -> 'chi\).
   }
 
   flags = [
@@ -138,26 +138,26 @@ implications is called <ref ClassicalLogic.Syllogism />.
   var chi: Prop
 
   premise = [
-    'phi => 'psi;
-    'psi => 'chi;
+    'phi -> 'psi;
+    'psi -> 'chi;
   ]
-  assertion = 'phi => 'chi;
+  assertion = 'phi -> 'chi;
 }
 
 \Proof Syllogism: ClassicalLogic {
   We begin with the second hypothesis, then distribute \('phi\) into it.
 
-  |2| 'psi => 'chi;
-  |PropSimpleInf| 'phi => ('psi => 'chi);
-  |PropDistribInf| ('phi => 'psi) => ('phi => 'chi);
+  |2| 'psi -> 'chi;
+  |PropSimpleInf| 'phi -> ('psi -> 'chi);
+  |PropDistribInf| ('phi -> 'psi) -> ('phi -> 'chi);
 
   This gives us a statement which has the first hypothesis
 
-  |1| 'phi => 'psi;
+  |1| 'phi -> 'psi;
 
   as the antecedent. We can now apply <ref ClassicalLogic.ModusPonens /> to get
 
-  |ModusPonens| 'phi => 'chi;,
+  |ModusPonens| 'phi -> 'chi;,
 
   which is what we were trying to show.
 }
@@ -166,12 +166,12 @@ implications is called <ref ClassicalLogic.Syllogism />.
 
 In this section, we will prove a couple theorems involving nested antecedents.
 By nested antecedents, I mean a statement of the form
-\('phi => ('psi => 'chi)\). A close equivalent in English might be ``If
+\('phi -> ('psi -> 'chi)\). A close equivalent in English might be ``If
 \('phi\), then \('psi\) implies \('chi\)". The interpretation of this is that,
 if we wish to derive \('chi\), we may prove \('phi\) and \('psi\) then apply
 <ref ClassicalLogic.ModusPonens /> twice. To this end, the order of \('phi\) and
-\('psi\) don't matter. That is, \('phi => ('psi => 'chi)\) should be the same as
-\('psi => ('phi => 'chi)\).
+\('psi\) don't matter. That is, \('phi -> ('psi -> 'chi)\) should be the same as
+\('psi -> ('phi -> 'chi)\).
 
 \Theorem PropCommutation: ClassicalLogic {
   name = "Commutation of Antecedents"
@@ -184,32 +184,32 @@ if we wish to derive \('chi\), we may prove \('phi\) and \('psi\) then apply
   var chi: Prop
 
   premise = [
-    'phi => ('psi => 'chi);
+    'phi -> ('psi -> 'chi);
   ]
-  assertion = 'psi => ('phi => 'chi);
+  assertion = 'psi -> ('phi -> 'chi);
 }
 
 \Proof PropCommutation: ClassicalLogic {
   We begin by taking the hypothesis and distributing in \('phi\).
   
-  |1| 'phi => ('psi => 'chi);
-  |PropDistribInf, #1| ('phi => 'psi) => ('phi => 'chi);
+  |1| 'phi -> ('psi -> 'chi);
+  |PropDistribInf, #1| ('phi -> 'psi) -> ('phi -> 'chi);
 
   Consider the following axiom:
 
-  |PropSimple| 'psi => ('phi => 'psi);.
+  |PropSimple| 'psi -> ('phi -> 'psi);.
 
   The consequent of this axiom is the antecedent of <ref #1 />, which allows us
   to derive
 
-  |Syllogism| 'psi => ('phi => 'chi);.
+  |Syllogism| 'psi -> ('phi -> 'chi);.
 }
 
 Now consider what happens if the two antecedents are the same, i.e.
-\('phi => ('phi => 'psi)\). After we prove \('phi\), we can also derive
+\('phi -> ('phi -> 'psi)\). After we prove \('phi\), we can also derive
 \('psi\), but that requires two applications of
 <ref ClassicalLogic.ModusPonens />. Thus, the two antecedents are redundant and
-the statement may be reduced to just \('phi => 'psi\).
+the statement may be reduced to just \('phi -> 'psi\).
 
 \Theorem RedundantAntecedent: ClassicalLogic {
   name = "Absorbtion of Redundant Antecedent"
@@ -221,24 +221,24 @@ the statement may be reduced to just \('phi => 'psi\).
   var psi: Prop
 
   premise = [
-    'phi => ('phi => 'psi);
+    'phi -> ('phi -> 'psi);
   ]
-  assertion = 'phi => 'psi;
+  assertion = 'phi -> 'psi;
 }
 
 \Proof RedundantAntecedent: ClassicalLogic {
   We begin by distributing in \('phi\).
 
-  |1| 'phi => ('phi => 'psi);
-  |PropDistribInf| ('phi => 'phi) => ('phi => 'psi);
+  |1| 'phi -> ('phi -> 'psi);
+  |PropDistribInf| ('phi -> 'phi) -> ('phi -> 'psi);
 
   The antecedent of this statement is an axiom,
 
-  |PropIdentity| 'phi => 'phi;,
+  |PropIdentity| 'phi -> 'phi;,
 
   which allows us to use <ref ClassicalLogic.ModusPonens /> to get
 
-  |ModusPonens| 'phi => 'psi;.
+  |ModusPonens| 'phi -> 'psi;.
 }
 
 # Contradictory Antecedents
@@ -252,7 +252,7 @@ managed to derive some statement \('phi\) as well as its negation \(!'phi\).
 This should hopefully never happen, but let's explore the consequences if it
 did. In particular, what would we be able to derive as a result of such a
 contradiction? Well, either \('phi\) is false or \(!'phi\) is false. And so, at
-least one of \('phi => 'psi\) or \(!'phi => 'psi\) is true, because a false
+least one of \('phi -> 'psi\) or \(!'phi -> 'psi\) is true, because a false
 statement can imply anything. Thus, by <ref ClassicalLogic.ModusPonens />, we
 would be able to derive \('psi\), no matter what \('psi\) is.
 
@@ -265,25 +265,25 @@ would be able to derive \('psi\), no matter what \('psi\) is.
   var phi: Prop
   var psi: Prop
 
-  assertion = !'phi => ('phi => 'psi);
+  assertion = !'phi -> ('phi -> 'psi);
 }
 
 \Proof PropExplosion: ClassicalLogic {
   We begin with
 
-  |PropIdentity| !'phi => !'phi;.
+  |PropIdentity| !'phi -> !'phi;.
 
   From there, we introduce \(!'psi\) as an antecedent and swap it with
   \(!'phi\).
 
-  |PropSimpleInf| !'psi => (!'phi => !'phi);
-  |PropCommutation| !'phi => (!'psi => !'phi);
+  |PropSimpleInf| !'psi -> (!'phi -> !'phi);
+  |PropCommutation| !'phi -> (!'psi -> !'phi);
 
   This is almost what we wanted to show. From here, we need only take the
   contrapositive of the consequent.
 
-  |PropContra| (!'psi => !'phi) => ('phi => 'psi);
-  |Syllogism| !'phi => ('phi => 'psi);
+  |PropContra| (!'psi -> !'phi) -> ('phi -> 'psi);
+  |Syllogism| !'phi -> ('phi -> 'psi);
 }
 
 <todo>
@@ -344,11 +344,11 @@ Next up, we have <ref ClassicalLogic.Clavius />.
 
   var phi: Prop
   
-  assertion = (!'phi => 'phi) => 'phi;
+  assertion = (!'phi -> 'phi) -> 'phi;
 }
 
 To understand this theorem intuitively, think about what it would mean if we
-manage to derive \(!'phi => 'phi\). This is actually a perfectly good statement
+manage to derive \(!'phi -> 'phi\). This is actually a perfectly good statement
 and it can be derived without issue for many \('phi\). However, let's say that
 later on we also derive \(!'phi\). Then \('phi\) would immediately follow by
 <ref ClassicalLogic.ModusPonens />, and that would be a huge problem because of
@@ -373,21 +373,21 @@ Aristotle made this famous statement which is an argument roughly of this form.
 \Proof Clavius: ClassicalLogic {
   This is derived from the axiom
 
-  |PropExplosion| !'phi => ('phi => !(!'phi => 'phi));.
+  |PropExplosion| !'phi -> ('phi -> !(!'phi -> 'phi));.
 
   If we distribute in the \(!'phi\),
 
-  |PropDistribInf| (!'phi => 'phi) => (!'phi => !(!'phi => 'phi));,
+  |PropDistribInf| (!'phi -> 'phi) -> (!'phi -> !(!'phi -> 'phi));,
 
   then take the contrapositive of the consequent,
 
-  |PropContra| (!'phi => !(!'phi => 'phi)) => ((!'phi => 'phi) => 'phi);
-  |Syllogism| (!'phi => 'phi) => ((!'phi => 'phi) => 'phi);,
+  |PropContra| (!'phi -> !(!'phi -> 'phi)) -> ((!'phi -> 'phi) -> 'phi);
+  |Syllogism| (!'phi -> 'phi) -> ((!'phi -> 'phi) -> 'phi);,
 
   then we almost get what we're looking for. We need only to remove the
   redundant antecedent.
 
-  |RedundantAntecedent| (!'phi => 'phi) => 'phi;
+  |RedundantAntecedent| (!'phi -> 'phi) -> 'phi;
 }
 
 <todo>
@@ -431,7 +431,7 @@ of the page. We will actually prove two equivalent forms of the same principle,
 
   var phi: Prop
 
-  assertion = !!'phi => 'phi;
+  assertion = !!'phi -> 'phi;
 }
 
 \Proof DNegElim: ClassicalLogic {
@@ -439,9 +439,9 @@ of the page. We will actually prove two equivalent forms of the same principle,
   <ref ClassicalLogic.PropExplosion /> with <ref ClassicalLogic.Clavius /> using
   a syllogism.
 
-  |PropExplosion| !!'phi => (!'phi => 'phi);
-  |Clavius| (!'phi => 'phi) => 'phi;
-  |Syllogism| !!'phi => 'phi;
+  |PropExplosion| !!'phi -> (!'phi -> 'phi);
+  |Clavius| (!'phi -> 'phi) -> 'phi;
+  |Syllogism| !!'phi -> 'phi;
 }
 
 \Theorem DNegIntro: ClassicalLogic {
@@ -452,13 +452,13 @@ of the page. We will actually prove two equivalent forms of the same principle,
 
   var phi: Prop
 
-  assertion = 'phi => !!'phi;
+  assertion = 'phi -> !!'phi;
 }
 
 \Proof DNegIntro: ClassicalLogic {
   This is just the contrapositive of a particular
   <ref ClassicalLogic.DNegElim />.
 
-  |DNegElim| !!!'phi => !'phi;
-  |PropContraInf| 'phi => !!'phi;
+  |DNegElim| !!!'phi -> !'phi;
+  |PropContraInf| 'phi -> !!'phi;
 }
