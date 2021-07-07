@@ -29,5 +29,14 @@ foundations: "Foundations" {
         resolution: "Resolution Calculus",
       ]
     }
+
+    intuitionistic_logic: "Introduction to Intuitionistic Logic" {
+      <ref IntuitionisticLogic /> is the second most common flavor of logic.
+
+      [
+        defs: "Definitions and Symbols",
+        axioms: "Axioms of Intuitionist Logic",
+      ]
+    }
   ]
 }

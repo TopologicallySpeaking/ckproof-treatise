@@ -1,0 +1,136 @@
+\Axiom ModusPonens: IntuitionisticLogic {
+  name = "Modus Ponens"
+  tagline = {
+    The derivation rule for <ref ClassicalLogic.implies />.
+  }
+
+  var phi: Prop
+  var psi: Prop
+
+  premise = [
+    'phi => 'psi;
+    'phi;
+  ]
+  assertion = 'psi;
+}
+
+\Axiom PropSimple: IntuitionisticLogic {
+  name = "The Axiom of Simplification"
+  tagline = {
+    We can transform a proof of \('phi\) into a proof of \('psi => 'phi\).
+  }
+
+  var phi: Prop
+  var psi: Prop
+
+  assertion = 'phi => ('psi => 'phi);
+}
+
+TODO: This next axiom is just the commuted form of
+<ref ClassicalLogic.PropDistrib />. If <ref ClassicalLogic.PropCommutation />
+turns out to hold in this system, use the other form for consistency's sake.
+
+TODO: This next name is stupid. If we need to use this form, rename it.
+
+\Axiom PropCommutedDistrib: IntuitionisticLogic {
+  name = "The Commuted Axiom of Distribution"
+  tagline = {
+    We can transform a proof of \('phi => 'psi\) and \('phi => ('psi => 'chi)\)
+    into a proof of \('phi => 'chi\).
+  }
+
+  var phi: Prop
+  var psi: Prop
+  var chi: Prop
+
+  assertion = ('phi => 'psi) => (('phi => ('psi => 'chi)) => ('phi => 'chi));
+}
+
+\Axiom AndIntro: IntuitionisticLogic {
+  name = "Logical Conjunction Introduction"
+  tagline = {
+    We can transform a proof of \('phi\) and a proof of \('psi\) into a proof of
+    \('phi & 'psi\).
+  }
+
+  var phi: Prop
+  var psi: Prop
+  
+  assertion = 'phi => ('psi => 'phi & 'psi);
+}
+
+\Axiom AndLeftElim: IntuitionisticLogic {
+  name = "Logical Conjunction Elimination on the Left"
+  tagline = {
+    We can transform a proof of \('phi & 'psi\) into a proof of \('psi\).
+  }
+
+  var phi: Prop
+  var psi: Prop
+
+  assertion = 'phi & 'psi => 'psi;
+}
+
+\Axiom AndRightElim: IntuitionisticLogic {
+  name = "Logical Conjunction Elimination on the Right"
+  tagline = {
+    We can transform a proof of \('phi & 'psi\) into a proof of \('phi\).
+  }
+
+  var phi: Prop
+  var psi: Prop
+
+  assertion = 'phi & 'psi => 'psi;
+}
+
+\Axiom OrLeftIntro: IntuitionisticLogic {
+  name = "Logical Disjunction Introduction on the Left"
+  tagline = {
+    We can transform a proof of \('psi\) into a proof of \('phi | 'psi\).
+  }
+
+  var phi: Prop
+  var psi: Prop
+
+  assertion = 'psi => 'phi | 'psi;
+}
+
+\Axiom OrRightIntro: IntuitionisticLogic {
+  name = "Logical Disjunction Introduction on the Right"
+  tagline = {
+    We can transform a proof of \('phi\) into a proof of \('phi | 'psi\).
+  }
+
+  var phi: Prop
+  var psi: Prop
+
+  assertion = 'phi => 'phi | 'psi;
+}
+
+\Axiom OrElim: IntuitionisticLogic {
+  name = "Logical Disjunction Elimination"
+  tagline = {
+    If both \('phi\) and \('psi\) can be transformed into a proof of \('chi\),
+    then the disjunction \('phi | 'psi\) can also be transformed into a proof of
+    \('chi\).
+  }
+
+  var phi: Prop
+  var psi: Prop
+  var chi: Prop
+
+  assertion = ('phi => 'chi) => (('phi => 'chi) => (('phi | 'psi) => 'chi));
+}
+
+\Axiom NegationProof: IntuitionisticLogic{
+  name = "Proof of Negation"
+  tagline = {
+    If \('phi\) can be transformed into both a proof of \('psi\) and a proof of
+    \(!'psi\), then we can transform those proofs into a proof of \(!'phi\).
+  }
+
+  var phi: Prop
+  var psi: Prop
+
+  assertion = ('phi => 'psi) => (('phi => !'psi) => !'phi);
+}

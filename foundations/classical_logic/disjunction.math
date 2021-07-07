@@ -209,3 +209,23 @@ must be valid for all integers.
 
   |!def| 'phi | 'psi => 'chi;
 }
+
+# The Law of Excluded Middle
+
+TODO: Write about how controversial this is.
+
+\Theorem ExcludedMiddle: ClassicalLogic {
+  name = "The Law of Excluded Middle"
+  tagline = {
+    All propositions are either true or false.
+  }
+
+  var phi: Prop
+
+  assertion = 'phi | !'phi;
+}
+
+\Proof ExcludedMiddle: ClassicalLogic {
+  |PropIdentity| !'phi => !'phi;
+  |!def| 'phi | !'phi;
+}

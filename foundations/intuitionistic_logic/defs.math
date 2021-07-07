@@ -1,0 +1,102 @@
+<ref IntuitionisticLogic /> is the second-most common flavor of logic. It is a
+weaker form of logic than <ref ClassicalLogic />, in the sense that every
+propositional statement which is true in <ref IntuitionisticLogic /> is also
+true in <ref ClassicalLogic />, but there are statements in
+<ref ClassicalLogic /> which cannot be derived in <ref IntuitionisticLogic />.
+
+The difference is in the interpretation of what a proof is. In
+<ref ClassicalLogic />, we assume that every propositional statement is either
+true or false, even if we don't know which it is. That idea is embodied in
+<ref ClassicalLogic.ExcludedMiddle />. Remember, the variables in the assertion
+mean that we can derive that statement for any proposition \('phi\), even if we
+know nothing else about it.
+
+Intuitionists reject this idea. To be clear, <ref IntuitionisticLogic />
+<em>does not</em> imply a third option, or that statements can be true or false
+at the same time, or any other weird interpretation like that. Rather, they
+believe you can only claim that a statement is true or false if you can present
+a proof that it is true or false.
+
+This idea is captured in the broader idea of constructivist mathematics.
+Mathematicians often talk about objects as if they exist, but without ever
+giving instructions for how one may construct such objects. According to
+Constructivists, however, if you cannot construct such objects, then they may as
+well not exist. <ref IntuitionisticLogic /> is logic from the constructive point
+of view. We are constructing proofs about propositions, and if you don't provide
+such a construction, then it is not a valid proof.
+
+Of course, this raises the question as to what it means to construct something.
+In the last chapter, we took a bunch of axioms, and messed around with them
+until we got <ref ClassicalLogic.ExcludedMiddle />. Is that not a construction?
+The only way to truly define the difference between a proof that an Intuitionist
+would accept and one which they would not is to state the axioms of
+<ref IntuitionisticLogic />, which we will do shortly.
+
+A common question is ``which logic is better", in the sense of which one is
+``correct". The official viewpoint of ckproof is that this is the wrong
+question. It wraps back to the discussion way back on the first page about how
+math does not tell you what is true, it tells you what consequences can be
+derived from what assumptions. <ref IntuitionisticLogic /> is nothing more than
+a different set of assumptions, and so it yields completely different
+consequences. Whether those assumptions and consequences are ``true" is outside
+the scope of this treatise.
+
+\System IntuitionisticLogic {
+  name = "Intuitionistic Logic"
+  tagline = {
+    A weaker version of <ref ClassicalLogic /> which forces one to construct
+    proofs to be valid, rather than assuming they exist even if we haven't found
+    them yet.
+  }
+}
+
+\Type Prop: IntuitionisticLogic {
+  name = "Proposition"
+  tagline = {
+    Statements of declaration.
+  }
+}
+
+\Symbol implies: IntuitionisticLogic {
+  name = "Material Implication"
+  tagline = {
+    The statement \('phi => 'psi\), which means that any proof of \('phi\) can
+    be transformed into a proof of \('psi\).
+  }
+
+  type = Prop -> Prop -> Prop
+  read = Infix =>
+}
+
+\Symbol negation: IntuitionisticLogic {
+  name = "Negation"
+  tagline = {
+    The statement \(!'phi\), which means that any proof of \('phi\) can be
+    transformed into a contradiction.
+  }
+
+  type = Prop -> Prop
+  read = Prefix !
+}
+
+\Symbol and: IntuitionisticLogic {
+  name = "Logical Conjunction"
+  tagline = {
+    The statement \('phi & 'psi\), which means that we have constructed both a
+    proof of \('phi\) and a proof of \('psi\).
+  }
+
+  type = Prop -> Prop -> Prop
+  read = Infix &
+}
+
+\Symbol or: IntuitionisticLogic {
+  name = "Logical Disjunction"
+  tagline = {
+    The statement \('phi | 'psi\), which means we have constructed either a
+    proof of \('phi\) or a proof of \('psi\).
+  }
+
+  type = Prop -> Prop -> Prop
+  read = Infix |
+}
