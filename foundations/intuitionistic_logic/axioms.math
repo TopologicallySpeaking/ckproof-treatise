@@ -26,24 +26,18 @@
   assertion = 'phi -> ('psi -> 'phi);
 }
 
-TODO: This next axiom is just the commuted form of
-<ref ClassicalLogic.PropDistrib />. If <ref ClassicalLogic.PropCommutation />
-turns out to hold in this system, use the other form for consistency's sake.
-
-TODO: This next name is stupid. If we need to use this form, rename it.
-
-\Axiom PropCommutedDistrib: IntuitionisticLogic {
-  name = "The Commuted Axiom of Distribution"
+\Axiom PropDistrib: IntuitionisticLogic {
+  name = "The Axiom of Distribution"
   tagline = {
-    We can transform a proof of \('phi -> 'psi\) and \('phi -> ('psi -> 'chi)\)
-    into a proof of \('phi -> 'chi\).
+    We can transform a proof of \('phi -> ('psi -> 'chi)\) into a proof of
+    \(('phi -> 'psi) -> ('phi -> 'chi)\).
   }
 
   var phi: Prop
   var psi: Prop
   var chi: Prop
 
-  assertion = ('phi -> 'psi) -> (('phi -> ('psi -> 'chi)) -> ('phi -> 'chi));
+  assertion = ('phi -> ('psi -> 'chi)) -> (('phi -> 'psi) -> ('phi -> 'chi));
 }
 
 \Axiom AndIntro: IntuitionisticLogic {
