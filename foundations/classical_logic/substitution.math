@@ -73,7 +73,7 @@ have defined so far, mainly because it only has one input. Specifically, it is a
 function over <ref ClassicalLogic.equiv />.
 
 \Theorem NegationFunctionEquiv: ClassicalLogic {
-  name = "Negation is a Function over Material Implication"
+  name = "Negation is a Function over Material Equivalence"
   tagline = {
     If \('phi <-> 'psi\), then \(!'phi <-> !'psi\).
   }
@@ -146,7 +146,7 @@ example, we shall prove that <ref ClassicalLogic.implies /> is a function over
 }
 
 \Proof ImpliesFunctionEquiv: ClassicalLogic {
-  Starting from the hypotheses
+  Starting from the hypotheses,
 
   |1, #h1| 'phi <-> 'psi;
   |2, #h2| 'chi <-> 'theta;,
@@ -349,7 +349,7 @@ This property can be inherited to prove that they are both functions over
 }
 
 \Theorem OrFunctionEquiv: ClassicalLogic {
-  name = "Logic Disjunction is a Function over Material Equivalence"
+  name = "Logical Disjunction is a Function over Material Equivalence"
   tagline = {
     If \('phi <-> 'psi\) and \('chi <-> 'theta\), then
     \(('phi | 'chi) <-> ('psi | 'theta)\).
