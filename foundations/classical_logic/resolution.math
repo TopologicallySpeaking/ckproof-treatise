@@ -15,7 +15,7 @@ a kind of propositional statement which is formed by the following process:
     called ``literals".
   </li>
   <li>
-    Combine the some of the literals, whichever ones you wish, into a bunch of
+    Combine some of the literals, whichever ones you wish, into a bunch of
     groups using <ref ClassicalLogic.or />. These combinations are called
     ``terms".
   </li>
@@ -39,10 +39,11 @@ is equivalent to
 \].
 
 You can see that this statement is in CNF by breaking it up into its component
-parts. The statement is formed from two terms: \(!'phi | 'psi\) and \(!'phi |
-!'chi\) which are combined by a <ref ClassicalLogic.and />. Furthermore, both of
-the terms are formed using <ref ClassicalLogic.or /> on the variables \('phi\),
-\('psi\), \('chi\) and their negations.
+parts. The statement is formed from two terms: \(!'phi | 'psi\) and
+\(!'phi | !'chi\). Both of these terms are formed using
+<ref ClassicalLogic.or /> on the variables \('phi\), \('psi\), \('chi\) and
+their negations. The two terms are then combined by a
+<ref ClassicalLogic.and />.
 
 As a counterexample, the statement
 
@@ -51,11 +52,12 @@ As a counterexample, the statement
 \]
 
 is <em>not</em> written in CNF because you are only allowed use negation on
-variables.
+variables when forming literals, so negating a <ref ClassicalLogic.and /> is
+not allowed.
 
-This form has some nice properties which ckproof takes advantage of. The first
-thing we need to do is prove some theorems which allow ckproof to convert a
-statement into its equivalent CNF.
+Conjunctive Normal Form has some nice properties which ckproof takes advantage
+of. The first thing we need to do is prove some theorems which allow ckproof to
+automatically convert a statement into its equivalent CNF.
 
 ## CNF for The Operators of Classical Logic
 
@@ -71,9 +73,8 @@ lemma which is used in the proofs which follow.
   }
   description = {
     This lemma is nothing more than a combination of
-    <ref ClassicalLogic.DNegElim /> and <ref ClassicalLogic.DNegIntro />. It's
-    worth proving simply because this combined form can save a few steps in
-    certain proofs.
+    <ref ClassicalLogic.DNegElim /> and <ref ClassicalLogic.DNegIntro />. This
+    combined form can save a few steps in certain proofs.
   }
 
   var phi: Prop
@@ -111,9 +112,9 @@ Using this lemma, we derive the CNF for <ref ClassicalLogic.implies /> and
   |DNegEquiv| !!'phi <-> 'phi;
   |EquivSymmetric| 'phi <-> !!'phi;
 
-  We then apply <ref ClassicalLogic.implies /> to both sides of the equivalence.
+  We then apply \(-> 'psi\) to both sides to get
 
-  |!sub| ('phi -> 'psi) <-> (!!'phi -> 'psi);
+  |!sub| ('phi -> 'psi) <-> (!!'phi -> 'psi);.
 
   By definition, this is what we were trying to show.
 
@@ -146,17 +147,30 @@ Using this lemma, we derive the CNF for <ref ClassicalLogic.implies /> and
   |AndFunctionEquiv|
     ('phi -> 'psi) & ('psi -> 'phi) <-> (!'phi | 'psi) & (!'psi | 'phi);.
 
-  By definition, this is what were trying to show.
+  By definition, this is what we were trying to show.
 
   |!def| ('phi <-> 'psi) <-> (!'phi | 'psi) & (!'psi | 'phi);
 }
 
 ## Constructing CNF for Larger Statements
 
+From here, we need to develop a process to construct the Conjunctive Normal Form
+for statements with more than just one logical connective. This process relies
+on the following theorems.
+
+### De Morgan's Laws
+
+As we already saw, \(!('phi & 'psi)\) is not in CNF because that
+<ref ClassicalLogic.negation /> is not in the right place. De Morgan's Laws are
+used to distribute a <ref ClassicalLogic.negation /> into a more useful
+position.
+
 \Theorem DeMorganAnd: ClassicalLogic {
   name = "De Morgan's Law for Logical Conjunction"
   tagline = {
-    TODO: Tagline.
+    <ref ClassicalLogic.negation /> may be distributed into
+    <ref ClassicalLogic.and />, but in the process you must switch it to
+    <ref ClassicalLogic.or />.
   }
 
   var phi: Prop
@@ -166,17 +180,26 @@ Using this lemma, we derive the CNF for <ref ClassicalLogic.implies /> and
 }
 
 \Proof DeMorganAnd: ClassicalLogic {
+  We begin by deriving an equivalent form of \(!('phi & 'psi)\).
+
   |DNegEquiv| !!('phi -> !'psi) <-> ('phi -> !'psi);
   |!def| !('phi & 'psi) <-> ('phi -> !'psi);
 
-  |ImpliesCNF| ('phi -> !'psi) <-> (!'phi | !'psi);
-  |EquivTransitive| !('phi & 'psi) <-> (!'phi | !'psi);
+  But, from the CNF for \('phi -> !'psi\), we get that
+
+  |ImpliesCNF| ('phi -> !'psi) <-> (!'phi | !'psi);.
+
+  Altogether, we have
+
+  |EquivTransitive| !('phi & 'psi) <-> (!'phi | !'psi);.
 }
 
 \Theorem DeMorganOr: ClassicalLogic {
   name = "De Morgan's Law for Logical Disjunction"
   tagline = {
-    TODO: Name.
+    <ref ClassicalLogic.negation /> may be distributed into
+    <ref ClassicalLogic.or />, but in the process you must switch it to
+    <ref ClassicalLogic.and />.
   }
 
   var phi: Prop
@@ -186,21 +209,37 @@ Using this lemma, we derive the CNF for <ref ClassicalLogic.implies /> and
 }
 
 \Proof DeMorganOr: ClassicalLogic {
+  Again, we begin by deriving an equivalent form of \(!('phi | 'psi)\).
+
   |EquivReflexive| !(!'phi -> 'psi) <-> !(!'phi -> 'psi);
   |!def| !('phi | 'psi) <-> !(!'phi -> 'psi);
 
-  |DNegEquiv| !!'psi <-> 'psi;
-  |EquivSymmetric| 'psi <-> !!'psi;
-  |!sub| !(!'phi -> 'psi) <-> !(!'phi -> !!'psi);
-  |EquivTransitive| !('phi | 'psi) <-> !(!'phi -> !!'psi);
+  However, unlike the last proof, proving the equivalence between
+  \(!(!'phi -> 'psi)\) and \(!'phi & !'psi\) is a little tricky. We begin with
 
-  |!def| !('phi | 'psi) <-> (!'phi & !'psi);
+  |DNegEquiv| !!'psi <-> 'psi;
+  |EquivSymmetric, #4| 'psi <-> !!'psi;.
+
+  After applying the functions <ref ClassicalLogic.implies /> and
+  <ref ClassicalLogic.negation /> to <ref #4 />, we get
+
+  |!sub| !(!'phi -> 'psi) <-> !(!'phi -> !!'psi);
+  |!def| !(!'phi -> 'psi) <-> (!'phi & !'psi);.
+
+  Altogether, we have
+
+  |EquivTransitive| !('phi | 'psi) <-> (!'phi & !'psi);.
 }
+
+### Other Distribution Laws
+
+De Morgan's two laws will ultimately be used to move any negations to a more
+useful position, but we also need to do this with the other logical operators.
 
 \Theorem ImpliesDistribAnd: ClassicalLogic {
   name = "Material Implication Distributes Over Logical Conjunction"
   tagline = {
-    TODO: Tagline.
+    <ref ClassicalLogic.implies /> distributes over <ref ClassicalLogic.and />.
   }
 
   var phi: Prop
@@ -211,29 +250,45 @@ Using this lemma, we derive the CNF for <ref ClassicalLogic.implies /> and
 }
 
 \Proof ImpliesDistribAnd: ClassicalLogic {
+  The forward implication is proven in two parts. For the first part, we take
+
   |AndRightElim| ('psi & 'chi) -> 'psi;
+
+  and distribute in a \('phi\).
+
   |PropSimpleInf| 'phi -> (('psi & 'chi) -> 'psi);
-  |PropDistribInf| ('phi -> ('psi & 'chi)) -> ('phi -> 'psi);
+  |PropDistribInf, #3| ('phi -> ('psi & 'chi)) -> ('phi -> 'psi);
+
+  The second part is similar.
 
   |AndLeftElim| ('psi & 'chi) -> 'chi;
   |PropSimpleInf| 'phi -> (('psi & 'chi) -> 'chi);
-  |PropDistribInf| ('phi -> ('psi & 'chi)) -> ('phi -> 'chi);
+  |PropDistribInf, #6| ('phi -> ('psi & 'chi)) -> ('phi -> 'chi);
+
+  We can now join the consequents of <ref #3 /> and <ref #6 /> to get
 
   |JoinConsequentInf|
-    ('phi -> ('psi & 'chi)) -> (('phi -> 'psi) & ('phi -> 'chi));
+    ('phi -> ('psi & 'chi)) -> (('phi -> 'psi) & ('phi -> 'chi));.
+
+  For the backward implication, we begin with the tautology
 
   |JoinConsequent|
-    ('phi -> 'psi) -> (('phi -> 'chi) -> ('phi -> ('psi & 'chi)));
+    ('phi -> 'psi) -> (('phi -> 'chi) -> ('phi -> ('psi & 'chi)));.
+
+  We can import the two antecedents to get the backward implication.
+
   |PropImport| (('phi -> 'psi) & ('phi -> 'chi)) -> ('phi -> ('psi & 'chi));
 
+  Altogether, we have
+
   |EquivIntroInf|
-    ('phi -> ('psi & 'chi)) <-> ('phi -> 'psi) & ('phi -> 'chi);
+    ('phi -> ('psi & 'chi)) <-> ('phi -> 'psi) & ('phi -> 'chi);.
 }
 
 \Theorem OrDistribAnd: ClassicalLogic {
   name = "Logical Disjunction Distributes Over Logical Conjunction"
   tagline = {
-    TODO: Tagline.
+    <ref ClassicalLogic.or /> distributes over <ref ClassicalLogic.and />.
   }
 
   var phi: Prop
@@ -244,11 +299,21 @@ Using this lemma, we derive the CNF for <ref ClassicalLogic.implies /> and
 }
 
 \Proof OrDistribAnd: ClassicalLogic {
+  This is an interesting one because it's actually just a special case of the
+  theorem we just proved.
+
   |ImpliesDistribAnd|
     (!'phi -> ('psi & 'chi)) <-> ((!'phi -> 'psi) & (!'phi -> 'chi));
 
-  |!def| 'phi | ('psi & 'chi) <-> (('phi | 'psi) & ('phi | 'chi));
+  This is, by definition,
+
+  |!def| 'phi | ('psi & 'chi) <-> (('phi | 'psi) & ('phi | 'chi));,
+
+  which is what we were trying to prove.
 }
+
+TODO: Do we really need the next theorem to do resolution? If not, remove it and
+prove it on the next page.
 
 \Theorem AndDistribOr: ClassicalLogic {
   name = "Logical Conjunction Distributes over Logical Disjunction"
@@ -359,4 +424,4 @@ Using this lemma, we derive the CNF for <ref ClassicalLogic.implies /> and
   |Syllogism| ('phi | 'psi) & (!'phi | 'chi) -> 'psi | 'chi;
 }
 
-# Automatically Proofs Using Propositional Calculus
+# Automatic Proofs in Propositional Calculus Using Resolution
