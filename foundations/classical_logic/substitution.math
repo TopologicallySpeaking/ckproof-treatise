@@ -401,5 +401,6 @@ This property can be inherited to prove that they are both functions over
 
 TODO: Write.
 
-TODO: Rename what is currently called substitution to function application, and
-implement substitution as a separate capability of ckproof.
+# Automatic Substitution
+
+TODO: Write.

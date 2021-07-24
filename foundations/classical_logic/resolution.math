@@ -114,7 +114,7 @@ Using this lemma, we derive the CNF for <ref ClassicalLogic.implies /> and
 
   We then apply \(-> 'psi\) to both sides to get
 
-  |!sub| ('phi -> 'psi) <-> (!!'phi -> 'psi);.
+  |!fun| ('phi -> 'psi) <-> (!!'phi -> 'psi);.
 
   By definition, this is what we were trying to show.
 
@@ -144,7 +144,7 @@ Using this lemma, we derive the CNF for <ref ClassicalLogic.implies /> and
   Because <ref ClassicalLogic.and /> is a function over
   <ref ClassicalLogic.equiv />, we can conclude
 
-  |AndFunctionEquiv|
+  |!fun|
     ('phi -> 'psi) & ('psi -> 'phi) <-> (!'phi | 'psi) & (!'psi | 'phi);.
 
   By definition, this is what we were trying to show.
@@ -223,7 +223,7 @@ position.
   After applying the functions <ref ClassicalLogic.implies /> and
   <ref ClassicalLogic.negation /> to <ref #4 />, we get
 
-  |!sub| !(!'phi -> 'psi) <-> !(!'phi -> !!'psi);
+  |!fun| !(!'phi -> 'psi) <-> !(!'phi -> !!'psi);
   |!def| !(!'phi -> 'psi) <-> (!'phi & !'psi);.
 
   Altogether, we have
@@ -360,12 +360,12 @@ prove it on the next page.
   we can apply <ref ClassicalLogic.and /> to both sides of the implication to
   get
 
-  |!sub, #right3| ('phi & 'psi) -> 'phi & ('psi | 'chi);.
+  |!fun, #right3| ('phi & 'psi) -> 'phi & ('psi | 'chi);.
 
   Similarly,
 
   |OrLeftIntro| 'chi -> 'psi | 'chi;
-  |!sub, #left3| ('phi & 'chi) -> 'phi & ('psi | 'chi);.
+  |!fun, #left3| ('phi & 'chi) -> 'phi & ('psi | 'chi);.
 
   Finally, <ref #right3 /> and <ref #left3 /> can be combined to get the
   backward implication.
