@@ -158,12 +158,15 @@ From here, we need to develop a process to construct the Conjunctive Normal Form
 for statements with more than just one logical connective. This process relies
 on the following theorems.
 
-### De Morgan's Laws
+### De Morgan's Laws and Other Distribution Laws
 
 As we already saw, \(!('phi & 'psi)\) is not in CNF because that
 <ref ClassicalLogic.negation /> is not in the right place. De Morgan's Laws are
 used to distribute a <ref ClassicalLogic.negation /> into a more useful
-position.
+position. The rule is that you can distribute in the
+<ref ClassicalLogic.negation />, but in the process you must switch
+<ref ClassicalLogic.and>Conjunctions</ref> into
+<ref ClassicalLogic.or>Disjunctions</ref> and vice-versa.
 
 \Theorem DeMorganAnd: ClassicalLogic {
   name = "De Morgan's Law for Logical Conjunction"
@@ -231,12 +234,17 @@ position.
   |EquivTransitive| !('phi | 'psi) <-> (!'phi & !'psi);.
 }
 
-### Other Distribution Laws
+Similarly, the proposition \('phi | ('psi & 'chi)\) is not in CNF because the
+operators are bacwards. That is, CNF requires a
+<ref ClassicalLogic.and>Conjunction</ref> of
+<ref ClassicalLogic.or>Disjunctions</ref>, but \('phi | ('psi & 'chi)\) is a
+<ref ClassicalLogic.or>Disjunction</ref> of
+<ref ClassicalLogic.and>Conjunctions</ref>. To convert this to CNF, we can
+distribute in the \('phi\) to get \(('phi | 'psi) & ('phi | 'chi)\).
 
-De Morgan's two laws will ultimately be used to move any negations to a more
-useful position, but we also need to do this with the other logical operators.
+To prove that we can do this, we first need a lemma.
 
-\Theorem ImpliesDistribAnd: ClassicalLogic {
+\Lemma ImpliesDistribAnd: ClassicalLogic {
   name = "Material Implication Distributes Over Logical Conjunction"
   tagline = {
     <ref ClassicalLogic.implies /> distributes over <ref ClassicalLogic.and />.
@@ -285,6 +293,8 @@ useful position, but we also need to do this with the other logical operators.
     ('phi -> ('psi & 'chi)) <-> ('phi -> 'psi) & ('phi -> 'chi);.
 }
 
+From this, we can derive what we're looking for.
+
 \Theorem OrDistribAnd: ClassicalLogic {
   name = "Logical Disjunction Distributes Over Logical Conjunction"
   tagline = {
@@ -312,8 +322,104 @@ useful position, but we also need to do this with the other logical operators.
   which is what we were trying to prove.
 }
 
-TODO: Do we really need the next theorem to do resolution? If not, remove it and
-prove it on the next page.
+### Putting it All Together
+
+The following procedure informally outlines the process to convert any statement
+into Conjunctive Normal Form.
+
+<ol>
+  <li>
+    Convert all instances of <ref ClassicalLogic.implies /> and
+    <ref ClassicalLogic.equiv /> into to their CNF. The entire sentence should
+    now contain only <ref ClassicalLogic.negation />,
+    <ref ClassicalLogic.and />, and <ref ClassicalLogic.or />.
+  </li>
+  <li>
+    Distribute in all <ref ClassicalLogic.negation>Negations</ref> using De
+    Morgan's laws until they are inside all the
+    <ref ClassicalLogic.and>Conjunctions</ref> and
+    <ref ClassicalLogic.or>Disjunctions</ref>.
+  </li>
+  <li>
+    Distribute the <ref ClassicalLogic.or>Disjunctions</ref> into the
+    <ref ClassicalLogic.and>Conjunctions</ref>.
+  </li>
+  <li>
+    Remove all double-negatives. The statement is now in CNF.
+  </li>
+  <li>
+    The statement may optionally be simplified further.
+  </li>
+</ol>
+
+Towards the beginning of this page, we mentioned that
+\(!('phi & ('psi -> 'chi))\) is equivalent to
+\((!'phi | 'psi) & (!'phi | !'chi)\). As an example, let's prove this claim.
+
+\Example CNFExample: ClassicalLogic {
+  name = "Finding the Conjunctive Normal Form of a Statement"
+  tagline = {
+    The Conjunctive Normal form of the proposition \(!('phi & ('psi -> 'chi))\)
+    is \((!'phi | 'psi) & (!'phi | !'chi)\).
+  }
+
+  var phi: Prop
+  var psi: Prop
+  var chi: Prop
+
+  assertion = !('phi & ('psi -> 'chi))
+    <-> (!'phi | 'psi) & (!'phi | !'chi);
+}
+
+\Proof CNFExample: ClassicalLogic {
+  The first step is to replace \('psi -> 'chi\) with its CNF. We have already
+  proven that
+
+  |ImpliesCNF| ('psi -> 'chi) <-> (!'psi | 'chi);,
+
+  and from this we may derive
+
+  |!fun, #2| !('phi & ('psi -> 'chi)) <-> !('phi & (!'psi | 'chi));.
+
+  The next step is to distribute in that negation symbol. We know that
+
+  |DeMorganAnd| !('phi & (!'psi | 'chi)) <-> !'phi | !(!'psi | 'chi);,
+
+  and so, by transitivity with <ref #2 />, we get
+
+  |EquivTransitive, #4| !('phi & ('psi ->'chi)) <-> !'phi | !(!'psi | 'chi);.
+
+  For that inner portion, i.e. \(!(!'psi | 'chi)\), we have
+
+  |DeMorganOr| !(!'psi | 'chi) <-> !!'psi & !'chi;,
+
+  which we can substitute into <ref #4 /> to get
+
+  |!sub, #6| !('phi & ('psi -> 'chi)) <-> !'phi | (!!'psi & !'chi);.
+
+  Next, we use the distributivity of <ref ClassicalLogic.or />.
+
+  |OrDistribAnd|
+    !'phi | (!!'psi & !'chi) <-> (!'phi | !!'psi) & (!'phi | !'chi);
+
+  By transitivity with <ref #6 />, we get,
+  
+  |EquivTransitive, #8|
+    !('phi & ('psi -> 'chi)) <-> (!'phi | !!'psi) & (!'phi | !'chi);.
+
+  Finally, we need to eliminate the double negative from \(!!'psi\). To do this,
+  we simply take
+
+  |DNegEquiv| !!'psi <-> 'psi;
+
+  and substitute it into <ref #8 /> to get
+
+  |!sub| !('phi & ('psi -> 'chi)) <-> (!'phi | 'psi) & (!'phi | !'chi);,
+
+  which is what we were trying to prove.
+}
+
+# Propositional Resolution
 
 \Theorem AndDistribOr: ClassicalLogic {
   name = "Logical Conjunction Distributes over Logical Disjunction"
@@ -376,8 +482,6 @@ prove it on the next page.
 
   |EquivIntroInf| 'phi & ('psi | 'chi) <-> ('phi & 'psi) | ('phi & 'chi);.
 }
-
-# Propositional Resolution
 
 \Theorem PropResolution: ClassicalLogic {
   name = "Propositional Resolution"
